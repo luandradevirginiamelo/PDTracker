@@ -3,4 +3,5 @@
     <string name="Login">Login</string>
     <string name="text_Register">Fisrt-Time User?Register Here</string>
     <string name="text_Forgotten">Forgotten Password?Click Here</string>
+    <string name="title_Patient">Register Here</string>
 </resources>
