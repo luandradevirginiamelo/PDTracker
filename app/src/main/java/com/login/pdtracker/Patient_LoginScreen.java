@@ -11,7 +11,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class FormLogin extends AppCompatActivity {
+public class Patient_LoginScreen extends AppCompatActivity {
 
     private TextView textRegister;
     private TextView textForgotten;
@@ -33,7 +33,7 @@ public class FormLogin extends AppCompatActivity {
         textRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(FormLogin.this, FormRegister.class);
+                Intent intent = new Intent(Patient_LoginScreen.this, Patients_RegScreen.class);
                 startActivity(intent);
             }
         });
