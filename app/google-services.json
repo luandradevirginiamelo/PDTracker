@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "921941142616",
+    "project_id": "pdproject-3b0dd",
+    "storage_bucket": "pdproject-3b0dd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:921941142616:android:f7667ac093acd3b9bf2e2d",
+        "android_client_info": {
+          "package_name": "com.login.pdtracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD30z_L-doJ8akm2irIAKqAuVUVJGUz5KU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
