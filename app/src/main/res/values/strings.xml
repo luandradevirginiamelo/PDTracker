@@ -4,4 +4,6 @@
     <string name="text_Register">Fisrt-Time User?Register Here</string>
     <string name="text_Forgotten">Forgotten Password?Click Here</string>
     <string name="title_Patient">Register Here</string>
+    <string name="title_send_reset_password">Send Reset Password Link</string>
+    <string name="text_logout">Logout Here</string>
 </resources>

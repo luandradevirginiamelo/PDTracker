@@ -16,6 +16,7 @@ public class Patient_LoginScreen extends AppCompatActivity {
     private TextView textRegister;
     private TextView textForgotten;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,8 +42,9 @@ public class Patient_LoginScreen extends AppCompatActivity {
         textForgotten.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Coloque o código para a ação de clique do "esqueceu a senha" aqui
-                // Por exemplo, pode abrir uma nova Activity para redefinir a senha
+                Intent intent = new Intent(Patient_LoginScreen.this, Reset_PasswordScreen.class);
+                startActivity(intent);
+
             }
         });
     }
