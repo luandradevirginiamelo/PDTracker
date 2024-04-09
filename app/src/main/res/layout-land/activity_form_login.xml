@@ -33,15 +33,15 @@
 
 
 
-       <EditText
-           android:id="@+id/edit_email"
-           style="@style/Edit_Text"
-           android:hint="Email:"
-           android:drawableRight="@drawable/ic_email"
-           android:inputType="textEmailAddress"
-           app:layout_constraintStart_toStartOf="containerComponents"
-           app:layout_constraintEnd_toEndOf="@id/containerComponents"
-           app:layout_constraintTop_toTopOf="@id/containerComponents"/>
+    <EditText
+        android:id="@+id/edit_email"
+        style="@style/Edit_Text"
+        android:hint="Email:"
+        android:drawableRight="@drawable/ic_email"
+        android:inputType="textEmailAddress"
+        app:layout_constraintStart_toStartOf="@id/containerComponents"
+        app:layout_constraintEnd_toEndOf="@id/containerComponents"
+        app:layout_constraintTop_toTopOf="@id/containerComponents"/>
 
     <EditText
         android:id="@+id/edit_senha"
@@ -49,7 +49,7 @@
         android:hint="Password:"
         android:inputType="numberPassword"
         android:drawableRight="@drawable/ic_eye"
-        app:layout_constraintStart_toStartOf="containerComponents"
+        app:layout_constraintStart_toStartOf="@id/containerComponents"
         app:layout_constraintEnd_toEndOf="@id/containerComponents"
         app:layout_constraintTop_toBottomOf="@id/edit_email"/>
   

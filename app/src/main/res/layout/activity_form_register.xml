@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -19,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Patient's Registration Screen"
+        android:text="Patient's Registration"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -30,7 +35,7 @@
     <View
         android:id="@+id/ContainerComponents"
         style="@style/ContainerComponents"
-        android:layout_width="365dp"
+        android:layout_width="match_parent"
         android:layout_height="585dp"
         app:layout_constraintTop_toBottomOf="@id/title_newuser"
         tools:layout_editor_absoluteX="26dp" />
@@ -110,7 +115,7 @@
         style="@style/Edit_Text"
         android:hint="Username:"
         android:padding="10dp"
-        android:inputType="text"
+        android:inputType="textEmailAddress"
         app:layout_constraintTop_toBottomOf="@id/edit_Patient_Caregiver_Surname"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -137,7 +142,8 @@
         />
 
     <androidx.appcompat.widget.AppCompatButton
-       style="@style/Button"
+        android:id="@+id/bt_register"
+        style="@style/Button"
         android:text="Register"
         android:layout_marginTop="10dp"
         app:layout_constraintTop_toBottomOf="@id/ContainerComponents"
@@ -148,3 +154,4 @@
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>
