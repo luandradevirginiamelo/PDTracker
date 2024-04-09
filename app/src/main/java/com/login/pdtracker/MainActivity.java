@@ -41,19 +41,22 @@ public class MainActivity extends AppCompatActivity {
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding document", e);
+                                          @Override
+                                          public void onFailure(@NonNull Exception e) {
+                                              Log.w(TAG, "Error adding document", e);
 
-                        EdgeToEdge.enable(this);
-                        setContentView(R.layout.activity_main);
-                        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-                            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-                            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-                            return insets;
-                        });
+                                              EdgeToEdge.enable(this);
+                                              setContentView(R.layout.activity_main);
+                                              ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+                                                  Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+                                                  v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+                                                  return insets;
+                                              });
 
-                    }
-                }
+                                          }
 
 
+                                      }
+                );
+    }
+}
