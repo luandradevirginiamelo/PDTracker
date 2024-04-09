@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Get a Firestore instance
+        // Get Firestore instance
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         // Create a new collection "patientProfiles" and a document with auto-generated ID
