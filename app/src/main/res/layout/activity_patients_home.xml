@@ -42,7 +42,7 @@
       android:contentDescription="@string/text_logout"
       android:background="@android:color/transparent"
       android:layout_marginTop="70dp"
-      android:layout_marginStart="50dp" />
+      android:layout_marginStart="70dp" />
 
 
   <androidx.appcompat.widget.AppCompatButton
