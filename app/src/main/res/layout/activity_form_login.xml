@@ -51,7 +51,7 @@ xmlns:android="http://schemas.android.com/apk/res/android">
             app:layout_constraintEnd_toEndOf="parent"/>
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/bt_Login"
+            android:id="@+id/bt_login"
             style="@style/Button"
             android:text="@string/Login"
             app:layout_constraintStart_toStartOf="parent"

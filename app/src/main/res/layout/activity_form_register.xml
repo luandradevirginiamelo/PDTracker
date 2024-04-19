@@ -4,21 +4,24 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     xmlns:android="http://schemas.android.com/apk/res/android">
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/backgroud"
-    tools:context=".Patients_RegScreen">
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/backgroud"
+        tools:context=".Patients_RegScreen">
 
-    <ImageView
-        android:id="@+id/logo"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:src="@drawable/logo"
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/logo"
+            app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
+
+
     <TextView
         android:id="@+id/title_newuser"
         android:layout_width="wrap_content"
@@ -32,15 +35,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <View
-        android:id="@+id/ContainerComponents"
-        style="@style/ContainerComponents"
-        android:layout_width="match_parent"
-        android:layout_height="585dp"
-        app:layout_constraintTop_toBottomOf="@id/title_newuser"
-        tools:layout_editor_absoluteX="26dp" />
+        <View
+            android:id="@+id/ContainerComponents"
+            style="@style/ContainerComponents"
+            android:layout_width="0dp"
+            android:layout_height="585dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/title_newuser"
+            app:layout_constraintBottom_toTopOf="@id/bt_register"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-    <EditText
+
+        <EditText
         android:id="@+id/edit_name"
         style="@style/Edit_Text"
         android:hint="Name:"
@@ -70,6 +76,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         />
+        <TextView
+            android:id="@+id/textViewError"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FF0000"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/edit_Mobile"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
     <EditText
         android:id="@+id/edit_Patient_Doctors_Name"
         style="@style/Edit_Text"
@@ -113,7 +128,7 @@
     <EditText
         android:id="@+id/edit_Username"
         style="@style/Edit_Text"
-        android:hint="Username:"
+        android:hint="EMAIL:"
         android:padding="10dp"
         android:inputType="textEmailAddress"
         app:layout_constraintTop_toBottomOf="@id/edit_Patient_Caregiver_Surname"
@@ -150,6 +165,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         />
+
+
 
 
 
