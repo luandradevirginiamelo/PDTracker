@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/backgroud"
+    tools:context=".Create_Update_PProfile">
+
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:src="@drawable/logo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+
+    <TextView
+        android:id="@+id/title_Create_Update_Patient_Profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="@string/title_CUPP"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/bt_CPP"
+        style="@style/Button2"
+        android:text="Create Patient Profile"
+        android:layout_marginTop="15dp"
+        app:layout_constraintTop_toBottomOf="@id/title_Create_Update_Patient_Profile"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/bt_UPP"
+        style="@style/Button2"
+        android:text="Update Patient Profile"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/bt_CPP"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/bt_save"
+        style="@style/Button2"
+        android:text="Save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        app:layout_constraintTop_toBottomOf="@id/ContainerComponents"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/bt_bdb"
+        style="@style/Button2"
+        android:text="Back to dashboard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/bt_save"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ContainerComponents"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        app:layout_constraintTop_toBottomOf="@id/bt_UPP"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+
+
+    <EditText
+        android:id="@+id/Patient_Hight"
+        style="@style/Edit_Text2"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="130dp"
+        android:hint="Pat..Hight (cm):"
+        android:inputType="text"   />
+
+    <EditText
+        android:id="@+id/Update"
+        style="@style/Edit_Text2"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="24dp"
+        android:hint="Update"
+        android:inputType="text"
+        app:layout_constraintStart_toEndOf="@+id/Patient_Hight"
+        app:layout_constraintTop_toTopOf="@+id/Patient_Hight" />
+
+    <EditText
+        android:id="@+id/Patient_weight"
+        style="@style/Edit_Text2"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:hint="Pat..Weight (kg):"
+        android:inputType="text"
+        app:layout_constraintStart_toStartOf="@+id/Patient_Hight"
+        app:layout_constraintTop_toBottomOf="@+id/Update" />
+
+    <EditText
+        android:id="@+id/Update2"
+        style="@style/Edit_Text2"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:hint="Update"
+        android:inputType="text"
+        app:layout_constraintStart_toStartOf="@+id/Update"
+        app:layout_constraintTop_toBottomOf="@+id/Update" />
+
+    <EditText
+        android:id="@+id/Patient_heart"
+        style="@style/Edit_Text2"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:hint="heart role(bpm)"
+        android:inputType="text"
+        app:layout_constraintStart_toStartOf="@+id/Patient_weight"
+        app:layout_constraintTop_toBottomOf="@+id/Patient_weight" />
+
+    <EditText
+        android:id="@+id/Update3"
+        style="@style/Edit_Text2"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:hint="Update"
+        android:inputType="text"
+        app:layout_constraintStart_toStartOf="@+id/Update2"
+        app:layout_constraintTop_toBottomOf="@+id/Update2" />
+
+    <EditText
+        android:id="@+id/Normal_OVS"
+        style="@style/Edit_Text2"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:hint="Normal Vital Signs"
+        android:inputType="text"
+        app:layout_constraintStart_toStartOf="@+id/Patient_heart"
+        app:layout_constraintTop_toBottomOf="@+id/Patient_heart" />
+
+    <EditText
+        android:id="@+id/Update4"
+        style="@style/Edit_Text2"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:hint="Update"
+        android:inputType="text"
+        app:layout_constraintStart_toStartOf="@+id/Update3"
+        app:layout_constraintTop_toBottomOf="@+id/Update3" />
+
+    <EditText
+        android:id="@+id/Treshold"
+        style="@style/Edit_Text2"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:hint="Treshold V.. Signs"
+        android:inputType="text"
+        app:layout_constraintStart_toStartOf="@+id/Normal_OVS"
+        app:layout_constraintTop_toBottomOf="@+id/Normal_OVS" />
+
+    <EditText
+        android:id="@+id/Update5"
+        style="@style/Edit_Text2"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:hint="Update"
+        android:inputType="text"
+        app:layout_constraintStart_toStartOf="@+id/Update4"
+        app:layout_constraintTop_toBottomOf="@+id/Update4" />
+
+    <EditText
+        android:id="@+id/Smart_details"
+        style="@style/Edit_Text2"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:hint="SmartWatch Details"
+        android:inputType="text"
+        app:layout_constraintStart_toStartOf="@+id/Treshold"
+        app:layout_constraintTop_toBottomOf="@+id/Treshold" />
+
+    <EditText
+        android:id="@+id/Update6"
+        style="@style/Edit_Text2"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:hint="Update"
+        android:inputType="text"
+        app:layout_constraintStart_toStartOf="@+id/Update5"
+        app:layout_constraintTop_toBottomOf="@+id/Update5" />
+
+    <EditText
+        android:id="@+id/Smart_model"
+        style="@style/Edit_Text2"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:hint="Sm.Watch model"
+        android:inputType="text"
+        app:layout_constraintStart_toStartOf="@+id/Smart_details"
+        app:layout_constraintTop_toBottomOf="@+id/Smart_details" />
+
+    <EditText
+        android:id="@+id/Update7"
+        style="@style/Edit_Text2"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:hint="Update"
+        android:inputType="text"
+        app:layout_constraintStart_toStartOf="@+id/Update6"
+        app:layout_constraintTop_toBottomOf="@+id/Update6" />
+
+    <EditText
+        android:id="@+id/Smart_DEVIDEID"
+        style="@style/Edit_Text2"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:hint="Sm.Watch ID"
+        android:inputType="text"
+        app:layout_constraintStart_toStartOf="@+id/Smart_model"
+        app:layout_constraintTop_toBottomOf="@+id/Smart_model" />
+
+    <EditText
+        android:id="@+id/Update8"
+        style="@style/Edit_Text2"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:hint="Update"
+        android:inputType="text"
+        app:layout_constraintStart_toStartOf="@+id/Update7"
+        app:layout_constraintTop_toBottomOf="@+id/Update7" />
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>

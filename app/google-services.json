@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "807608496552",
-    "project_id": "parkinson-fall-detection-watch",
-    "storage_bucket": "parkinson-fall-detection-watch.appspot.com"
+    "project_number": "955978655591",
+    "project_id": "pdtracker-d7a14",
+    "storage_bucket": "pdtracker-d7a14.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:807608496552:android:3fa217cb5e8c61f6c7ad9d",
+        "mobilesdk_app_id": "1:955978655591:android:5f0be181773b7f281931c2",
         "android_client_info": {
           "package_name": "com.login.pdtracker"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAkTO2tLGxAX87fa2nW90N5I2UySojp5cQ"
+          "current_key": "AIzaSyADIbUFMokOy0AotvU6tE5NsiSd6R51coA"
         }
       ],
       "services": {
