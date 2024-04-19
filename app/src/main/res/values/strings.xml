@@ -7,4 +7,5 @@
     <string name="title_send_reset_password">Send Reset Password Link</string>
     <string name="text_logout">Logout Here</string>
     <string name="title_CUPP">Create Update Patient Profile</string>
+
 </resources>
