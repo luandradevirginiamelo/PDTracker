@@ -88,35 +88,38 @@
         style="@style/Edit_Text2"
         android:layout_width="150dp"
         android:layout_height="40dp"
-        android:layout_marginTop="130dp"
+        android:layout_marginTop="150dp"
+        android:visibility="visible"
         android:hint="Pat..Hight (cm):"
-        android:inputType="text"   />
+        android:inputType="text"
+        />
 
-    <EditText
+
+        <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/Update"
-        style="@style/Edit_Text2"
+        style="@style/Button3"
         android:layout_width="150dp"
         android:layout_height="40dp"
         android:layout_marginStart="24dp"
         android:hint="Update"
         android:inputType="text"
-        app:layout_constraintStart_toEndOf="@+id/Patient_Hight"
+        app:layout_constraintStart_toEndOf="@id/Patient_Hight"
         app:layout_constraintTop_toTopOf="@+id/Patient_Hight" />
 
-    <EditText
-        android:id="@+id/Patient_weight"
-        style="@style/Edit_Text2"
-        android:layout_width="150dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="10dp"
-        android:hint="Pat..Weight (kg):"
-        android:inputType="text"
-        app:layout_constraintStart_toStartOf="@+id/Patient_Hight"
-        app:layout_constraintTop_toBottomOf="@+id/Update" />
+        <EditText
+            android:id="@+id/Patient_weight"
+            style="@style/Edit_Text2"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:hint="Pat..Weight (kg):"
+            android:inputType="text"
+            app:layout_constraintStart_toStartOf="@id/Patient_Hight"
+            app:layout_constraintTop_toBottomOf="@id/Patient_Hight" />
 
-    <EditText
+        <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/Update2"
-        style="@style/Edit_Text2"
+        style="@style/Button3"
         android:layout_width="150dp"
         android:layout_height="40dp"
         android:layout_marginTop="10dp"
@@ -136,9 +139,9 @@
         app:layout_constraintStart_toStartOf="@+id/Patient_weight"
         app:layout_constraintTop_toBottomOf="@+id/Patient_weight" />
 
-    <EditText
+        <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/Update3"
-        style="@style/Edit_Text2"
+        style="@style/Button3"
         android:layout_width="150dp"
         android:layout_height="40dp"
         android:layout_marginTop="10dp"
@@ -158,9 +161,9 @@
         app:layout_constraintStart_toStartOf="@+id/Patient_heart"
         app:layout_constraintTop_toBottomOf="@+id/Patient_heart" />
 
-    <EditText
+        <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/Update4"
-        style="@style/Edit_Text2"
+        style="@style/Button3"
         android:layout_width="150dp"
         android:layout_height="40dp"
         android:layout_marginTop="10dp"
@@ -180,9 +183,9 @@
         app:layout_constraintStart_toStartOf="@+id/Normal_OVS"
         app:layout_constraintTop_toBottomOf="@+id/Normal_OVS" />
 
-    <EditText
+        <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/Update5"
-        style="@style/Edit_Text2"
+        style="@style/Button3"
         android:layout_width="150dp"
         android:layout_height="40dp"
         android:layout_marginTop="10dp"
@@ -202,9 +205,9 @@
         app:layout_constraintStart_toStartOf="@+id/Treshold"
         app:layout_constraintTop_toBottomOf="@+id/Treshold" />
 
-    <EditText
+        <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/Update6"
-        style="@style/Edit_Text2"
+        style="@style/Button3"
         android:layout_width="150dp"
         android:layout_height="40dp"
         android:layout_marginTop="10dp"
@@ -224,9 +227,9 @@
         app:layout_constraintStart_toStartOf="@+id/Smart_details"
         app:layout_constraintTop_toBottomOf="@+id/Smart_details" />
 
-    <EditText
+        <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/Update7"
-        style="@style/Edit_Text2"
+        style="@style/Button3"
         android:layout_width="150dp"
         android:layout_height="40dp"
         android:layout_marginTop="10dp"
@@ -246,9 +249,9 @@
         app:layout_constraintStart_toStartOf="@+id/Smart_model"
         app:layout_constraintTop_toBottomOf="@+id/Smart_model" />
 
-    <EditText
+        <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/Update8"
-        style="@style/Edit_Text2"
+        style="@style/Button3"
         android:layout_width="150dp"
         android:layout_height="40dp"
         android:layout_marginTop="10dp"
