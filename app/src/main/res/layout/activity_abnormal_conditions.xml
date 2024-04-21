@@ -84,8 +84,8 @@
             android:layout_marginTop="10dp"
             android:hint="View"
             android:inputType="text"
-            app:layout_constraintStart_toStartOf="@+id/notificationnew"
-            app:layout_constraintTop_toBottomOf="@+id/notificationnew" />
+            app:layout_constraintStart_toStartOf="@id/notificationnew"
+            app:layout_constraintTop_toBottomOf="@id/notificationnew" />
 
         <TextView
             android:id="@+id/notificationold"
@@ -95,8 +95,8 @@
             android:layout_marginTop="10dp"
             android:hint="Oldest Notification"
             android:inputType="text"
-            app:layout_constraintStart_toStartOf="@+id/view1"
-            app:layout_constraintTop_toBottomOf="@+id/view1"
+            app:layout_constraintStart_toStartOf="@id/view1"
+            app:layout_constraintTop_toBottomOf="@id/view1"
             />
 
         <androidx.appcompat.widget.AppCompatButton
@@ -107,8 +107,8 @@
             android:layout_marginTop="10dp"
             android:hint="View"
             android:inputType="text"
-            app:layout_constraintStart_toStartOf="@+id/notificationold"
-            app:layout_constraintTop_toBottomOf="@+id/notificationold" />
+            app:layout_constraintStart_toStartOf="@id/notificationold"
+            app:layout_constraintTop_toBottomOf="@id/notificationold" />
 
 
 
@@ -120,6 +120,8 @@
         android:layout_height="70dp"
         android:text="Back to dashboard"
         tools:layout_editor_absoluteX="132dp"
-        tools:layout_editor_absoluteY="580dp" />
+        tools:layout_editor_absoluteY="580dp"
+        app:layout_constraintStart_toStartOf="@id/ContainerComponents"
+        app:layout_constraintTop_toBottomOf="@id/ContainerComponents" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
