@@ -35,5 +35,7 @@ public class Abnormal_Conditions extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
     }
 }
