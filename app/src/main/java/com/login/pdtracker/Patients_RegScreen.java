@@ -24,7 +24,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import android.app.DatePickerDialog;
 import android.widget.DatePicker;
-
+import android.os.Handler;
 import java.util.Locale;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -33,13 +33,11 @@ import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.util.Date;
 
-
 public class Patients_RegScreen extends AppCompatActivity {
     private EditText edit_name, edit_surname, edit_Mobile, edit_Patient_Doctors_Name, edit_Patient_Doctors_Surname, edit_Patient_Caregiver_Name, edit_DOB, edit_email, edit_Password2, edit_Re_type;
     private Button bt_register;
     private TextView textViewError; // TextView for displaying error messages
     private boolean isMobileValid = false; // To track the validity of the mobile number
-
 
     String[] errorMessages = {"Please complete all required fields to proceed", "Registration Successful!", "Invalid Irish mobile number format informe 083, 085, 086, 087, or 089"};
 
@@ -50,6 +48,24 @@ public class Patients_RegScreen extends AppCompatActivity {
 
         iniciarComponentes();
 
+        edit_Password2.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!isPasswordStrong(s.toString())) {
+                    edit_Password2.setError("A Strong Password should be a minimum of 8 characters in length, containing a mixture of upper and lower case letters, and special characters.");
+                } else {
+                    edit_Password2.setError(null); // Clear error
+                }
+            }
+        });
         edit_Mobile.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -61,8 +77,9 @@ public class Patients_RegScreen extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.length() >= 3 && !isValidIrishPrefix(s.toString().substring(0, 3))) {
-                    textViewError.setText(errorMessages[2]);
+                String mobile = s.toString();
+                if (mobile.length() < 10 || !isValidIrishPrefix(mobile.substring(0, 10))) {
+                    textViewError.setText(errorMessages[2]); // "Invalid Irish mobile number format informe 083, 085, 086, 087, or 089"
                     textViewError.setVisibility(View.VISIBLE);
                     isMobileValid = false;
                 } else {
@@ -85,38 +102,83 @@ public class Patients_RegScreen extends AppCompatActivity {
                 String password = edit_Password2.getText().toString();
                 String retype = edit_Re_type.getText().toString();
                 String dobString = edit_DOB.getText().toString();
-                // Verifica primeiro se todos os campos estão preenchidos
+
+                // First check if all fields are filled
                 if (name.isEmpty() || surname.isEmpty() || mobile.isEmpty() || patient_D_Name.isEmpty() || patient_D_Surname.isEmpty() || patient_C_Name.isEmpty() || dobString.isEmpty() || username.isEmpty() || password.isEmpty() || retype.isEmpty()) {
                     Snackbar.make(v, errorMessages[0], Snackbar.LENGTH_SHORT).show();
-                    return; // Encerrar o método aqui se algum campo estiver vazio
+                    return; // End method here if any field is empty
                 }
 
-                // Verifica a igualdade das senhas
+                // Check if the passwords match
                 if (!password.equals(retype)) {
                     Snackbar.make(v, "Passwords do not match.", Snackbar.LENGTH_LONG).show();
-                    return; // Parar execução se as senhas não forem iguais
+                    return; // Stop execution if the passwords are not the same
                 }
 
-                // Verifica a validade da idade
-                if (!isAgeValid(dobString)) {
-                    Snackbar.make(v, "You must be at least 18 years old to register.", Snackbar.LENGTH_LONG).show();
-                    return; // Encerrar o método aqui se a idade não for válida
+                // Check for strong password
+                if (!isPasswordStrong(password)) {
+                    Snackbar.make(v, "A Strong Password should be minimum of 8 in length, containing a mixture of upper and lower case letters, and special characters.", Snackbar.LENGTH_LONG).show();
+                    return; // Stop execution if the password is not strong
                 }
 
-                // Verifica a validade do número de celular
+                // Check the validity of the mobile number
                 if (!isMobileValid) {
                     Snackbar.make(v, errorMessages[2], Snackbar.LENGTH_LONG).show();
                     return;
                 }
 
-                // Tudo validado, proceder com o cadastro
+                // All validations passed, proceed with registration
                 cadastrarUsuario(v, username, password);
             }
         });
     }
 
+    private boolean isPasswordStrong(String password) {
+        if (password.length() < 8) {
+            return false;
+        }
+
+        boolean hasUpper = false, hasLower = false, hasSpecial = false;
+
+        for (char c : password.toCharArray()) {
+            if (Character.isUpperCase(c)) hasUpper = true;
+            if (Character.isLowerCase(c)) hasLower = true;
+            if (!Character.isLetterOrDigit(c)) hasSpecial = true;
+        }
+
+        return hasUpper && hasLower && hasSpecial;
+    }
+
+    private void setupMobileValidation() {
+        edit_Mobile.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String mobile = s.toString();
+                if (mobile.length() < 10 || !isValidIrishPrefix(mobile)) {
+                    edit_Mobile.setError("Invalid Irish mobile number format. Must be 10 digits and start with 083, 085, 086, 087, or 089");
+                    isMobileValid = false;
+                } else {
+                    edit_Mobile.setError(null); // Clear error
+                    isMobileValid = true;
+                }
+            }
+        });
+    }
+
     private boolean isValidIrishPrefix(String number) {
-        return number.startsWith("083") || number.startsWith("085") || number.startsWith("086") || number.startsWith("087") || number.startsWith("089");
+        if (number.length() >= 3) {
+            String prefix = number.substring(0, 3);
+            return prefix.equals("083") || prefix.equals("085") || prefix.equals("086") || prefix.equals("087") || prefix.equals("089");
+        }
+        return false;
     }
 
     // Metod shows the format date
@@ -245,7 +307,21 @@ public class Patients_RegScreen extends AppCompatActivity {
 
     }
 
+
     private void setupEmailValidation() {
+        final Handler handler = new Handler();
+        final Runnable emailValidationRunnable = new Runnable() {
+            @Override
+            public void run() {
+                String email = edit_email.getText().toString();
+                if (!isValidEmail(email)) {
+                    edit_email.setError("Invalid email address. Must be a valid domain like gmail.com, hotmail.com, etc.");
+                } else {
+                    edit_email.setError(null); // Limpa o erro
+                }
+            }
+        };
+
         edit_email.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -257,22 +333,14 @@ public class Patients_RegScreen extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (!isValidEmail(s.toString())) {
-                    textViewError.setText("Please, type a valid email!");
-                    textViewError.setVisibility(View.VISIBLE);
-                } else {
-                    textViewError.setVisibility(View.GONE);
-                }
+                handler.removeCallbacks(emailValidationRunnable); // Cancela qualquer runnable existente
+                handler.postDelayed(emailValidationRunnable, 800); // Aguarda 800 milissegundos antes de validar
             }
         });
     }
-
-
 
     private boolean isValidEmail(String email) {
         String emailRegex = "^[\\w-\\.]+@((gmail.com)|(hotmail.com)|(yahoo.com)|(outlook.com)|(live.com))$";
         return email.matches(emailRegex);
     }
-
-
-    }
+}

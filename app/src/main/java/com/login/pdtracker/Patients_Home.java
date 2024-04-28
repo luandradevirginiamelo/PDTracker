@@ -27,6 +27,8 @@ public class Patients_Home extends AppCompatActivity {
     private ImageButton bt_logoutButton;
     private AppCompatButton b2; // Reference to the update profile button
     private AppCompatButton b4; // Reference to the button for viewing doctor's notifications
+
+    private AppCompatButton b3; // Reference to the button for viewing doctor's notifications
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     String userID;
 
@@ -72,6 +74,14 @@ public class Patients_Home extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        b3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Patients_Home.this, Dailydata_reading.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -103,7 +113,8 @@ public class Patients_Home extends AppCompatActivity {
         welcome_user = findViewById(R.id.welcome_user);
         bt_logoutButton = findViewById(R.id.bt_logoutButton);
         b2 = findViewById(R.id.b2); // Initialize the update profile button
-        b4 = findViewById(R.id.b4); // Initialize the button for viewing doctor's notifications
+        b4 = findViewById(R.id.b4);
+        b3 = findViewById(R.id.b3); // Initialize the button for viewing doctor's notifications
     }
 }
 
