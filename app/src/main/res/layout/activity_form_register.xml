@@ -26,7 +26,7 @@
             android:id="@+id/title_newuser"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="20dp"
             android:text="Patient's Registration"
             android:textColor="@color/white"
             android:textSize="20sp"
@@ -40,7 +40,7 @@
             style="@style/ContainerComponents"
             android:layout_width="0dp"
             android:layout_height="585dp"
-            android:layout_marginTop="70dp"
+            android:layout_marginTop="20dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title_newuser"
             app:layout_constraintBottom_toTopOf="@id/bt_register"
@@ -111,30 +111,28 @@
         <EditText
             android:id="@+id/edit_Patient_Caregiver_Name"
             style="@style/Edit_Text"
-            android:hint="Caregiver Name:"
+            android:hint="Caregiver Name and Surname:"
             android:padding="10dp"
             android:inputType="text"
             app:layout_constraintTop_toBottomOf="@id/edit_Patient_Doctors_Surname"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             />
-        <EditText
-            android:id="@+id/edit_Patient_Caregiver_Surname"
-            style="@style/Edit_Text"
-            android:hint="Caregiver Surname:"
-            android:padding="10dp"
-            android:inputType="text"
-            app:layout_constraintTop_toBottomOf="@id/edit_Patient_Caregiver_Name"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            />
+
+        <TextView
+            android:id="@+id/textViewAgeError"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FF0000"
+            android:visibility="gone" />
+
         <EditText
             android:id="@+id/edit_DOB"
             style="@style/Edit_Text"
             android:hint="Date of Birthday (MM dd, yyyy):"
             android:padding="10dp"
             android:inputType="date"
-            app:layout_constraintTop_toBottomOf="@id/edit_Patient_Caregiver_Surname"
+            app:layout_constraintTop_toBottomOf="@id/edit_Patient_Caregiver_Name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:focusable="false"
@@ -179,7 +177,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             />
-
 
 
 

@@ -48,6 +48,7 @@ public class Patients_RegScreen extends AppCompatActivity {
 
         iniciarComponentes();
 
+        // TextWatcher for real-time password strength validation
         edit_Password2.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -63,6 +64,27 @@ public class Patients_RegScreen extends AppCompatActivity {
                     edit_Password2.setError("A Strong Password should be a minimum of 8 characters in length, containing a mixture of upper and lower case letters, and special characters.");
                 } else {
                     edit_Password2.setError(null); // Clear error
+                }
+            }
+        });
+
+        // TextWatcher for real-time retype password matching validation
+        edit_Re_type.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String password = edit_Password2.getText().toString();
+                if (!password.equals(s.toString())) {
+                    edit_Re_type.setError("Passwords do not match.");
+                } else {
+                    edit_Re_type.setError(null); // Clear error if they match
                 }
             }
         });
@@ -120,6 +142,14 @@ public class Patients_RegScreen extends AppCompatActivity {
                     Snackbar.make(v, "A Strong Password should be minimum of 8 in length, containing a mixture of upper and lower case letters, and special characters.", Snackbar.LENGTH_LONG).show();
                     return; // Stop execution if the password is not strong
                 }
+
+                if (!isAgeValid(dobString)) {
+                    edit_DOB.setError("You must be at least 18 years old to register.");
+                    return; // Stop registration if not valid
+                } else {
+                    edit_DOB.setError(null); // Clear error if age is valid
+                }
+
 
                 // Check the validity of the mobile number
                 if (!isMobileValid) {
@@ -191,13 +221,19 @@ public class Patients_RegScreen extends AppCompatActivity {
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                monthOfYear = monthOfYear + 1; // Ajustar o mês para base 1
-                String formattedDate = String.format(Locale.getDefault(), "%02d %02d, %d", monthOfYear, dayOfMonth, year);
+                monthOfYear = monthOfYear + 1; // Adjust month to 1-based index
+                String formattedDate = String.format(Locale.getDefault(), "%02d/%02d/%d", monthOfYear, dayOfMonth, year);
                 edit_DOB.setText(formattedDate);
+
+                // Check age right after the date is set
+                if (!isAgeValid(formattedDate)) {
+                    textViewError.setText("You must be at least 18 years old to register.");
+                    textViewError.setVisibility(View.VISIBLE);
+                } else {
+                    textViewError.setVisibility(View.GONE);
+                }
             }
         }, year, month, day);
-
-
         datePickerDialog.show();
     }
     private Date parseDate(String dateStr) {
@@ -344,3 +380,4 @@ public class Patients_RegScreen extends AppCompatActivity {
         return email.matches(emailRegex);
     }
 }
+
