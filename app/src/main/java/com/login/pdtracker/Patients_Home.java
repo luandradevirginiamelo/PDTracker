@@ -14,9 +14,9 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import javax.annotation.Nullable;
@@ -26,6 +26,9 @@ public class Patients_Home extends AppCompatActivity {
     private TextView welcome_user;
     private ImageButton bt_logoutButton;
     private AppCompatButton b2; // Reference to the update profile button
+    private AppCompatButton b4; // Reference to the button for viewing doctor's notifications
+
+    private AppCompatButton b3; // Reference to the button for viewing doctor's notifications
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     String userID;
 
@@ -62,6 +65,23 @@ public class Patients_Home extends AppCompatActivity {
                 finish();
             }
         });
+
+        // Set click listener for the doctor's notifications button
+        b4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Patients_Home.this, Abnormal_Conditions.class);
+                startActivity(intent);
+            }
+        });
+
+        b3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Patients_Home.this, Dailydata_reading.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -82,7 +102,7 @@ public class Patients_Home extends AppCompatActivity {
                 }
             });
         } else {
-            // Se não houver usuário logado, redirecionar para a tela de login
+            // Redirect to login screen if no user is logged in
             Intent intent = new Intent(Patients_Home.this, Patient_LoginScreen.class);
             startActivity(intent);
             finish();
@@ -93,6 +113,8 @@ public class Patients_Home extends AppCompatActivity {
         welcome_user = findViewById(R.id.welcome_user);
         bt_logoutButton = findViewById(R.id.bt_logoutButton);
         b2 = findViewById(R.id.b2); // Initialize the update profile button
+        b4 = findViewById(R.id.b4);
+        b3 = findViewById(R.id.b3); // Initialize the button for viewing doctor's notifications
     }
 }
 
