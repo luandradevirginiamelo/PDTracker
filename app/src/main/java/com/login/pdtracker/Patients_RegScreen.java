@@ -37,6 +37,8 @@ public class Patients_RegScreen extends AppCompatActivity {
     private EditText edit_name, edit_surname, edit_Mobile, edit_Patient_Doctors_Name, edit_Patient_Doctors_Surname, edit_Patient_Caregiver_Name, edit_DOB, edit_email, edit_Password2, edit_Re_type;
     private Button bt_register;
     private TextView textViewError; // TextView for displaying error messages
+
+    private TextView textViewError2;
     private boolean isMobileValid = false; // To track the validity of the mobile number
 
     String[] errorMessages = {"Please complete all required fields to proceed", "Registration Successful!", "Invalid Irish mobile number format informe 083, 085, 086, 087, or 089"};
@@ -227,46 +229,16 @@ public class Patients_RegScreen extends AppCompatActivity {
 
                 // Check age right after the date is set
                 if (!isAgeValid(formattedDate)) {
-                    textViewError.setText("You must be at least 18 years old to register.");
-                    textViewError.setVisibility(View.VISIBLE);
+                    textViewError2.setText("You must be at least 18 years old to register.");
+                    textViewError2.setVisibility(View.VISIBLE);
                 } else {
-                    textViewError.setVisibility(View.GONE);
+                    textViewError2.setVisibility(View.GONE);
                 }
             }
         }, year, month, day);
         datePickerDialog.show();
     }
-    private Date parseDate(String dateStr) {
-        SimpleDateFormat sdf = new SimpleDateFormat("MM dd, yyyy", Locale.getDefault());
-        try {
-            return sdf.parse(dateStr);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 
-    private int calculateAge(Date birthDate) {
-        Calendar birth = Calendar.getInstance();
-        birth.setTime(birthDate);
-        Calendar today = Calendar.getInstance();
-
-        int age = today.get(Calendar.YEAR) - birth.get(Calendar.YEAR);
-        if (today.get(Calendar.DAY_OF_YEAR) < birth.get(Calendar.DAY_OF_YEAR)) {
-            age--;
-        }
-
-        return age;
-    }
-
-    private boolean isAgeValid(String dobString) {
-        Date dob = parseDate(dobString);
-        if (dob == null) {
-            return false;
-        }
-        int age = calculateAge(dob);
-        return age >= 18 && age <= 110;
-    }
 
     private void cadastrarUsuario(View v, String email, String password) {
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -335,12 +307,73 @@ public class Patients_RegScreen extends AppCompatActivity {
         edit_email = findViewById(R.id.edit_email);
         edit_Password2 = findViewById(R.id.edit_Password2);
         edit_Re_type = findViewById(R.id.edit_Re_type);
-        edit_DOB = findViewById(R.id.edit_DOB); // Inicializar uma vez
+        edit_DOB = findViewById(R.id.edit_DOB);
         bt_register = findViewById(R.id.bt_register);
-        textViewError = findViewById(R.id.textViewError); // Confirmar que textViewError está vinculado corretamente no layout XML
+        textViewError = findViewById(R.id.textViewError);
+        textViewError2 = findViewById(R.id.textViewError2);
 
         setupEmailValidation();
+        setupDOBValidation();
+    }
 
+    private void setupDOBValidation() {
+        edit_DOB.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                edit_DOB.setError(null); // Clear any existing error message
+                validateDOB(s.toString()); // Validate new DOB immediately
+            }
+        });
+    }
+
+    private void validateDOB(String dob) {
+        if (!isAgeValid(dob)) {
+            edit_DOB.setError("You must be at least 18 years old to register.");
+            textViewError2.setText("You must be at least 18 years old to register.");
+            textViewError2.setVisibility(View.VISIBLE);
+        } else {
+            textViewError2.setVisibility(View.GONE);
+        }
+    }
+
+    private Date parseDate(String dateStr) {
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
+        try {
+            return sdf.parse(dateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private boolean isAgeValid(String dobString) {
+        Date dob = parseDate(dobString);
+        if (dob == null) {
+            return false;
+        }
+        int age = calculateAge(dob);
+        return age >= 18;
+    }
+
+    private int calculateAge(Date birthDate) {
+        Calendar birth = Calendar.getInstance();
+        birth.setTime(birthDate);
+        Calendar today = Calendar.getInstance();
+
+        int age = today.get(Calendar.YEAR) - birth.get(Calendar.YEAR);
+        if (today.get(Calendar.DAY_OF_YEAR) < birth.get(Calendar.DAY_OF_YEAR)) {
+            age--;
+        }
+
+        return age;
     }
 
 
@@ -351,7 +384,7 @@ public class Patients_RegScreen extends AppCompatActivity {
             public void run() {
                 String email = edit_email.getText().toString();
                 if (!isValidEmail(email)) {
-                    edit_email.setError("Invalid email address. Must be a valid domain like gmail.com, hotmail.com, etc.");
+                    edit_email.setError("Invalid email address. Must be a valid domain like @gmail.com, @hotmail.com, etc.");
                 } else {
                     edit_email.setError(null); // Limpa o erro
                 }

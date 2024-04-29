@@ -10,14 +10,15 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
+import android.util.Log;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+
 
 import javax.annotation.Nullable;
 
@@ -27,8 +28,7 @@ public class Patients_Home extends AppCompatActivity {
     private ImageButton bt_logoutButton;
     private AppCompatButton b2; // Reference to the update profile button
     private AppCompatButton b4; // Reference to the button for viewing doctor's notifications
-
-    private AppCompatButton b3; // Reference to the button for viewing doctor's notifications
+    private AppCompatButton b3; // Reference to the button for daily data reading
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     String userID;
 
@@ -47,40 +47,25 @@ public class Patients_Home extends AppCompatActivity {
         IniciarComponentes();
 
         // Set click listener for the update profile button
-        b2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Patients_Home.this, Create_Update_PProfile.class);
-                startActivity(intent);
-            }
-        });
+        b2.setOnClickListener(v -> checkUserProfile());
 
         // Set click listener for the logout button
-        bt_logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(Patients_Home.this, Patient_LoginScreen.class);
-                startActivity(intent);
-                finish();
-            }
+        bt_logoutButton.setOnClickListener(v -> {
+            FirebaseAuth.getInstance().signOut();
+            Intent intent = new Intent(Patients_Home.this, Patient_LoginScreen.class);
+            startActivity(intent);
+            finish();
         });
 
         // Set click listener for the doctor's notifications button
-        b4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Patients_Home.this, Abnormal_Conditions.class);
-                startActivity(intent);
-            }
+        b4.setOnClickListener(v -> {
+            Intent intent = new Intent(Patients_Home.this, Abnormal_Conditions.class);
+            startActivity(intent);
         });
 
-        b3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Patients_Home.this, Dailydata_reading.class);
-                startActivity(intent);
-            }
+        b3.setOnClickListener(v -> {
+            Intent intent = new Intent(Patients_Home.this, Dailydata_reading.class);
+            startActivity(intent);
         });
     }
 
@@ -95,7 +80,7 @@ public class Patients_Home extends AppCompatActivity {
             documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
                 @Override
                 public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
-                    if (documentSnapshot != null) {
+                    if (documentSnapshot != null && documentSnapshot.exists()) {
                         String userName = documentSnapshot.getString("name");
                         welcome_user.setText("Welcome, " + userName);
                     }
@@ -112,9 +97,30 @@ public class Patients_Home extends AppCompatActivity {
     private void IniciarComponentes() {
         welcome_user = findViewById(R.id.welcome_user);
         bt_logoutButton = findViewById(R.id.bt_logoutButton);
-        b2 = findViewById(R.id.b2); // Initialize the update profile button
+        b2 = findViewById(R.id.b2);
         b4 = findViewById(R.id.b4);
-        b3 = findViewById(R.id.b3); // Initialize the button for viewing doctor's notifications
+        b3 = findViewById(R.id.b3);
+    }
+
+    private void checkUserProfile() {
+        DocumentReference profileRef = db.collection("patient_profiles").document(userID);
+        profileRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document != null && document.exists()) {
+                    openProfileActivity("Update");
+                } else {
+                    openProfileActivity("Create");
+                }
+            } else {
+                Log.d("TAG", "Failed with: ", task.getException());
+            }
+        });
+    }
+
+    private void openProfileActivity(String mode) {
+        Intent intent = new Intent(Patients_Home.this, Create_Update_PProfile.class);
+        intent.putExtra("mode", mode);  // Pass the mode as extra
+        startActivity(intent);
     }
 }
-

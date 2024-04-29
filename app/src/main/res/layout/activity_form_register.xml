@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
+<androidx.core.widget.NestedScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -39,7 +38,7 @@
             android:id="@+id/ContainerComponents"
             style="@style/ContainerComponents"
             android:layout_width="0dp"
-            android:layout_height="585dp"
+            android:layout_height="619dp"
             android:layout_marginTop="20dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title_newuser"
@@ -120,23 +119,27 @@
             />
 
         <TextView
-            android:id="@+id/textViewAgeError"
+            android:id="@+id/textViewError2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#FF0000"
-            android:visibility="gone" />
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/edit_Patient_Caregiver_Name"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <EditText
             android:id="@+id/edit_DOB"
             style="@style/Edit_Text"
+            android:layout_marginTop="25dp"
+            android:focusable="false"
             android:hint="Date of Birthday (MM dd, yyyy):"
-            android:padding="10dp"
             android:inputType="date"
-            app:layout_constraintTop_toBottomOf="@id/edit_Patient_Caregiver_Name"
+            android:onClick="showDatePickerDialog"
+            android:padding="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:focusable="false"
-            android:onClick="showDatePickerDialog"  />
+            app:layout_constraintTop_toBottomOf="@id/edit_Patient_Caregiver_Name" />
 
         <EditText
             android:id="@+id/edit_email"

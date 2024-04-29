@@ -9,9 +9,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import java.util.Map;
+import java.util.HashMap;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 
 public class Create_Update_PProfile extends AppCompatActivity {
@@ -27,12 +30,20 @@ public class Create_Update_PProfile extends AppCompatActivity {
         // Initialize Firebase Firestore
         db = FirebaseFirestore.getInstance();
 
-        // Setting up Edge to Edge
+        // Set up Edge to Edge
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        // Determine mode from intent
+        buttonMode = getIntent().getStringExtra("mode");
+        if ("Create".equals(buttonMode)) {
+            setCreateMode();
+        } else {
+            setUpdateMode();  // You need to implement this method to set up the UI for updating
+        }
 
         // Set up the back to dashboard button
         findViewById(R.id.bt_bdb).setOnClickListener(v -> {
@@ -41,11 +52,32 @@ public class Create_Update_PProfile extends AppCompatActivity {
             finish();
         });
 
-        // Set up the create patient profile button
-        findViewById(R.id.bt_CPP).setOnClickListener(v -> setCreateMode());
-
         // Set up the save button
         findViewById(R.id.bt_save).setOnClickListener(v -> saveOrUpdatePatientProfile());
+    }
+
+    private void setUpdateMode() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            String userId = user.getUid();
+            // Buscar o documento do perfil do paciente
+            db.collection("patient_profiles").document(userId).get().addOnCompleteListener(task -> {
+                if (task.isSuccessful() && task.getResult() != null) {
+                    DocumentSnapshot document = task.getResult();
+                    // Configurar os campos com os dados existentes
+                    ((EditText) findViewById(R.id.Patient_Hight)).setText(document.getString("height"));
+                    ((EditText) findViewById(R.id.Patient_weight)).setText(document.getString("weight"));
+                    ((EditText) findViewById(R.id.Patient_heart)).setText(document.getString("heart"));
+                    ((EditText) findViewById(R.id.Normal_OVS)).setText(document.getString("normalOVS"));
+                    ((EditText) findViewById(R.id.Treshold)).setText(document.getString("threshold"));
+                    ((EditText) findViewById(R.id.Smart_details)).setText(document.getString("smartDetails"));
+                    ((EditText) findViewById(R.id.Smart_model)).setText(document.getString("smartModel"));
+                    ((EditText) findViewById(R.id.Smart_DEVIDEID)).setText(document.getString("smartDeviceId"));
+                } else {
+                    Toast.makeText(Create_Update_PProfile.this, "Erro ao carregar dados: " + (task.getException() != null ? task.getException().getMessage() : "Desconhecido"), Toast.LENGTH_LONG).show();
+                }
+            });
+        }
     }
 
     private void setCreateMode() {
@@ -74,92 +106,35 @@ public class Create_Update_PProfile extends AppCompatActivity {
     }
 
     private void saveOrUpdatePatientProfile() {
-        // Retrieving EditText fields
-        EditText editHeight = findViewById(R.id.Patient_Hight);
-        EditText editWeight = findViewById(R.id.Patient_weight);
-        EditText editHeart = findViewById(R.id.Patient_heart);
-        EditText editNormalOVS = findViewById(R.id.Normal_OVS);
-        EditText editThreshold = findViewById(R.id.Treshold);
-        EditText editSmartDetails = findViewById(R.id.Smart_details);
-        EditText editSmartModel = findViewById(R.id.Smart_model);
-        EditText editSmartDeviceId = findViewById(R.id.Smart_DEVIDEID);
-
-        // Extracting the string values from EditTexts
-        String height = editHeight.getText().toString();
-        String weight = editWeight.getText().toString();
-        String heart = editHeart.getText().toString();
-        String normalOVS = editNormalOVS.getText().toString();
-        String threshold = editThreshold.getText().toString();
-        String smartDetails = editSmartDetails.getText().toString();
-        String smartModel = editSmartModel.getText().toString();
-        String smartDeviceId = editSmartDeviceId.getText().toString();
-
-         class PatientProfile {
-            private String height;
-            private String weight;
-            private String heart;
-            private String normalOVS;
-            private String threshold;
-            private String smartDetails;
-            private String smartModel;
-            private String smartDeviceId;
-
-            // Construtor vazio necessário para Firestore
-            public PatientProfile() {
-            }
-            public PatientProfile(String height, String weight, String heart, String normalOVS, String threshold, String smartDetails, String smartModel, String smartDeviceId) {
-                this.height = height;
-                this.weight = weight;
-                this.heart = heart;
-                this.normalOVS = normalOVS;
-                this.threshold = threshold;
-                this.smartDetails = smartDetails;
-                this.smartModel = smartModel;
-                this.smartDeviceId = smartDeviceId;
-            }
-
-            // Getters e Setters
-            public String getHeight() { return height; }
-            public void setHeight(String height) { this.height = height; }
-            public String getWeight() { return weight; }
-            public void setWeight(String weight) { this.weight = weight; }
-            public String getHeart() { return heart; }
-            public void setHeart(String heart) { this.heart = heart; }
-            public String getNormalOVS() { return normalOVS; }
-            public void setNormalOVS(String normalOVS) { this.normalOVS = normalOVS; }
-            public String getThreshold() { return threshold; }
-            public void setThreshold(String threshold) { this.threshold = threshold; }
-            public String getSmartDetails() { return smartDetails; }
-            public void setSmartDetails(String smartDetails) { this.smartDetails = smartDetails; }
-            public String getSmartModel() { return smartModel; }
-            public void setSmartModel(String smartModel) { this.smartModel = smartModel; }
-            public String getSmartDeviceId() { return smartDeviceId; }
-            public void setSmartDeviceId(String smartDeviceId) { this.smartDeviceId = smartDeviceId; }
-        }
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             String userId = user.getUid();
-            PatientProfile profile = new PatientProfile(height, weight, heart, normalOVS, threshold, smartDetails, smartModel, smartDeviceId);
-            if ("Create".equals(buttonMode)) {
-                // Create new patient profile
-                db.collection("patient_profiles").document(userId).set(profile)
-                        .addOnSuccessListener(aVoid -> Toast.makeText(Create_Update_PProfile.this, "Profile created successfully!", Toast.LENGTH_SHORT).show())
-                        .addOnFailureListener(e -> Toast.makeText(Create_Update_PProfile.this, "Error creating profile: " + e.getMessage(), Toast.LENGTH_LONG).show());
+            Map<String, Object> updates = new HashMap<>();
+
+            // Verificar cada campo e adicionar ao mapa de updates apenas se não estiver vazio
+            updateField(updates, "height", ((EditText) findViewById(R.id.Patient_Hight)).getText().toString());
+            updateField(updates, "weight", ((EditText) findViewById(R.id.Patient_weight)).getText().toString());
+            updateField(updates, "heart", ((EditText) findViewById(R.id.Patient_heart)).getText().toString());
+            updateField(updates, "normalOVS", ((EditText) findViewById(R.id.Normal_OVS)).getText().toString());
+            updateField(updates, "threshold", ((EditText) findViewById(R.id.Treshold)).getText().toString());
+            updateField(updates, "smartDetails", ((EditText) findViewById(R.id.Smart_details)).getText().toString());
+            updateField(updates, "smartModel", ((EditText) findViewById(R.id.Smart_model)).getText().toString());
+            updateField(updates, "smartDeviceId", ((EditText) findViewById(R.id.Smart_DEVIDEID)).getText().toString());
+
+            if (!updates.isEmpty()) {
+                // Atualizar o documento com apenas os campos que mudaram
+                db.collection("patient_profiles").document(userId).update(updates)
+                        .addOnSuccessListener(aVoid -> Toast.makeText(Create_Update_PProfile.this, "Perfil atualizado com sucesso!", Toast.LENGTH_SHORT).show())
+                        .addOnFailureListener(e -> Toast.makeText(Create_Update_PProfile.this, "Erro ao atualizar perfil: " + e.getMessage(), Toast.LENGTH_LONG).show());
             } else {
-                // Update existing patient profile
-                db.collection("patient_profiles").document(userId).update(
-                                "height", height,
-                                "weight", weight,
-                                "heart", heart,
-                                "normalOVS", normalOVS,
-                                "threshold", threshold,
-                                "smartDetails", smartDetails,
-                                "smartModel", smartModel,
-                                "smartDeviceId", smartDeviceId)
-                        .addOnSuccessListener(aVoid -> Toast.makeText(Create_Update_PProfile.this, "Profile updated successfully.!", Toast.LENGTH_SHORT).show())
-                        .addOnFailureListener(e -> Toast.makeText(Create_Update_PProfile.this, "Error updating default Android profile: " + e.getMessage(), Toast.LENGTH_LONG).show());
+                Toast.makeText(this, "Nenhuma alteração detectada.", Toast.LENGTH_SHORT).show();
             }
         }
     }
-}
 
+    private void updateField(Map<String, Object> updates, String fieldKey, String fieldValue) {
+        if (fieldValue != null && !fieldValue.isEmpty()) {
+            updates.put(fieldKey, fieldValue);
+        }
+    }
+}
