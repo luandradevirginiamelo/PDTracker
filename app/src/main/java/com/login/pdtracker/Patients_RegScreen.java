@@ -102,7 +102,7 @@ public class Patients_RegScreen extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 String mobile = s.toString();
                 if (mobile.length() < 10 || !isValidIrishPrefix(mobile.substring(0, 10))) {
-                   // "Invalid Irish mobile number format informe 083, 085, 086, 087, or 089"
+                    // "Invalid Irish mobile number format informe 083, 085, 086, 087, or 089"
                     isMobileValid = false;
                 } else {
                     isMobileValid = true;
@@ -387,7 +387,7 @@ public class Patients_RegScreen extends AppCompatActivity {
             }
         };
 
-           edit_email.addTextChangedListener(new TextWatcher() {
+        edit_email.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -409,4 +409,3 @@ public class Patients_RegScreen extends AppCompatActivity {
         return email.matches(emailRegex);
     }
 }
-
