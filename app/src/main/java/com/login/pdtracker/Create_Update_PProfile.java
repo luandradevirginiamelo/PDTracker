@@ -2,6 +2,7 @@ package com.login.pdtracker;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -9,13 +10,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import java.util.Map;
-import java.util.HashMap;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.HashMap;
+import java.util.Map;
 
 public class Create_Update_PProfile extends AppCompatActivity {
 
@@ -26,33 +27,28 @@ public class Create_Update_PProfile extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_update_patient_profile);
-
-        // Initialize Firebase Firestore
         db = FirebaseFirestore.getInstance();
 
-        // Set up Edge to Edge
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        // Determine mode from intent
         buttonMode = getIntent().getStringExtra("mode");
+        Log.d("ProfileMode", "Current mode: " + buttonMode);
         if ("Create".equals(buttonMode)) {
             setCreateMode();
         } else {
-            setUpdateMode();  // You need to implement this method to set up the UI for updating
+            setUpdateMode();
         }
 
-        // Set up the back to dashboard button
         findViewById(R.id.bt_bdb).setOnClickListener(v -> {
             Intent intent = new Intent(Create_Update_PProfile.this, Patients_Home.class);
             startActivity(intent);
             finish();
         });
 
-        // Set up the save button
         findViewById(R.id.bt_save).setOnClickListener(v -> saveOrUpdatePatientProfile());
     }
 
@@ -60,76 +56,204 @@ public class Create_Update_PProfile extends AppCompatActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             String userId = user.getUid();
-            // Buscar o documento do perfil do paciente
             db.collection("patient_profiles").document(userId).get().addOnCompleteListener(task -> {
                 if (task.isSuccessful() && task.getResult() != null) {
                     DocumentSnapshot document = task.getResult();
-                    // Configurar os campos com os dados existentes
-                    ((EditText) findViewById(R.id.Patient_Hight)).setText(document.getString("height"));
-                    ((EditText) findViewById(R.id.Patient_weight)).setText(document.getString("weight"));
-                    ((EditText) findViewById(R.id.Patient_heart)).setText(document.getString("heart"));
-                    ((EditText) findViewById(R.id.Normal_OVS)).setText(document.getString("normalOVS"));
-                    ((EditText) findViewById(R.id.Treshold)).setText(document.getString("threshold"));
-                    ((EditText) findViewById(R.id.Smart_details)).setText(document.getString("smartDetails"));
-                    ((EditText) findViewById(R.id.Smart_model)).setText(document.getString("smartModel"));
-                    ((EditText) findViewById(R.id.Smart_DEVIDEID)).setText(document.getString("smartDeviceId"));
+                    populateFields(document);
                 } else {
-                    Toast.makeText(Create_Update_PProfile.this, "Erro ao carregar dados: " + (task.getException() != null ? task.getException().getMessage() : "Desconhecido"), Toast.LENGTH_LONG).show();
+                    Log.e("FirestoreError", "Error loading document", task.getException());
+                    Toast.makeText(this, "Erro ao carregar dados: " + (task.getException() != null ? task.getException().getMessage() : "Desconhecido"), Toast.LENGTH_LONG).show();
                 }
             });
         }
     }
 
+    private void populateFields(DocumentSnapshot document) {
+        ((EditText) findViewById(R.id.Patient_Hight)).setText(document.getString("height"));
+        ((EditText) findViewById(R.id.Patient_weight)).setText(document.getString("weight"));
+        ((EditText) findViewById(R.id.Patient_heart)).setText(document.getString("heart"));
+        ((EditText) findViewById(R.id.threshold_hr)).setText(document.getString("threshold heart"));
+        ((EditText) findViewById(R.id.Nbloodpre)).setText(document.getString("normal blood pressure"));
+        ((EditText) findViewById(R.id.threshold_bloodpre)).setText(document.getString("threshold blood pressure"));
+        ((EditText) findViewById(R.id.Smartw_ID)).setText(document.getString("smartID"));
+        ((EditText) findViewById(R.id.Smart_name)).setText(document.getString("smartname"));
+        ((EditText) findViewById(R.id.Smartwatch_model)).setText(document.getString("smartDevicemodel"));
+    }
+
     private void setCreateMode() {
         buttonMode = "Create";
-        // Show all EditText fields
-        // Note: Ensure that these IDs correspond to your layout
-        findViewById(R.id.Patient_Hight).setVisibility(View.VISIBLE);
-        findViewById(R.id.Patient_weight).setVisibility(View.VISIBLE);
-        findViewById(R.id.Patient_heart).setVisibility(View.VISIBLE);
-        findViewById(R.id.Normal_OVS).setVisibility(View.VISIBLE);
-        findViewById(R.id.Treshold).setVisibility(View.VISIBLE);
-        findViewById(R.id.Smart_details).setVisibility(View.VISIBLE);
-        findViewById(R.id.Smart_model).setVisibility(View.VISIBLE);
-        findViewById(R.id.Smart_DEVIDEID).setVisibility(View.VISIBLE);
+        clearFields();
+    }
 
-        // Hide all update buttons
-        // Note: Adjust these IDs based on your actual UI elements
-        findViewById(R.id.Update).setVisibility(View.GONE);
-        findViewById(R.id.Update2).setVisibility(View.GONE);
-        findViewById(R.id.Update3).setVisibility(View.GONE);
-        findViewById(R.id.Update4).setVisibility(View.GONE);
-        findViewById(R.id.Update5).setVisibility(View.GONE);
-        findViewById(R.id.Update6).setVisibility(View.GONE);
-        findViewById(R.id.Update7).setVisibility(View.GONE);
-        findViewById(R.id.Update8).setVisibility(View.GONE);
+    private void clearFields() {
+        ((EditText) findViewById(R.id.Patient_Hight)).setText("");
+        ((EditText) findViewById(R.id.Patient_weight)).setText("");
+        ((EditText) findViewById(R.id.Patient_heart)).setText("");
+        ((EditText) findViewById(R.id.threshold_hr)).setText("");
+        ((EditText) findViewById(R.id.Nbloodpre)).setText("");
+        ((EditText) findViewById(R.id.threshold_bloodpre)).setText("");
+        ((EditText) findViewById(R.id.Smartw_ID)).setText("");
+        ((EditText) findViewById(R.id.Smart_name)).setText("");
+        ((EditText) findViewById(R.id.Smartwatch_model)).setText("");
     }
 
     private void saveOrUpdatePatientProfile() {
+        // Validate weight
+        if (!validatePatientWeight()) {
+            Toast.makeText(this, "Please correct the weight value.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Validate heart rate
+        if (!validateHeartRate()) {
+            Toast.makeText(this, "Please correct the heart rate value.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (!validateThresholdHeartRate()) {
+            Toast.makeText(this, "Please correct the Threshold heart value.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (!validateNormalBloodPressure()) {
+            Toast.makeText(this, "Please correct the Normal Blood Pressure value.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (!validateThresholdBloodPressure()) {
+            Toast.makeText(this, "Threshold Blood Pressure.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             String userId = user.getUid();
             Map<String, Object> updates = new HashMap<>();
+            collectFieldData(updates);
 
-            // Verificar cada campo e adicionar ao mapa de updates apenas se não estiver vazio
-            updateField(updates, "height", ((EditText) findViewById(R.id.Patient_Hight)).getText().toString());
-            updateField(updates, "weight", ((EditText) findViewById(R.id.Patient_weight)).getText().toString());
-            updateField(updates, "heart", ((EditText) findViewById(R.id.Patient_heart)).getText().toString());
-            updateField(updates, "normalOVS", ((EditText) findViewById(R.id.Normal_OVS)).getText().toString());
-            updateField(updates, "threshold", ((EditText) findViewById(R.id.Treshold)).getText().toString());
-            updateField(updates, "smartDetails", ((EditText) findViewById(R.id.Smart_details)).getText().toString());
-            updateField(updates, "smartModel", ((EditText) findViewById(R.id.Smart_model)).getText().toString());
-            updateField(updates, "smartDeviceId", ((EditText) findViewById(R.id.Smart_DEVIDEID)).getText().toString());
-
-            if (!updates.isEmpty()) {
-                // Atualizar o documento com apenas os campos que mudaram
+            if ("Create".equals(buttonMode) && !updates.isEmpty()) {
+                db.collection("patient_profiles").document(userId).set(updates)
+                        .addOnSuccessListener(aVoid -> {
+                            Log.d("ProfileCreation", "Profile created successfully");
+                            Toast.makeText(this, "Profile created successfully!", Toast.LENGTH_SHORT).show();
+                        })
+                        .addOnFailureListener(e -> {
+                            Log.e("FirestoreError", "Error creating profile", e);
+                            Toast.makeText(this, "Error creating profile: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                        });
+            } else if (!updates.isEmpty()) {
                 db.collection("patient_profiles").document(userId).update(updates)
-                        .addOnSuccessListener(aVoid -> Toast.makeText(Create_Update_PProfile.this, "Perfil atualizado com sucesso!", Toast.LENGTH_SHORT).show())
-                        .addOnFailureListener(e -> Toast.makeText(Create_Update_PProfile.this, "Erro ao atualizar perfil: " + e.getMessage(), Toast.LENGTH_LONG).show());
+                        .addOnSuccessListener(aVoid -> {
+                            Log.d("ProfileUpdate", "Profile updated successfully");
+                            Toast.makeText(this, "Profile updated successfully!", Toast.LENGTH_SHORT).show();
+                        })
+                        .addOnFailureListener(e -> {
+                            Log.e("FirestoreError", "Error updating profile", e);
+                            Toast.makeText(this, "Error updating profile: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                        });
             } else {
-                Toast.makeText(this, "Nenhuma alteração detectada.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "No alteration detected.", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(this, "User not found, try login again.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private boolean validatePatientWeight() {
+        EditText weightEditText = findViewById(R.id.Patient_weight);
+        String weightStr = weightEditText.getText().toString();
+        if (!weightStr.isEmpty()) {
+            try {
+                double weight = Double.parseDouble(weightStr);
+                if (weight < 40.0 || weight > 150.0) {
+                    weightEditText.setError("Weight must be between 40kg and 150kg");
+                    return false;
+                }
+            } catch (NumberFormatException e) {
+                weightEditText.setError("Invalid number");
+                return false;
             }
         }
+        return true;
+    }
+    private boolean validateHeartRate() {
+        EditText heartRateEditText = findViewById(R.id.Patient_heart);
+        String heartRateStr = heartRateEditText.getText().toString();
+        if (!heartRateStr.isEmpty()) {
+            try {
+                int heartRate = Integer.parseInt(heartRateStr);
+                if (heartRate < 60 || heartRate > 100) {
+                    heartRateEditText.setError("Heart rate must be between 60 and 100 bpm");
+                    return false;
+                }
+            } catch (NumberFormatException e) {
+                heartRateEditText.setError("Invalid number");
+                return false;
+            }
+        }
+        return true;
+    }
+    private boolean validateThresholdHeartRate() {
+        EditText thresholdHrEditText = findViewById(R.id.threshold_hr);
+        String thresholdHrStr = thresholdHrEditText.getText().toString();
+        if (!thresholdHrStr.isEmpty()) {
+            try {
+                int thresholdHr = Integer.parseInt(thresholdHrStr);
+                if (thresholdHr < 180) {
+                    thresholdHrEditText.setError("Threshould heart exceed 180 bpm");
+                    return false;
+                }
+            } catch (NumberFormatException e) {
+                thresholdHrEditText.setError("Invalid number");
+                return false;
+            }
+        }
+        return true;
+    }
+    private boolean validateNormalBloodPressure() {
+        EditText nbpEditText = findViewById(R.id.Nbloodpre);
+        String nbpStr = nbpEditText.getText().toString();
+        if (!nbpStr.isEmpty()) {
+            try {
+                int nbp = Integer.parseInt(nbpStr);
+                if (nbp >= 130) {
+                    nbpEditText.setError("Normal BP must be less than 130 mm Hg");
+                    return false;
+                }
+            } catch (NumberFormatException e) {
+                nbpEditText.setError("Invalid number");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean validateThresholdBloodPressure() {
+        EditText tbpEditText = findViewById(R.id.threshold_bloodpre);
+        String tbpStr = tbpEditText.getText().toString();
+        if (!tbpStr.isEmpty()) {
+            try {
+                int tbp = Integer.parseInt(tbpStr);
+                if (tbp < 130 || tbp > 139) {
+                    tbpEditText.setError("Threshold BP must be between 130 and 139 mm Hg");
+                    return false;
+                }
+            } catch (NumberFormatException e) {
+                tbpEditText.setError("Invalid number");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void collectFieldData(Map<String, Object> updates) {
+        updateField(updates, "height", ((EditText) findViewById(R.id.Patient_Hight)).getText().toString());
+        updateField(updates, "weight", ((EditText) findViewById(R.id.Patient_weight)).getText().toString());
+        updateField(updates, "heart", ((EditText) findViewById(R.id.Patient_heart)).getText().toString());
+        updateField(updates, "threshold heart", ((EditText) findViewById(R.id.threshold_hr)).getText().toString());
+        updateField(updates, "normal blood pressure", ((EditText) findViewById(R.id.Nbloodpre)).getText().toString());
+        updateField(updates, "threshold blood pressure", ((EditText) findViewById(R.id.threshold_bloodpre)).getText().toString());
+        updateField(updates, "smartID", ((EditText) findViewById(R.id.Smartw_ID)).getText().toString());
+        updateField(updates, "smartname", ((EditText) findViewById(R.id.Smart_name)).getText().toString());
+        updateField(updates, "smartDevicemodel", ((EditText) findViewById(R.id.Smartwatch_model)).getText().toString());
     }
 
     private void updateField(Map<String, Object> updates, String fieldKey, String fieldValue) {

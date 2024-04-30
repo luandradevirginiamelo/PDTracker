@@ -22,7 +22,7 @@
         android:id="@+id/title_Create_Update_Patient_Profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="60dp"
         android:text="@string/title_CUPP"
         android:textColor="@color/white"
         android:textSize="20sp"
@@ -31,24 +31,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/bt_CPP"
-        style="@style/Button2"
-        android:text="Create Patient Profile"
-        android:layout_marginTop="15dp"
-        app:layout_constraintTop_toBottomOf="@id/title_Create_Update_Patient_Profile"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        />
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/bt_UPP"
-        style="@style/Button2"
-        android:text="Update Patient Profile"
-        android:layout_marginTop="10dp"
-        app:layout_constraintTop_toBottomOf="@id/bt_CPP"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        />
+
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/bt_save"
         style="@style/Button2"
@@ -76,189 +59,165 @@
         android:id="@+id/ContainerComponents"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        app:layout_constraintTop_toBottomOf="@id/bt_UPP"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/title_Create_Update_Patient_Profile"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
 
+        <EditText
+            android:id="@+id/Patient_Hight"
+            style="@style/Edit_Text2"
+            android:layout_width="280dp"
+            android:layout_height="40dp"
+            android:hint="Patient Hight (cm):"
+            android:inputType="text"
+            android:visibility="visible"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="2dp" />
 
-    <EditText
-        android:id="@+id/Patient_Hight"
-        style="@style/Edit_Text2"
-        android:layout_width="150dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="150dp"
-        android:visibility="visible"
-        android:hint="Pat..Hight (cm):"
-        android:inputType="text"
-        />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Patient Hight (cm):"
+            android:textSize="14sp"
+            app:layout_constraintTop_toBottomOf="@id/Patient_Hight"
+            app:layout_constraintStart_toStartOf="@id/Patient_Hight" />
 
-
-        <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/Update"
-        style="@style/Button3"
-        android:layout_width="150dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="24dp"
-        android:hint="Update"
-        android:inputType="text"
-        app:layout_constraintStart_toEndOf="@id/Patient_Hight"
-        app:layout_constraintTop_toTopOf="@+id/Patient_Hight" />
 
         <EditText
             android:id="@+id/Patient_weight"
             style="@style/Edit_Text2"
-            android:layout_width="150dp"
+            android:layout_width="280dp"
             android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:hint="Pat..Weight (kg):"
-            android:inputType="text"
+            android:layout_marginTop="18dp"
+            android:hint="Patient Weight (kg):"
+            android:inputType="numberDecimal"
             app:layout_constraintStart_toStartOf="@id/Patient_Hight"
             app:layout_constraintTop_toBottomOf="@id/Patient_Hight" />
 
-        <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/Update2"
-        style="@style/Button3"
-        android:layout_width="150dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="10dp"
-        android:hint="Update"
-        android:inputType="text"
-        app:layout_constraintStart_toStartOf="@+id/Update"
-        app:layout_constraintTop_toBottomOf="@+id/Update" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Weight must be between 40kg and 150kg"
+            android:textSize="14sp"
+            app:layout_constraintTop_toBottomOf="@id/Patient_weight"
+            app:layout_constraintStart_toStartOf="@id/Patient_weight" />
+
+        <EditText
+            android:id="@+id/Patient_heart"
+            style="@style/Edit_Text2"
+            android:layout_width="280dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="18dp"
+            android:hint="Normal Heart Rate(bpm)"
+            android:inputType="number"
+            app:layout_constraintStart_toStartOf="@+id/Patient_weight"
+            app:layout_constraintTop_toBottomOf="@+id/Patient_weight" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Heart Rate ranges from 60-100 at rest"
+            android:textSize="14sp"
+            app:layout_constraintTop_toBottomOf="@id/Patient_heart"
+            app:layout_constraintStart_toStartOf="@id/Patient_heart" />
+
+
+        <EditText
+            android:id="@+id/threshold_hr"
+            style="@style/Edit_Text2"
+            android:layout_width="280dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="18dp"
+            android:hint="Threshold Heart Rate (bpm)"
+            android:inputType="number"
+            app:layout_constraintStart_toStartOf="@+id/Patient_heart"
+            app:layout_constraintTop_toBottomOf="@+id/Patient_heart" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Threshould Rate ranges more than 180"
+            android:textSize="14sp"
+            app:layout_constraintTop_toBottomOf="@id/threshold_hr"
+            app:layout_constraintStart_toStartOf="@id/threshold_hr" />
+
+
+        <EditText
+            android:id="@+id/Nbloodpre"
+            style="@style/Edit_Text2"
+            android:layout_width="280dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="18dp"
+            android:hint="Normal Blood Pressure"
+            android:inputType="number"
+            app:layout_constraintStart_toStartOf="@+id/threshold_hr"
+            app:layout_constraintTop_toBottomOf="@+id/threshold_hr" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Normal Blood pressure (less than 130 mm Hg)"
+            android:textSize="14sp"
+            app:layout_constraintTop_toBottomOf="@id/Nbloodpre"
+            app:layout_constraintStart_toStartOf="@id/Nbloodpre" />
+
+
+        <EditText
+            android:id="@+id/threshold_bloodpre"
+            style="@style/Edit_Text2"
+            android:layout_width="280dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="18dp"
+            android:hint="Threshold Blood Pressure"
+            android:inputType="number"
+            app:layout_constraintStart_toStartOf="@+id/Nbloodpre"
+            app:layout_constraintTop_toBottomOf="@+id/Nbloodpre" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Threshold Blood pressure high/130-139 mm Hg"
+            android:textSize="14sp"
+            app:layout_constraintTop_toBottomOf="@id/threshold_bloodpre"
+            app:layout_constraintStart_toStartOf="@id/threshold_bloodpre" />
+
+
 
     <EditText
-        android:id="@+id/Patient_heart"
+        android:id="@+id/Smartw_ID"
         style="@style/Edit_Text2"
-        android:layout_width="150dp"
+        android:layout_width="280dp"
         android:layout_height="40dp"
-        android:layout_marginTop="10dp"
-        android:hint="heart role(bpm)"
+        android:layout_marginTop="18dp"
+        android:hint="SmartWatch ID"
         android:inputType="text"
-        app:layout_constraintStart_toStartOf="@+id/Patient_weight"
-        app:layout_constraintTop_toBottomOf="@+id/Patient_weight" />
+        app:layout_constraintStart_toStartOf="@+id/threshold_bloodpre"
+        app:layout_constraintTop_toBottomOf="@+id/threshold_bloodpre" />
 
-        <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/Update3"
-        style="@style/Button3"
-        android:layout_width="150dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="10dp"
-        android:hint="Update"
-        android:inputType="text"
-        app:layout_constraintStart_toStartOf="@+id/Update2"
-        app:layout_constraintTop_toBottomOf="@+id/Update2" />
+
+
+        <EditText
+            android:id="@+id/Smart_name"
+            style="@style/Edit_Text2"
+            android:layout_width="280dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:hint="SmartWatch Name"
+            android:inputType="text"
+            app:layout_constraintStart_toStartOf="@+id/Smartw_ID"
+            app:layout_constraintTop_toBottomOf="@+id/Smartw_ID" />
 
     <EditText
-        android:id="@+id/Normal_OVS"
+        android:id="@+id/Smartwatch_model"
         style="@style/Edit_Text2"
-        android:layout_width="150dp"
+        android:layout_width="280dp"
         android:layout_height="40dp"
         android:layout_marginTop="10dp"
-        android:hint="Normal Vital Signs"
+        android:hint="SmartWatch Model"
         android:inputType="text"
-        app:layout_constraintStart_toStartOf="@+id/Patient_heart"
-        app:layout_constraintTop_toBottomOf="@+id/Patient_heart" />
+        app:layout_constraintStart_toStartOf="@+id/Smart_name"
+        app:layout_constraintTop_toBottomOf="@+id/Smart_name" />
 
-        <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/Update4"
-        style="@style/Button3"
-        android:layout_width="150dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="10dp"
-        android:hint="Update"
-        android:inputType="text"
-        app:layout_constraintStart_toStartOf="@+id/Update3"
-        app:layout_constraintTop_toBottomOf="@+id/Update3" />
 
-    <EditText
-        android:id="@+id/Treshold"
-        style="@style/Edit_Text2"
-        android:layout_width="150dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="10dp"
-        android:hint="Treshold V.. Signs"
-        android:inputType="text"
-        app:layout_constraintStart_toStartOf="@+id/Normal_OVS"
-        app:layout_constraintTop_toBottomOf="@+id/Normal_OVS" />
-
-        <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/Update5"
-        style="@style/Button3"
-        android:layout_width="150dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="10dp"
-        android:hint="Update"
-        android:inputType="text"
-        app:layout_constraintStart_toStartOf="@+id/Update4"
-        app:layout_constraintTop_toBottomOf="@+id/Update4" />
-
-    <EditText
-        android:id="@+id/Smart_details"
-        style="@style/Edit_Text2"
-        android:layout_width="150dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="10dp"
-        android:hint="SmartWatch Details"
-        android:inputType="text"
-        app:layout_constraintStart_toStartOf="@+id/Treshold"
-        app:layout_constraintTop_toBottomOf="@+id/Treshold" />
-
-        <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/Update6"
-        style="@style/Button3"
-        android:layout_width="150dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="10dp"
-        android:hint="Update"
-        android:inputType="text"
-        app:layout_constraintStart_toStartOf="@+id/Update5"
-        app:layout_constraintTop_toBottomOf="@+id/Update5" />
-
-    <EditText
-        android:id="@+id/Smart_model"
-        style="@style/Edit_Text2"
-        android:layout_width="150dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="10dp"
-        android:hint="Sm.Watch model"
-        android:inputType="text"
-        app:layout_constraintStart_toStartOf="@+id/Smart_details"
-        app:layout_constraintTop_toBottomOf="@+id/Smart_details" />
-
-        <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/Update7"
-        style="@style/Button3"
-        android:layout_width="150dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="10dp"
-        android:hint="Update"
-        android:inputType="text"
-        app:layout_constraintStart_toStartOf="@+id/Update6"
-        app:layout_constraintTop_toBottomOf="@+id/Update6" />
-
-    <EditText
-        android:id="@+id/Smart_DEVIDEID"
-        style="@style/Edit_Text2"
-        android:layout_width="150dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="10dp"
-        android:hint="Sm.Watch ID"
-        android:inputType="text"
-        app:layout_constraintStart_toStartOf="@+id/Smart_model"
-        app:layout_constraintTop_toBottomOf="@+id/Smart_model" />
-
-        <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/Update8"
-        style="@style/Button3"
-        android:layout_width="150dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="10dp"
-        android:hint="Update"
-        android:inputType="text"
-        app:layout_constraintStart_toStartOf="@+id/Update7"
-        app:layout_constraintTop_toBottomOf="@+id/Update7" />
 
 
 

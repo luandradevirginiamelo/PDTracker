@@ -2,6 +2,7 @@ package com.login.pdtracker;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -10,7 +11,6 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import android.util.Log;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -19,16 +19,15 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
-
 import javax.annotation.Nullable;
 
 public class Patients_Home extends AppCompatActivity {
 
     private TextView welcome_user;
     private ImageButton bt_logoutButton;
-    private AppCompatButton b2; // Reference to the update profile button
-    private AppCompatButton b4; // Reference to the button for viewing doctor's notifications
-    private AppCompatButton b3; // Reference to the button for daily data reading
+    private AppCompatButton b2; // Update profile button
+    private AppCompatButton b4; // Doctor's notifications button
+    private AppCompatButton b3; // Daily data reading button
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     String userID;
 
@@ -36,8 +35,6 @@ public class Patients_Home extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_patients_home);
-
-        // Configure edge-to-edge layout
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -46,10 +43,7 @@ public class Patients_Home extends AppCompatActivity {
 
         IniciarComponentes();
 
-        // Set click listener for the update profile button
         b2.setOnClickListener(v -> checkUserProfile());
-
-        // Set click listener for the logout button
         bt_logoutButton.setOnClickListener(v -> {
             FirebaseAuth.getInstance().signOut();
             Intent intent = new Intent(Patients_Home.this, Patient_LoginScreen.class);
@@ -57,7 +51,6 @@ public class Patients_Home extends AppCompatActivity {
             finish();
         });
 
-        // Set click listener for the doctor's notifications button
         b4.setOnClickListener(v -> {
             Intent intent = new Intent(Patients_Home.this, Abnormal_Conditions.class);
             startActivity(intent);
@@ -72,7 +65,6 @@ public class Patients_Home extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
             userID = currentUser.getUid();
@@ -87,7 +79,6 @@ public class Patients_Home extends AppCompatActivity {
                 }
             });
         } else {
-            // Redirect to login screen if no user is logged in
             Intent intent = new Intent(Patients_Home.this, Patient_LoginScreen.class);
             startActivity(intent);
             finish();
@@ -120,7 +111,7 @@ public class Patients_Home extends AppCompatActivity {
 
     private void openProfileActivity(String mode) {
         Intent intent = new Intent(Patients_Home.this, Create_Update_PProfile.class);
-        intent.putExtra("mode", mode);  // Pass the mode as extra
+        intent.putExtra("mode", mode);
         startActivity(intent);
     }
 }
