@@ -62,7 +62,7 @@ public class Patients_RegScreen extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (!isPasswordStrong(s.toString())) {
-                    edit_Password2.setError("For a strong password, use at least 8 characters, including both uppercase and lowercase letters, as well as special characters.");
+                    edit_Password2.setError("A strong password should be of minimum 8 characters in length, and a mixture of upper- and lower-case letters, digits, and special characters.");
                 } else {
                     edit_Password2.setError(null); // Clear error
                 }
@@ -138,7 +138,7 @@ public class Patients_RegScreen extends AppCompatActivity {
 
                 // Check for strong password
                 if (!isPasswordStrong(password)) {
-                    Snackbar.make(v, "A Strong Password should be minimum of 8 in length, containing a mixture of upper and lower case letters, and special characters.", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(v, "A strong password should be of minimum 8 characters in length, and a mixture of upper- and lower-case letters, digits, and special characters.", Snackbar.LENGTH_LONG).show();
                     return; // Stop execution if the password is not strong
                 }
 
@@ -191,7 +191,7 @@ public class Patients_RegScreen extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 String mobile = s.toString();
                 if (mobile.length() < 10 || !isValidIrishPrefix(mobile)) {
-                    edit_Mobile.setError("Invalid Irish mobile number format. Must be 10 digits and start with 083, 085, 086, 087, or 089");
+                    edit_Mobile.setError("A valid Irish mobile number should start with 083, 086, 087, 089, and be of total 10 digits in length.");
                     isMobileValid = false;
                 } else {
                     edit_Mobile.setError(null); // Clear error
@@ -380,7 +380,7 @@ public class Patients_RegScreen extends AppCompatActivity {
             public void run() {
                 String email = edit_email.getText().toString();
                 if (!isValidEmail(email)) {
-                    edit_email.setError("Invalid email address. Must be a valid domain like @gmail.com, @hotmail.com, etc.");
+                    edit_email.setError("Incorrect email address. A valid email should contain valid email domain, like gmail.com, hotmail.com, yahoo.com, etc., and has the @ sign before it.");
                 } else {
                     edit_email.setError(null); // Limpa o erro
                 }

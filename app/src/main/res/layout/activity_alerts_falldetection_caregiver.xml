@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Alerts_Falldetection_Caregiver">
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:src="@drawable/logo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+
+    <TextView
+        android:id="@+id/title_dailydata"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:text="Patient fall Detected"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/bt_bdb7"
+        style="@style/Buttoncaregiver"
+        android:text="Back to dashboard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/ContainerComponents"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ContainerComponents"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        app:layout_constraintTop_toBottomOf="@id/title_dailydata"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+
+
+        <TextView
+            android:id="@+id/patnameme"
+            android:textStyle="bold"
+            android:layout_width="250dp"
+            android:layout_height="40dp"
+            android:visibility="visible"
+            android:hint="Patient name:"
+            android:inputType="text" />
+
+
+        <TextView
+            android:id="@+id/currentheart_rateam"
+            android:textStyle="bold"
+            android:layout_width="250dp"
+            android:layout_height="40dp"
+            android:visibility="visible"
+            android:hint="Recording Heart Rate (a.m):"
+            android:inputType="text"
+            app:layout_constraintStart_toStartOf="@id/patnameme"
+            app:layout_constraintTop_toBottomOf="@id/patnameme" />
+
+
+        <TextView
+            android:id="@+id/currentheart_ratepm"
+            android:textStyle="bold"
+            android:layout_width="250dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:hint="Recording Heart Rate (p.m):"
+            android:inputType="text"
+            app:layout_constraintStart_toStartOf="@id/currentheart_rateam"
+            app:layout_constraintTop_toBottomOf="@id/currentheart_rateam" />
+
+
+        <TextView
+            android:id="@+id/abnormality_heart"
+            android:textStyle="bold"
+            android:layout_width="250dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:hint="Abnormality Heart rate detected (Y/N):"
+            android:inputType="text"
+            app:layout_constraintStart_toStartOf="@+id/currentheart_ratepm"
+            app:layout_constraintTop_toBottomOf="@+id/currentheart_ratepm" />
+
+
+        <TextView
+            android:id="@+id/blood_pnormal"
+            android:textStyle="bold"
+            android:layout_width="250dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp"
+            android:hint="Blood Pressure(a.m):"
+            android:inputType="text"
+            app:layout_constraintStart_toStartOf="@+id/abnormality_heart"
+            app:layout_constraintTop_toBottomOf="@+id/abnormality_heart" />
+
+
+        <TextView
+            android:id="@+id/bp_pm"
+            android:textStyle="bold"
+            android:layout_width="250dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="30dp"
+            android:hint="Blood Pressure(p.m):"
+            android:inputType="text"
+            app:layout_constraintStart_toStartOf="@+id/blood_pnormal"
+            app:layout_constraintTop_toBottomOf="@+id/blood_pnormal" />
+
+        <TextView
+            android:id="@+id/abnormality_bloodp"
+            android:textStyle="bold"
+            android:layout_width="250dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="30dp"
+            android:hint="Abnormality blood pressure detected (Y/N):"
+            android:inputType="text"
+            app:layout_constraintStart_toStartOf="@+id/bp_pm"
+            app:layout_constraintTop_toBottomOf="@+id/bp_pm" />
+
+        <TextView
+            android:id="@+id/gps"
+            android:textStyle="bold"
+            android:layout_width="250dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="30dp"
+            android:hint="Patient current GPS location:"
+            android:inputType="text"
+            app:layout_constraintStart_toStartOf="@+id/abnormality_bloodp"
+            app:layout_constraintTop_toBottomOf="@+id/abnormality_bloodp" />
+
+
+        <TextView
+            android:id="@+id/falldateandtime"
+            android:textStyle="bold"
+            android:layout_width="300dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="30dp"
+            android:hint="Detection fall date (mm;dd) (time:):"
+            android:inputType="text"
+            app:layout_constraintStart_toStartOf="@+id/gps"
+            app:layout_constraintTop_toBottomOf="@+id/gps" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

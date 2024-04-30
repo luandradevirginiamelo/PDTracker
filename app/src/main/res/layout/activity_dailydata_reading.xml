@@ -21,7 +21,7 @@
         android:id="@+id/title_dailydata"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="50dp"
         android:text="Daily data from smart watch"
         android:textColor="@color/black"
         android:textSize="20sp"
@@ -47,82 +47,91 @@
         android:id="@+id/ContainerComponents"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="60dp"
         app:layout_constraintTop_toBottomOf="@id/title_dailydata"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-
         <TextView
-            android:id="@+id/currentheart_rate"
+            android:id="@+id/currentheart_ratepm"
             android:textStyle="bold"
             android:layout_width="250dp"
             android:layout_height="40dp"
-            android:visibility="visible"
-            android:hint="Current Heart rate"
-            android:inputType="text"
-            />
+            android:layout_marginTop="10dp"
+            android:hint="Recording Heart Rate activity:"
+            android:inputType="text" />
 
 
         <TextView
-            android:id="@+id/Mood_rate"
+            android:id="@+id/abnormality_heart"
             android:textStyle="bold"
             android:layout_width="250dp"
             android:layout_height="40dp"
-            android:layout_marginTop="70dp"
-            android:hint="Mood rate"
+            android:layout_marginTop="10dp"
+            android:hint="Abnormality Heart rate detected (Y/N):"
             android:inputType="text"
-            app:layout_constraintStart_toStartOf="@id/currentheart_rate"
-            app:layout_constraintTop_toBottomOf="@id/currentheart_rate" />
+            app:layout_constraintStart_toStartOf="@+id/currentheart_ratepm"
+            app:layout_constraintTop_toBottomOf="@+id/currentheart_ratepm" />
 
 
         <TextView
-            android:id="@+id/Sleep_data"
+            android:id="@+id/blood_pnormal"
             android:textStyle="bold"
             android:layout_width="250dp"
             android:layout_height="40dp"
-            android:layout_marginTop="50dp"
-            android:hint="Sleep data"
+            android:layout_marginTop="20dp"
+            android:hint="Blood Pressure activity:"
             android:inputType="text"
-            app:layout_constraintStart_toStartOf="@+id/Mood_rate"
-            app:layout_constraintTop_toBottomOf="@+id/Mood_rate" />
+            app:layout_constraintStart_toStartOf="@+id/abnormality_heart"
+            app:layout_constraintTop_toBottomOf="@+id/abnormality_heart" />
+
 
 
         <TextView
-            android:id="@+id/Activity"
+            android:id="@+id/abnormality_bloodp"
             android:textStyle="bold"
             android:layout_width="250dp"
             android:layout_height="40dp"
-            android:layout_marginTop="50dp"
-            android:hint="Normal Vital Signs activity"
+            android:layout_marginTop="30dp"
+            android:hint="Oxygen saturation:"
             android:inputType="text"
-            app:layout_constraintStart_toStartOf="@+id/Sleep_data"
-            app:layout_constraintTop_toBottomOf="@+id/Sleep_data" />
+            app:layout_constraintStart_toStartOf="@+id/blood_pnormal"
+            app:layout_constraintTop_toBottomOf="@+id/blood_pnormal" />
+
+        <TextView
+            android:id="@+id/sleep"
+            android:textStyle="bold"
+            android:layout_width="250dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="30dp"
+            android:hint="Informations about sleep:"
+            android:inputType="text"
+            app:layout_constraintStart_toStartOf="@+id/abnormality_bloodp"
+            app:layout_constraintTop_toBottomOf="@+id/abnormality_bloodp" />
 
 
         <TextView
-            android:id="@+id/Treshold"
+            android:id="@+id/breathing"
             android:textStyle="bold"
             android:layout_width="250dp"
             android:layout_height="40dp"
-            android:layout_marginTop="50dp"
-            android:hint="Treshold Other Vital Sign"
+            android:layout_marginTop="30dp"
+            android:hint="Breathing(oxygen):"
             android:inputType="text"
-            app:layout_constraintStart_toStartOf="@+id/Activity"
-            app:layout_constraintTop_toBottomOf="@+id/Activity" />
+            app:layout_constraintStart_toStartOf="@+id/sleep"
+            app:layout_constraintTop_toBottomOf="@+id/sleep" />
 
 
         <TextView
-            android:id="@+id/Fall"
+            android:id="@+id/gps"
             android:textStyle="bold"
             android:layout_width="250dp"
             android:layout_height="40dp"
-            android:layout_marginTop="50dp"
-            android:hint="Fall detection"
+            android:layout_marginTop="30dp"
+            android:hint="gps Location:"
             android:inputType="text"
-            app:layout_constraintStart_toStartOf="@+id/Treshold"
-            app:layout_constraintTop_toBottomOf="@+id/Treshold" />
-
+            app:layout_constraintStart_toStartOf="@+id/breathing"
+            app:layout_constraintTop_toBottomOf="@+id/breathing" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

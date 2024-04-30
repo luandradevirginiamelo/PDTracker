@@ -25,7 +25,7 @@ public class Caregiver_Home extends AppCompatActivity {
 
     private TextView welcome_user;
     private ImageButton bt_logoutButton;
-    private AppCompatButton b2c; // Reference to the update profile button
+    private AppCompatButton b3c, b2c, b4; // Reference to the update profile button
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     String userID;
 
@@ -44,10 +44,24 @@ public class Caregiver_Home extends AppCompatActivity {
         IniciarComponentes();
 
         // Set click listener for the update profile button
+        b3c.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Caregiver_Home.this, Abnormal_Conditions_Caregiver.class);
+                startActivity(intent);
+            }
+        });
         b2c.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Caregiver_Home.this, Caregiver_Home.class);
+                Intent intent = new Intent(Caregiver_Home.this, Daily_data_reading_Caregiver.class);
+                startActivity(intent);
+            }
+        });
+        b4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Caregiver_Home.this, Alerts_Falldetection_Caregiver.class);
                 startActivity(intent);
             }
         });
@@ -92,6 +106,8 @@ public class Caregiver_Home extends AppCompatActivity {
     private void IniciarComponentes() {
         welcome_user = findViewById(R.id.welcome_user);
         bt_logoutButton = findViewById(R.id.bt_logoutButton);
-        b2c = findViewById(R.id.b2c); // Initialize the update profile button
+        b3c = findViewById(R.id.b3c); // Initialize the update profile button
+        b2c = findViewById(R.id.b2c);
+        b4 = findViewById(R.id.b4);
     }
 }

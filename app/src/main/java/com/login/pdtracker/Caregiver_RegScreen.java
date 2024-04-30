@@ -37,7 +37,7 @@ public class Caregiver_RegScreen extends AppCompatActivity {
     String[] errorMessages = {
             "Please complete all required fields to proceed.",
             "Registration Successful!",
-            "Invalid Irish mobile number format. It should start with 083, 085, 086, 087, or 089 and be 10 digits long."
+            "A valid Irish mobile number should start with 083, 086, 087, 089, and be of total 10 digits in length."
     };
 
     @Override
@@ -159,7 +159,7 @@ public class Caregiver_RegScreen extends AppCompatActivity {
             final Runnable emailValidationRunnable = () -> {
                 String email = caregiver_email.getText().toString();
                 if (!isValidEmail(email)) {
-                    caregiver_email.setError("Invalid email address. Must be a valid domain like @gmail.com, @hotmail.com, etc.");
+                    caregiver_email.setError("Incorrect email address. A valid email should contain valid email domain, like gmail.com, hotmail.com, yahoo.com, etc., and has the @ sign before it.");
                 } else {
                     caregiver_email.setError(null);
                 }
@@ -194,7 +194,7 @@ public class Caregiver_RegScreen extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (!isPasswordStrong(s.toString())) {
-                    caregiver_password2.setError("For a strong password, use at least 8 characters, including both uppercase and lowercase letters, as well as special characters.");
+                    caregiver_password2.setError("A strong password should be of minimum 8 characters in length, and a mixture of upper- and lower-case letters, digits, and special characters.");
                 } else {
                     caregiver_password2.setError(null);
                 }
@@ -242,7 +242,7 @@ public class Caregiver_RegScreen extends AppCompatActivity {
         }
 
         if (!isPasswordStrong(password)) {
-            Snackbar.make(v, "Password is not strong enough.", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(v, "A strong password should be of minimum 8 characters in length, and a mixture of upper- and lower-case letters, digits, and special characters.", Snackbar.LENGTH_LONG).show();
             return;
         }
 
