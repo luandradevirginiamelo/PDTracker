@@ -36,7 +36,6 @@ import java.util.Date;
 public class Patients_RegScreen extends AppCompatActivity {
     private EditText edit_name, edit_surname, edit_Mobile, edit_Patient_Doctors_Name, edit_Patient_Doctors_Surname, edit_Patient_Caregiver_Name, edit_DOB, edit_email, edit_Password2, edit_Re_type;
     private Button bt_register;
-    private TextView textViewError; // TextView for displaying error messages
 
     private TextView textViewError2;
     private boolean isMobileValid = false; // To track the validity of the mobile number
@@ -63,7 +62,7 @@ public class Patients_RegScreen extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (!isPasswordStrong(s.toString())) {
-                    edit_Password2.setError("A Strong Password should be a minimum of 8 characters in length, containing a mixture of upper and lower case letters, and special characters.");
+                    edit_Password2.setError("For a strong password, use at least 8 characters, including both uppercase and lowercase letters, as well as special characters.");
                 } else {
                     edit_Password2.setError(null); // Clear error
                 }
@@ -103,11 +102,9 @@ public class Patients_RegScreen extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 String mobile = s.toString();
                 if (mobile.length() < 10 || !isValidIrishPrefix(mobile.substring(0, 10))) {
-                    textViewError.setText(errorMessages[2]); // "Invalid Irish mobile number format informe 083, 085, 086, 087, or 089"
-                    textViewError.setVisibility(View.VISIBLE);
+                   // "Invalid Irish mobile number format informe 083, 085, 086, 087, or 089"
                     isMobileValid = false;
                 } else {
-                    textViewError.setVisibility(View.GONE);
                     isMobileValid = true;
                 }
             }
@@ -155,7 +152,6 @@ public class Patients_RegScreen extends AppCompatActivity {
 
                 // Check the validity of the mobile number
                 if (!isMobileValid) {
-                    Snackbar.make(v, errorMessages[2], Snackbar.LENGTH_LONG).show();
                     return;
                 }
 
@@ -309,11 +305,11 @@ public class Patients_RegScreen extends AppCompatActivity {
         edit_Re_type = findViewById(R.id.edit_Re_type);
         edit_DOB = findViewById(R.id.edit_DOB);
         bt_register = findViewById(R.id.bt_register);
-        textViewError = findViewById(R.id.textViewError);
         textViewError2 = findViewById(R.id.textViewError2);
 
         setupEmailValidation();
         setupDOBValidation();
+        setupMobileValidation();
     }
 
     private void setupDOBValidation() {
@@ -391,7 +387,7 @@ public class Patients_RegScreen extends AppCompatActivity {
             }
         };
 
-        edit_email.addTextChangedListener(new TextWatcher() {
+           edit_email.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }

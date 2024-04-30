@@ -27,5 +27,12 @@ public class Home_App extends AppCompatActivity {
             Intent intent = new Intent(Home_App.this, Patient_LoginScreen.class);
             startActivity(intent);
         });
+
+        Button caregiverButton = findViewById(R.id.b4C);
+        caregiverButton.setOnClickListener(v -> {
+            Intent intent = new Intent(Home_App.this, Caregiver_LoginScreen.class);
+            startActivity(intent);
+        });
     }
 }
+
