@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <!-- Background color for the spinner -->
+    <solid android:color="@android:color/transparent" />
+    <!-- Curved edges -->
+    <corners android:radius="8dp" />
+    <!-- Glass effect -->
+    <stroke
+        android:width="1dp"
+        android:color="#80FFFFFF" />
+    <!-- Add some padding -->
+    <padding
+        android:left="8dp"
+        android:right="8dp" />
+</shape>

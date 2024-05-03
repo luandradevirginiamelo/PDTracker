@@ -36,7 +36,8 @@ import java.util.Date;
 public class Patients_RegScreen extends AppCompatActivity {
     private EditText edit_name, edit_surname, edit_Mobile, edit_Patient_Doctors_Name, edit_Patient_Doctors_Surname, edit_Patient_Caregiver_Name, edit_DOB, edit_email, edit_Password2, edit_Re_type;
     private Button bt_register;
-    private TextView textViewError; // TextView for displaying error messages
+
+    private TextView textViewError2;
     private boolean isMobileValid = false; // To track the validity of the mobile number
 
     String[] errorMessages = {"Please complete all required fields to proceed", "Registration Successful!", "Invalid Irish mobile number format informe 083, 085, 086, 087, or 089"};
@@ -48,6 +49,7 @@ public class Patients_RegScreen extends AppCompatActivity {
 
         iniciarComponentes();
 
+        // TextWatcher for real-time password strength validation
         edit_Password2.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -60,9 +62,30 @@ public class Patients_RegScreen extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (!isPasswordStrong(s.toString())) {
-                    edit_Password2.setError("A Strong Password should be a minimum of 8 characters in length, containing a mixture of upper and lower case letters, and special characters.");
+                    edit_Password2.setError("A strong password should be of minimum 8 characters in length, and a mixture of upper- and lower-case letters, digits, and special characters.");
                 } else {
                     edit_Password2.setError(null); // Clear error
+                }
+            }
+        });
+
+        // TextWatcher for real-time retype password matching validation
+        edit_Re_type.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String password = edit_Password2.getText().toString();
+                if (!password.equals(s.toString())) {
+                    edit_Re_type.setError("Passwords do not match.");
+                } else {
+                    edit_Re_type.setError(null); // Clear error if they match
                 }
             }
         });
@@ -79,11 +102,9 @@ public class Patients_RegScreen extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 String mobile = s.toString();
                 if (mobile.length() < 10 || !isValidIrishPrefix(mobile.substring(0, 10))) {
-                    textViewError.setText(errorMessages[2]); // "Invalid Irish mobile number format informe 083, 085, 086, 087, or 089"
-                    textViewError.setVisibility(View.VISIBLE);
+                    // "Invalid Irish mobile number format informe 083, 085, 086, 087, or 089"
                     isMobileValid = false;
                 } else {
-                    textViewError.setVisibility(View.GONE);
                     isMobileValid = true;
                 }
             }
@@ -117,13 +138,20 @@ public class Patients_RegScreen extends AppCompatActivity {
 
                 // Check for strong password
                 if (!isPasswordStrong(password)) {
-                    Snackbar.make(v, "A Strong Password should be minimum of 8 in length, containing a mixture of upper and lower case letters, and special characters.", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(v, "A strong password should be of minimum 8 characters in length, and a mixture of upper- and lower-case letters, digits, and special characters.", Snackbar.LENGTH_LONG).show();
                     return; // Stop execution if the password is not strong
                 }
 
+                if (!isAgeValid(dobString)) {
+                    edit_DOB.setError("You must be at least 18 years old to register.");
+                    return; // Stop registration if not valid
+                } else {
+                    edit_DOB.setError(null); // Clear error if age is valid
+                }
+
+
                 // Check the validity of the mobile number
                 if (!isMobileValid) {
-                    Snackbar.make(v, errorMessages[2], Snackbar.LENGTH_LONG).show();
                     return;
                 }
 
@@ -163,7 +191,7 @@ public class Patients_RegScreen extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 String mobile = s.toString();
                 if (mobile.length() < 10 || !isValidIrishPrefix(mobile)) {
-                    edit_Mobile.setError("Invalid Irish mobile number format. Must be 10 digits and start with 083, 085, 086, 087, or 089");
+                    edit_Mobile.setError("A valid Irish mobile number should start with 083, 086, 087, 089, and be of total 10 digits in length.");
                     isMobileValid = false;
                 } else {
                     edit_Mobile.setError(null); // Clear error
@@ -191,46 +219,22 @@ public class Patients_RegScreen extends AppCompatActivity {
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                monthOfYear = monthOfYear + 1; // Ajustar o mês para base 1
-                String formattedDate = String.format(Locale.getDefault(), "%02d %02d, %d", monthOfYear, dayOfMonth, year);
+                monthOfYear = monthOfYear + 1; // Adjust month to 1-based index
+                String formattedDate = String.format(Locale.getDefault(), "%02d/%02d/%d", monthOfYear, dayOfMonth, year);
                 edit_DOB.setText(formattedDate);
+
+                // Check age right after the date is set
+                if (!isAgeValid(formattedDate)) {
+                    textViewError2.setText("You must be at least 18 years old to register.");
+                    textViewError2.setVisibility(View.VISIBLE);
+                } else {
+                    textViewError2.setVisibility(View.GONE);
+                }
             }
         }, year, month, day);
-
-
         datePickerDialog.show();
     }
-    private Date parseDate(String dateStr) {
-        SimpleDateFormat sdf = new SimpleDateFormat("MM dd, yyyy", Locale.getDefault());
-        try {
-            return sdf.parse(dateStr);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 
-    private int calculateAge(Date birthDate) {
-        Calendar birth = Calendar.getInstance();
-        birth.setTime(birthDate);
-        Calendar today = Calendar.getInstance();
-
-        int age = today.get(Calendar.YEAR) - birth.get(Calendar.YEAR);
-        if (today.get(Calendar.DAY_OF_YEAR) < birth.get(Calendar.DAY_OF_YEAR)) {
-            age--;
-        }
-
-        return age;
-    }
-
-    private boolean isAgeValid(String dobString) {
-        Date dob = parseDate(dobString);
-        if (dob == null) {
-            return false;
-        }
-        int age = calculateAge(dob);
-        return age >= 18 && age <= 110;
-    }
 
     private void cadastrarUsuario(View v, String email, String password) {
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -299,12 +303,73 @@ public class Patients_RegScreen extends AppCompatActivity {
         edit_email = findViewById(R.id.edit_email);
         edit_Password2 = findViewById(R.id.edit_Password2);
         edit_Re_type = findViewById(R.id.edit_Re_type);
-        edit_DOB = findViewById(R.id.edit_DOB); // Inicializar uma vez
+        edit_DOB = findViewById(R.id.edit_DOB);
         bt_register = findViewById(R.id.bt_register);
-        textViewError = findViewById(R.id.textViewError); // Confirmar que textViewError está vinculado corretamente no layout XML
+        textViewError2 = findViewById(R.id.textViewError2);
 
         setupEmailValidation();
+        setupDOBValidation();
+        setupMobileValidation();
+    }
 
+    private void setupDOBValidation() {
+        edit_DOB.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                edit_DOB.setError(null); // Clear any existing error message
+                validateDOB(s.toString()); // Validate new DOB immediately
+            }
+        });
+    }
+
+    private void validateDOB(String dob) {
+        if (!isAgeValid(dob)) {
+            edit_DOB.setError("You must be at least 18 years old to register.");
+            textViewError2.setText("You must be at least 18 years old to register.");
+            textViewError2.setVisibility(View.VISIBLE);
+        } else {
+            textViewError2.setVisibility(View.GONE);
+        }
+    }
+
+    private Date parseDate(String dateStr) {
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
+        try {
+            return sdf.parse(dateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private boolean isAgeValid(String dobString) {
+        Date dob = parseDate(dobString);
+        if (dob == null) {
+            return false;
+        }
+        int age = calculateAge(dob);
+        return age >= 18;
+    }
+
+    private int calculateAge(Date birthDate) {
+        Calendar birth = Calendar.getInstance();
+        birth.setTime(birthDate);
+        Calendar today = Calendar.getInstance();
+
+        int age = today.get(Calendar.YEAR) - birth.get(Calendar.YEAR);
+        if (today.get(Calendar.DAY_OF_YEAR) < birth.get(Calendar.DAY_OF_YEAR)) {
+            age--;
+        }
+
+        return age;
     }
 
 
@@ -315,7 +380,7 @@ public class Patients_RegScreen extends AppCompatActivity {
             public void run() {
                 String email = edit_email.getText().toString();
                 if (!isValidEmail(email)) {
-                    edit_email.setError("Invalid email address. Must be a valid domain like gmail.com, hotmail.com, etc.");
+                    edit_email.setError("Incorrect email address. A valid email should contain valid email domain, like gmail.com, hotmail.com, yahoo.com, etc., and has the @ sign before it.");
                 } else {
                     edit_email.setError(null); // Limpa o erro
                 }

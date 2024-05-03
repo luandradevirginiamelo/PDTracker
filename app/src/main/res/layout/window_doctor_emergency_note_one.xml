@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@drawable/background3"
+        android:elevation="8dp">
+
+        <EditText
+            android:id="@+id/SpecCondition"
+            style="@style/Edit_Text"
+            android:hint="Patient specific medical condition:"
+            android:padding="10dp"
+            android:inputType="text"/>
+
+        <EditText
+            android:id="@+id/Allergies"
+            style="@style/Edit_Text"
+            android:hint="Patient Allergies: "
+            android:padding="10dp"
+            android:inputType="text"
+            android:layout_marginTop="8dp"/>
+
+        <EditText
+            android:id="@+id/NextOfKin"
+            style="@style/Edit_Text"
+            android:hint="Patient Next of Kin Name + Surname:"
+            android:padding="10dp"
+            android:inputType="text"
+            android:layout_marginTop="8dp"/>
+
+        <TextView
+            android:id="@+id/textViewError"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FF0000"
+            android:visibility="gone"
+            android:layout_marginTop="8dp"/>
+
+        <EditText
+            android:id="@+id/NextOfKinMobile"
+            style="@style/Edit_Text"
+            android:hint="Patient Next of Kin Mobile"
+            android:padding="10dp"
+            android:maxLength="10"
+            android:inputType="number"
+            android:layout_marginTop="8dp"/>
+
+        <EditText
+            android:id="@+id/DoctorsNotes"
+            style="@style/Edit_Text"
+            android:hint="Doctor's Notes in Case of Emergency:"
+            android:padding="10dp"
+            android:inputType="text"
+            android:layout_marginTop="8dp"/>
+
+        <EditText
+            android:id="@+id/ParamedicsNumber"
+            style="@style/Edit_Text"
+            android:hint="Paramedics Mobile Number:"
+            android:padding="10dp"
+            android:maxLength="10"
+            android:inputType="number"
+            android:layout_marginTop="8dp"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button"
+            style="@style/Buttondoctor"
+            android:layout_width="299dp"
+            android:layout_marginTop="25dp"
+            android:layout_height="wrap_content"
+            android:text="Save and Close" />
+
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

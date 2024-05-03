@@ -14,6 +14,66 @@
         android:theme="@style/Theme.PDTracker"
         tools:targetApi="31">
         <activity
+            android:name=".Viewlist_ofpatientfalldetection"
+            android:exported="false" />
+        <activity
+            android:name=".window_contact_patient_caregiver_paramedics"
+            android:exported="false" />
+        <activity
+            android:name=".window_view_selected_alert_details"
+            android:exported="false" />
+        <activity
+            android:name=".send_doctors_note_to_paramedics"
+            android:exported="false" />
+        <activity
+            android:name=".ViewAbnormal_conditiondetected"
+            android:exported="false" />
+        <activity
+            android:name=".Doctor_Forgetpassword"
+            android:exported="false" />
+        <activity
+            android:name=".Doctors_View_Daily_Reads_By_Patient"
+            android:exported="false" />
+        <activity
+            android:name=".Doctors_View_Daily_Readings"
+            android:exported="false" />
+        <activity
+            android:name=".Doctors_Update_Note"
+            android:exported="false" />
+        <activity
+            android:name=".Doctors_Create_Note"
+            android:exported="false" />
+        <activity
+            android:name=".Doctor_Emergency_Notes"
+            android:exported="false" />
+        <activity
+            android:name=".Doctors_Dashboard_Screen"
+            android:exported="false" />
+        <activity
+            android:name=".Doctors_LoginScreen"
+            android:exported="false" />
+        <activity
+            android:name=".Alerts_Falldetection_Caregiver"
+            android:exported="false" />
+        <activity
+            android:name=".Daily_data_reading_Caregiver"
+            android:exported="false" />
+        <activity
+            android:name=".Abnormal_Conditions_Caregiver"
+            android:exported="false" />
+        <activity
+            android:name=".Caregiver_RegScreen"
+            android:exported="false" />
+        <activity
+            android:name=".Caregiver_ResetScreen"
+            android:exported="false" />
+        <activity
+            android:name=".Caregiver_LoginScreen"
+            android:exported="false" />
+        <activity
+            android:name=".Caregiver_Home"
+            android:exported="false" />
+        <activity
             android:name=".Dailydata_reading"
             android:exported="false" />
         <activity
