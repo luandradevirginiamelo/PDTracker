@@ -115,11 +115,11 @@ public class Create_Update_PProfile extends AppCompatActivity {
             return;
         }
         if (!validateNormalBloodPressure()) {
-            Toast.makeText(this, "Please correct the Normal Blood Pressure value.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please correct the Normal Blood Pressure value should be between 60-120.", Toast.LENGTH_SHORT).show();
             return;
         }
         if (!validateThresholdBloodPressure()) {
-            Toast.makeText(this, "Threshold Blood Pressure.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Threshold Blood Pressure should be between 40-200.", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -213,9 +213,16 @@ public class Create_Update_PProfile extends AppCompatActivity {
         String nbpStr = nbpEditText.getText().toString();
         if (!nbpStr.isEmpty()) {
             try {
-                int nbp = Integer.parseInt(nbpStr);
-                if (nbp >= 130) {
-                    nbpEditText.setError("Normal BP must be less than 130 mm Hg");
+                String[] nbpParts = nbpStr.split("-");
+                if (nbpParts.length == 2) {
+                    int nbpLow = Integer.parseInt(nbpParts[0]);
+                    int nbpHigh = Integer.parseInt(nbpParts[1]);
+                    if (nbpLow < 60 || nbpHigh > 120) {
+                        nbpEditText.setError("Normal Blood Pressure should be between 60-120.");
+                        return false;
+                    }
+                } else {
+                    nbpEditText.setError("Please enter the Normal Blood Pressure in the format XX-XXX.");
                     return false;
                 }
             } catch (NumberFormatException e) {
@@ -231,9 +238,16 @@ public class Create_Update_PProfile extends AppCompatActivity {
         String tbpStr = tbpEditText.getText().toString();
         if (!tbpStr.isEmpty()) {
             try {
-                int tbp = Integer.parseInt(tbpStr);
-                if (tbp < 130 || tbp > 139) {
-                    tbpEditText.setError("Threshold BP must be between 130 and 139 mm Hg");
+                String[] tbpParts = tbpStr.split("-");
+                if (tbpParts.length == 2) {
+                    int tbpLow = Integer.parseInt(tbpParts[0]);
+                    int tbpHigh = Integer.parseInt(tbpParts[1]);
+                    if (tbpLow < 40 || tbpHigh > 200) {
+                        tbpEditText.setError("Threshold Blood Pressure should be between 40-200.");
+                        return false;
+                    }
+                } else {
+                    tbpEditText.setError("Please enter the Threshold Blood Pressure in the format XX-XXX.");
                     return false;
                 }
             } catch (NumberFormatException e) {

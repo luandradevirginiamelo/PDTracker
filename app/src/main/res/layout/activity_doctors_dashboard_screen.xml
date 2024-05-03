@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background3"
+    tools:context=".Patients_RegScreen">
+
+    <ImageButton
+        android:id="@+id/bt_logoutButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/ic_logout"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_logout"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:layout_editor_absoluteX="347dp" />
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:src="@drawable/logo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/title_newuser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="192dp"
+        android:text="Doctor's Dashboard Screen"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/welcome_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title_newuser"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/b1" />
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        style="@style/Buttondoctor"
+        android:id="@+id/b1"
+        android:text="Create/Update Notes For Patients Emergency Situations"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/welcome_user"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+    <androidx.appcompat.widget.AppCompatButton
+        style="@style/Buttondoctor"
+        android:id="@+id/b2"
+        android:text="View Daily Data Readings from Patient's Smart Watch"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/b1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+    <androidx.appcompat.widget.AppCompatButton
+        style="@style/Buttondoctor"
+        android:id="@+id/b3"
+        android:text="View Patient's Abnormal Condition Alerts and Send Notification"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/b2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+    <androidx.appcompat.widget.AppCompatButton
+        style="@style/Buttondoctor"
+        android:id="@+id/b4"
+        android:text="View Patient's Fall Alerts and Send Notification With Emergency Note"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/b3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

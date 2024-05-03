@@ -150,13 +150,14 @@
             android:layout_height="40dp"
             android:layout_marginTop="18dp"
             android:hint="Normal Blood Pressure"
-            android:inputType="number"
+            android:inputType="text"
+            android:maxLength="10"
             app:layout_constraintStart_toStartOf="@+id/threshold_hr"
             app:layout_constraintTop_toBottomOf="@+id/threshold_hr" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Normal Blood pressure (less than 130 mm Hg)"
+            android:text="Normal Blood pressure (low/60)-(high/120)"
             android:textSize="14sp"
             app:layout_constraintTop_toBottomOf="@id/Nbloodpre"
             app:layout_constraintStart_toStartOf="@id/Nbloodpre" />
@@ -168,30 +169,30 @@
             android:layout_width="280dp"
             android:layout_height="40dp"
             android:layout_marginTop="18dp"
+            android:maxLength="10"
             android:hint="Threshold Blood Pressure"
-            android:inputType="number"
+            android:inputType="text"
             app:layout_constraintStart_toStartOf="@+id/Nbloodpre"
             app:layout_constraintTop_toBottomOf="@+id/Nbloodpre" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Threshold Blood pressure high/130-139 mm Hg"
+            android:text="Threshold Blood pressure (low/40)-(high/200)"
             android:textSize="14sp"
             app:layout_constraintTop_toBottomOf="@id/threshold_bloodpre"
             app:layout_constraintStart_toStartOf="@id/threshold_bloodpre" />
 
 
-
-    <EditText
-        android:id="@+id/Smartw_ID"
-        style="@style/Edit_Text2"
-        android:layout_width="280dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="18dp"
-        android:hint="SmartWatch ID"
-        android:inputType="text"
-        app:layout_constraintStart_toStartOf="@+id/threshold_bloodpre"
-        app:layout_constraintTop_toBottomOf="@+id/threshold_bloodpre" />
+        <EditText
+            android:id="@+id/Smartw_ID"
+            style="@style/Edit_Text2"
+            android:layout_width="280dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="18dp"
+            android:hint="SmartWatch ID"
+            android:inputType="text"
+            app:layout_constraintStart_toStartOf="@+id/threshold_bloodpre"
+            app:layout_constraintTop_toBottomOf="@+id/threshold_bloodpre" />
 
 
 

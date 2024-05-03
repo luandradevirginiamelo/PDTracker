@@ -28,6 +28,12 @@ public class Home_App extends AppCompatActivity {
             startActivity(intent);
         });
 
+        Button Buttondoctor = findViewById(R.id.b3D);
+        Buttondoctor.setOnClickListener(v -> {
+            Intent intent = new Intent(Home_App.this, Doctors_LoginScreen.class);
+            startActivity(intent);
+        });
+
         Button caregiverButton = findViewById(R.id.b4C);
         caregiverButton.setOnClickListener(v -> {
             Intent intent = new Intent(Home_App.this, Caregiver_LoginScreen.class);
