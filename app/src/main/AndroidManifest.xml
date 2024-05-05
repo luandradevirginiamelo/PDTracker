@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.login.pdtracker">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -14,6 +16,9 @@
         android:theme="@style/Theme.PDTracker"
         tools:targetApi="31">
         <activity
+            android:name=".send_doctors_note_to_paramedics"
+            android:exported="false" />
+        <activity
             android:name=".Viewlist_ofpatientfalldetection"
             android:exported="false" />
         <activity
@@ -21,9 +26,6 @@
             android:exported="false" />
         <activity
             android:name=".window_view_selected_alert_details"
-            android:exported="false" />
-        <activity
-            android:name=".send_doctors_note_to_paramedics"
             android:exported="false" />
         <activity
             android:name=".ViewAbnormal_conditiondetected"

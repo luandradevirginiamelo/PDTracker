@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".send_doctors_note_to_paramedics">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="#CCFFFFFF"
+        android:elevation="8dp"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/NameSurname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="string/NameSurname"
+            android:textColor="@color/Turquoise"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:id="@+id/AlertInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dear Paramedics Unit, this is an emergency alert call for required urgent assistance about a serious fall of my patient {Var PatNam + Var PatSurname }, of age {Var PatAge}, Mobile Number {Var PatMobile}, with fall vital signs recording of {Var PatOtherVitSigns},
+
+    (if Var PatHeartRate not null and Heart Rate Rate Reading {Var PatHeartRate})
+
+    at the moment of fall detect {Var DateDetected}, {Var TimeDetected}.
+
+    (If Var PatSpecificMedCon not Null Please, Note the patient has the following specific medical condition {Var PatSpecificMedCon})
+
+    (If Var PatAllergy not Null The Patient has the following Allergy {Var PatAllergy})
+
+    As patient's doctor, my notes in case in emergency are as follows: {LongVar EmergencyNotText}
+
+    Patient's Next of Kin Name and Mobile Number: {Var NextofKinNam}, {Var NextofKinMobile}
+
+    Patient's Caregiver Name and Mobile Number: {Var CareNam + VarCareSurnam}, {Var CareMobile}
+
+    Yours, Sincerely
+    Doctor {Var DocName + Var DocSurnam}, {Var DocMobile}
+
+    Date of Notification: { SysDate}
+    Time of Notification: { SysTime}
+    Dear Paramedics Unit, this is an emergency alert call for required urgent assistance about a serious fall of my patient {Var PatNam + Var PatSurname }, of age {Var PatAge}, Mobile Number {Var PatMobile}, with fall vital signs recording of {Var PatOtherVitSigns},
+
+    (if Var PatHeartRate not null and Heart Rate Rate Reading {Var PatHeartRate})
+
+    at the moment of fall detect {Var DateDetected}, {Var TimeDetected}.
+
+    (If Var PatSpecificMedCon not Null Please, Note the patient has the following specific medical condition {Var PatSpecificMedCon})
+
+    (If Var PatAllergy not Null The Patient has the following Allergy {Var PatAllergy})
+
+    As patient's doctor, my notes in case in emergency are as follows: {LongVar EmergencyNotText}
+
+    Patient's Next of Kin Name and Mobile Number: {Var NextofKinNam}, {Var NextofKinMobile}
+
+    Patient's Caregiver Name and Mobile Number: {Var CareNam + VarCareSurnam}, {Var CareMobile}
+
+    Yours, Sincerely
+    Doctor {Var DocName + Var DocSurnam}, {Var DocMobile}
+
+    Date of Notification: { SysDate}
+    Time of Notification: { SysTime}
+    "
+            android:textColor="@color/Turquoise"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/ViewAlerts"
+            style="@style/Button2"
+            android:layout_width="168dp"
+            android:layout_height="46dp"
+            android:text="Send Message"
+            android:layout_marginBottom="16dp" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
