@@ -27,9 +27,7 @@
         <activity
             android:name=".window_view_selected_alert_details"
             android:exported="false" />
-        <activity
-            android:name=".ViewAbnormal_conditiondetected"
-            android:exported="false" />
+
         <activity
             android:name=".Doctor_Forgetpassword"
             android:exported="false" />
@@ -42,6 +40,11 @@
         <activity
             android:name=".Doctors_Update_Note"
             android:exported="false" />
+
+        <activity
+            android:name=".Doctors_View_Abnormalities"
+            android:exported="false" />
+
         <activity
             android:name=".Doctors_Create_Note"
             android:exported="false" />

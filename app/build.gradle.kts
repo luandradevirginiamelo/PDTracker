@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "com.login.pdtracker"
-        minSdk = 21
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -39,6 +39,8 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore-ktx")
     implementation(platform("com.google.firebase:firebase-bom:32.8.1"))
     implementation ("com.google.android.material:material:1.4.0")
+
+
 
 
     // Outras dependências

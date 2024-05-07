@@ -48,12 +48,16 @@ public class Doctors_View_Daily_Readings extends AppCompatActivity {
         // Initialize spinner
         spinnerUsers = findViewById(R.id.spinner_users);
 
+
         AppCompatButton bt_view = findViewById(R.id.View);
         bt_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Start the next activity
+                // Get the selected user ID from the spinner
+                String selectedUserID = userIDs.get(spinnerUsers.getSelectedItemPosition());
+                // Start the next activity and pass the selected user ID
                 Intent intent = new Intent(Doctors_View_Daily_Readings.this, Doctors_View_Daily_Reads_By_Patient.class);
+                intent.putExtra("selectedUserID", selectedUserID);
                 startActivity(intent);
             }
         });
@@ -70,23 +74,58 @@ public class Doctors_View_Daily_Readings extends AppCompatActivity {
         });
 
         // Fetch users from Firestore where DoctorID matches logged doctor's documentID
-        getLoggedDoctorDocumentID(new Callback<String>() {
-            @Override
-            public void onSuccess(String doctorDocumentID) {
-                fetchUsers(doctorDocumentID);
-            }
-
-            @Override
-            public void onError(String message) {
-                // Handle errors
-                Log.e("Error", message);
-            }
-        });
+        fetchUsers();
     }
 
-    private void fetchUsers(String doctorDocumentID) {
+    private void fetchUsers() {
+        // Get the UID of the logged-in user
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            String doctorUID = currentUser.getUid();
+
+            // Query the Doctor collection to find the DoctorID where userAuthID == doctorUID
+            FirebaseFirestore.getInstance().collection("Doctor")
+                    .whereEqualTo("userAuthID", doctorUID)
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            if (!queryDocumentSnapshots.isEmpty()) {
+                                // Retrieve the first document's DoctorID (assuming there's only one matching document)
+                                DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
+                                String doctorID = documentSnapshot.getString("DoctorID");
+                                if (doctorID != null) {
+                                    fetchUsersByDoctorID(doctorID);
+                                } else {
+                                    // Handle the case where DoctorID is null
+                                    String message = "DoctorID is null";
+                                    Log.e("Error", message);
+                                }
+                            } else {
+                                // Handle the case where no matching document is found
+                                String message = "Doctor is not logged in";
+                                Log.e("Error", message);
+                            }
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            // Handle failures
+                            String message = "Failed to fetch Doctor";
+                            Log.e("Error", message, e);
+                        }
+                    });
+        } else {
+            // Handle the case where the current user is null
+            String message = "Current user is null";
+            Log.e("Error", message);
+        }
+    }
+
+    private void fetchUsersByDoctorID(String doctorID) {
         db.collection("users")
-                .whereEqualTo("DoctorID", 1) // Filter users where DoctorID matches logged doctor's documentID
+                .whereEqualTo("DoctorID", doctorID)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -109,52 +148,9 @@ public class Doctors_View_Daily_Readings extends AppCompatActivity {
                             spinnerUsers.setAdapter(adapter);
                         } else {
                             // Handle errors
+                            Log.e("Error", "Error fetching users: ", task.getException());
                         }
                     }
                 });
     }
-
-    // Dummy method to get the logged doctor's documentID
-    private void getLoggedDoctorDocumentID(Callback<String> callback) {
-        // Get the UID of the logged-in user
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser != null) {
-            String doctorUID = currentUser.getUid();
-
-            // Query the Doctor collection to find the documentID where userAuthID == doctorUID
-            FirebaseFirestore.getInstance().collection("Doctor")
-                    .whereEqualTo("userAuthID", doctorUID)
-                    .get()
-                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                        @Override
-                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                            if (!queryDocumentSnapshots.isEmpty()) {
-                                // Retrieve the first document's ID (assuming there's only one matching document)
-                                DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
-                                String doctorDocumentID = documentSnapshot.getId();
-                                // Use the retrieved doctor documentID
-                                callback.onSuccess(doctorDocumentID);
-                            } else {
-                                // Handle the case where no matching document is found
-                                String message = "Doctor is not logged in";
-                                callback.onError(message);
-                            }
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            // Handle failures
-                            String message = "Doctor is not logged in";
-                            callback.onError(message);
-                        }
-                    });
-        } else {
-            // Handle the case where the current user is null
-            String message = "Current user is null";
-            callback.onError(message);
-        }
-    }
 }
-
-

@@ -1,14 +1,21 @@
 package com.login.pdtracker;
 
+import static android.content.ContentValues.TAG;
+
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.util.Base64;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,6 +35,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import android.app.DatePickerDialog;
 import android.widget.DatePicker;
 import android.os.Handler;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+
 import java.util.Locale;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -43,15 +55,33 @@ public class Patients_RegScreen extends AppCompatActivity {
 
     private TextView textViewError2;
     private boolean isMobileValid = false; // To track the validity of the mobile number
+    private String codeVerifier;
+    private String codeChallenge;
 
+    private String fitbitCode; // Variable to store the Fitbit authorization code
+    private String fitbitState; // Variable to store the Fitbit state
+
+    String state = generateSecureRandomString();
     String[] errorMessages = {"Please complete all required fields to proceed", "Registration Successful!", "Invalid Irish mobile number format informe 083, 085, 086, 087, or 089"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_form_register);
+        // Generate code verifier
+        codeVerifier = generateCodeVerifier();
 
+        // Generate code challenge
+        codeChallenge = generateCodeChallenge(codeVerifier);
         iniciarComponentes();
+        Button authorizeButton = findViewById(R.id.btn_fitbit_authorize);
+
+        authorizeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openFitbitAuthorizationUrl();
+            }
+        });
 
         // TextWatcher for real-time password strength validation
         edit_Password2.addTextChangedListener(new TextWatcher() {
@@ -243,6 +273,12 @@ public class Patients_RegScreen extends AppCompatActivity {
         datePickerDialog.show();
     }
 
+    // Method to extract access token from URL fragment
+    private String extractAccessTokenFromUrl(String url) {
+        // Extract access token from URL fragment
+        Uri uri = Uri.parse(url);
+        return uri.getFragment().replace("access_token=", "");
+    }
 
     // Método atualizado com parâmetro adicional para o nome do cuidador
     private void cadastrarUsuario(View v, String email, String password, String caregiverName, String doctorName, String doctorSurname) {
@@ -318,7 +354,7 @@ public class Patients_RegScreen extends AppCompatActivity {
                             // Atualiza o documento do paciente com o ID do médico
                             db.collection("users") // Substitua "users" se a coleção tiver um nome diferente
                                     .document(patientId)
-                                    .update("IDdoctor", doctorId)
+                                    .update("DoctorID", doctorId)
                                     .addOnSuccessListener(aVoid -> Log.d("Firestore", "Doctor ID linked successfully to patient."))
                                     .addOnFailureListener(e -> Log.e("Firestore", "Error linking doctor ID", e));
                         } else {
@@ -368,6 +404,7 @@ public class Patients_RegScreen extends AppCompatActivity {
         edit_DOB = findViewById(R.id.edit_DOB);
         bt_register = findViewById(R.id.bt_register);
         textViewError2 = findViewById(R.id.textViewError2);
+
 
         setupEmailValidation();
         setupDOBValidation();
@@ -469,5 +506,191 @@ public class Patients_RegScreen extends AppCompatActivity {
     private boolean isValidEmail(String email) {
         String emailRegex = "^[\\w-\\.]+@((gmail.com)|(hotmail.com)|(yahoo.com)|(outlook.com)|(live.com))$";
         return email.matches(emailRegex);
+    }
+
+    public static String generateSecureRandomString() {
+        String CHAR_LOWER = "abcdefghijklmnopqrstuvwxyz";
+        String CHAR_UPPER = CHAR_LOWER.toUpperCase();
+        String NUMBER = "0123456789";
+        String SPECIAL_CHARS = "!@#$%&*()_+-=[]|,./?><";
+
+        String PASSWORD_ALLOW_BASE = CHAR_LOWER + CHAR_UPPER + NUMBER + SPECIAL_CHARS;
+        SecureRandom random = new SecureRandom();
+
+        StringBuilder sb = new StringBuilder(32);
+        for (int i = 0; i < 32; i++) {
+            // 0-62 (exclusive), random returns 0-61
+            int randomCharIndex = random.nextInt(PASSWORD_ALLOW_BASE.length());
+            // append a character at random location
+            sb.append(PASSWORD_ALLOW_BASE.charAt(randomCharIndex));
+        }
+        return sb.toString();
+    }
+
+    public static String generateSHA256Base64(String codeVerifier) {
+        try {
+            // Calculate SHA-256 hash of the codeVerifier
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hashBytes = digest.digest(codeVerifier.getBytes());
+
+            // Encode the hash bytes to base64
+            return android.util.Base64.encodeToString(hashBytes, android.util.Base64.URL_SAFE | android.util.Base64.NO_WRAP);
+        } catch (NoSuchAlgorithmException e) {
+            // Handle NoSuchAlgorithmException
+            e.printStackTrace();
+            return null;
+        }
+    }
+    // Method to generate a random string of length between 43 to 128 characters
+    private String generateCodeVerifier() {
+        SecureRandom secureRandom = new SecureRandom();
+        byte[] codeVerifierBytes = new byte[64]; // Adjust length as needed (minimum 43 characters)
+        secureRandom.nextBytes(codeVerifierBytes);
+        return android.util.Base64.encodeToString(codeVerifierBytes, android.util.Base64.URL_SAFE | android.util.Base64.NO_PADDING);
+
+    }
+
+    // Method to generate code challenge from code verifier
+    private String generateCodeChallenge(String codeVerifier) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] codeVerifierBytes = codeVerifier.getBytes();
+            byte[] codeChallengeBytes = digest.digest(codeVerifierBytes);
+            return android.util.Base64.encodeToString(codeVerifierBytes, android.util.Base64.URL_SAFE | android.util.Base64.NO_PADDING);
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        Uri data = intent.getData();
+        if (data != null) {
+            // Extract data from the URL response
+            String code = data.getQueryParameter("code");
+            String state = data.getQueryParameter("state");
+
+            // Save the data to Firebase or perform any other necessary action
+            saveDataToFirebase(code, state);
+        }
+    }
+
+    private void saveDataToFirebase(String code, String state) {
+        // Save the data to Firebase Firestore or Realtime Database
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Map<String, Object> data = new HashMap<>();
+        data.put("code", code);
+        data.put("state", state);
+
+        db.collection("fitbit_auth_responses")
+                .add(data)
+                .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
+                .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
+    }
+
+    // Method to extract refresh token from URL
+    private String extractRefreshTokenFromUrl(String url) {
+        Uri uri = Uri.parse(url);
+        return uri.getQueryParameter("refresh_token");
+    }
+
+    // Method to extract user ID from URL
+    private String extractUserIdFromUrl(String url) {
+        Uri uri = Uri.parse(url);
+        return uri.getQueryParameter("user_id");
+    }
+
+    private void openFitbitAuthorizationUrl() {
+        if (fitbitPermissionGranted()) {
+            String authorizationUrl = getIntent().getData().toString();
+            handleFitbitAuthorizationResponse(authorizationUrl);
+            return;
+        }
+
+        String fitbitAuthorizationUrl = "https://www.fitbit.com/oauth2/authorize?" +
+                "response_type=code" +
+                "&client_id=23RWTJ" +
+                "&scope=activity+nutrition+heartrate+location+profile+settings+sleep+social+weight" +
+                "&code_challenge=" + codeChallenge +
+                "&code_challenge_method=S256" +
+                "&redirect_uri=https://Localhost" +
+                "&state=" + state;
+
+        WebView webView = new WebView(this);
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                if (url.startsWith("https://Localhost") || url.contains("transferpage")) {
+                    handleFitbitAuthorizationResponse(url);
+                    finish(); // Close WebView after handling response
+                    return true;
+                }
+                return false;
+            }
+        });
+
+
+
+        webView.loadUrl(fitbitAuthorizationUrl);
+
+        setContentView(R.layout.activity_form_register);
+    }
+
+    private void handleFitbitAuthorizationResponse(String url) {
+        if (url.contains("transferpage")) {
+            String code = extractCodeFromTransferpageUrl(url);
+            String state = extractStateFromTransferpageUrl(url);
+            // Save data to Firebase or perform other actions
+            saveDataToFirebase(code, state);
+            return;
+
+        }
+
+        // Existing code to handle localhost URL (code and state extraction)
+        String code = getCodeFromUrl(url);
+        String returnedState = getStateFromUrl(url);
+
+        if (!state.equals(returnedState)) {
+            Log.e(TAG, "Returned state does not match the expected state.");
+            return;
+        }
+
+        //saveUserData(code, state);
+    }
+
+
+
+    private String getCodeFromUrl(String url) {
+        Uri uri = Uri.parse(url);
+        return uri.getQueryParameter("code");
+    }
+
+    private String getStateFromUrl(String url) {
+        Uri uri = Uri.parse(url);
+        return uri.getQueryParameter("state");
+    }
+
+    private boolean fitbitPermissionGranted() {
+        Uri data = getIntent().getData();
+        return data != null && data.toString().startsWith("https://Localhost");
+    }
+
+    private String extractCodeFromTransferpageUrl(String url) {
+        Uri uri = Uri.parse(url);
+        String query = uri.getQueryParameter("code");
+        return query != null ? query : "";
+    }
+
+    private String extractStateFromTransferpageUrl(String url) {
+        Uri uri = Uri.parse(url);
+        String query = uri.getQueryParameter("state");
+        return query != null ? query : "";
     }
 }

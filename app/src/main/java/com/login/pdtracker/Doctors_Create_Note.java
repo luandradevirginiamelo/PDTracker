@@ -133,58 +133,34 @@ public class Doctors_Create_Note extends AppCompatActivity {
         String doctorsNotes = DoctorsNotes.getText().toString();
         String paramedicsNumber = ParamedicsNumber.getText().toString();
 
-        // Create a reference to the user document in Firestore
-        DocumentReference userRef = db.collection("users").document(selectedUserID);
+        // Create a new document with the collected data
+        Map<String, Object> note = new HashMap<>();
+        note.put("NotesDate", FieldValue.serverTimestamp());
+        note.put("NotesText", doctorsNotes);
+        note.put("PatientAllergies", allergies);
+        note.put("PatientID", selectedUserID);
+        note.put("PatientNextOfKinMobileNumber", nextOfKinMobile);
+        note.put("PatientNextOfKinName", nextOfKin);
+        note.put("PatientSpecificMedicalCondition", specCondition);
+        note.put("ParamedicsNumber", paramedicsNumber);
 
-        // Fetch the user document
-        userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()) {
-                    // Extract DoctorID from the user document
-                    Integer doctorID = documentSnapshot.getLong("DoctorID").intValue();
-
-                    // Create a new document with the collected data
-                    Map<String, Object> note = new HashMap<>();
-                    note.put("DoctorID", doctorID); // Populate DoctorID with the fetched value
-                    note.put("NotesDate", FieldValue.serverTimestamp());
-                    note.put("NotesText", doctorsNotes);
-                    note.put("PatientAllergies", allergies);
-                    note.put("PatientID", selectedUserID);
-                    note.put("PatientNextOfKinMobileNumber", nextOfKinMobile);
-                    note.put("PatientNextOfKinName", nextOfKin);
-                    note.put("PatientSpecificMedicalCondition", specCondition);
-                    note.put("ParamedicsNumber", paramedicsNumber); // Add ParamedicsNumber to the note
-
-                    // Add the document to Firestore
-                    db.collection("DoctorsNoteForPatientEmergency")
-                            .add(note)
-                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                @Override
-                                public void onSuccess(DocumentReference documentReference) {
-                                    // Document successfully added
-                                    Toast.makeText(Doctors_Create_Note.this, "Note saved successfully", Toast.LENGTH_SHORT).show();
-                                    finish(); // Close the activity after saving
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    // Handle errors
-                                    Toast.makeText(Doctors_Create_Note.this, "Failed to save note", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                } else {
-                    // User document does not exist
-                    Toast.makeText(Doctors_Create_Note.this, "User document not found", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                // Handle errors
-                Toast.makeText(Doctors_Create_Note.this, "Failed to fetch user document", Toast.LENGTH_SHORT).show();
-            }
-        });
+        // Add the document to Firestore
+        db.collection("DoctorsNoteForPatientEmergency")
+                .add(note)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        // Document successfully added
+                        Toast.makeText(Doctors_Create_Note.this, "Note saved successfully", Toast.LENGTH_SHORT).show();
+                        finish(); // Close the activity after saving
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Handle errors
+                        Toast.makeText(Doctors_Create_Note.this, "Failed to save note", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }

@@ -31,6 +31,8 @@ public class Doctors_Dashboard_Screen extends AppCompatActivity {
 
     private TextView welcome_user;
     private ImageButton bt_logoutButton;
+
+
     private AppCompatButton b1; // Reference to the update profile button
     private AppCompatButton b2;
     private AppCompatButton b3;
@@ -52,10 +54,11 @@ public class Doctors_Dashboard_Screen extends AppCompatActivity {
 
         IniciarComponentes();
 
+
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Doctors_Dashboard_Screen.this, Doctors_Update_Note.class);
+                Intent intent = new Intent(Doctors_Dashboard_Screen.this, Doctor_Emergency_Notes.class);
                 startActivity(intent);
             }
         });
@@ -72,7 +75,7 @@ public class Doctors_Dashboard_Screen extends AppCompatActivity {
         b3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Doctors_Dashboard_Screen.this, Doctor_Emergency_Notes.class);
+                Intent intent = new Intent(Doctors_Dashboard_Screen.this, Doctors_View_Abnormalities.class);
                 startActivity(intent);
             }
         });
@@ -133,6 +136,7 @@ public class Doctors_Dashboard_Screen extends AppCompatActivity {
     private void IniciarComponentes() {
         welcome_user = findViewById(R.id.welcome_user);
         bt_logoutButton = findViewById(R.id.bt_logoutButton);
+
         b1 = findViewById(R.id.b1);
         b2 = findViewById(R.id.b2);
         b3 = findViewById(R.id.b3);
