@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context=".Screen1">
+
+        <!-- High Heart Rate Button -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_high_heart_rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="High Heart Rate"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <!-- Low Heart Rate Button -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_low_heart_rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Low Heart Rate"
+            app:layout_constraintTop_toBottomOf="@id/button_high_heart_rate"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <!-- High Blood Pressure Button -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_high_blood_pressure"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="High Blood Pressure"
+            app:layout_constraintTop_toBottomOf="@id/button_low_heart_rate"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <!-- Low Blood Pressure Button -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_low_blood_pressure"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Low Blood Pressure"
+            app:layout_constraintTop_toBottomOf="@id/button_high_blood_pressure"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <!-- High Oxygen Levels Button -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_high_oxygen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="High Oxygen Levels"
+            app:layout_constraintTop_toBottomOf="@id/button_low_blood_pressure"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <!-- Low Oxygen Levels Button -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_low_oxygen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Low Oxygen Levels"
+            app:layout_constraintTop_toBottomOf="@id/button_high_oxygen"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <!-- Poor Sleep Button -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_poor_sleep"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Poor Sleep"
+            app:layout_constraintTop_toBottomOf="@id/button_low_oxygen"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <!-- Fall Detected Button -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_fall_detected"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fall Detected"
+            app:layout_constraintTop_toBottomOf="@id/button_poor_sleep"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <!-- Register ID Button -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_register_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Register ID"
+            app:layout_constraintTop_toBottomOf="@id/button_fall_detected"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
