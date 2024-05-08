@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "955978655591",
+    "project_id": "pdtracker-d7a14",
+    "storage_bucket": "pdtracker-d7a14.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:955978655591:android:5f0be181773b7f281931c2",
+        "android_client_info": {
+          "package_name": "com.login.pdtracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADIbUFMokOy0AotvU6tE5NsiSd6R51coA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:955978655591:android:026475b9eb952f9d1931c2",
+        "android_client_info": {
+          "package_name": "com.login.wear_ospdtracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADIbUFMokOy0AotvU6tE5NsiSd6R51coA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
