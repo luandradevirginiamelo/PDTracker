@@ -12,7 +12,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -32,6 +35,7 @@ import java.util.Map;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.util.Date;
+
 
 public class Patients_RegScreen extends AppCompatActivity {
     private EditText edit_name, edit_surname, edit_Mobile, edit_Patient_Doctors_Name, edit_Patient_Doctors_Surname, edit_Patient_Caregiver_Name, edit_DOB, edit_email, edit_Password2, edit_Re_type;
@@ -123,6 +127,10 @@ public class Patients_RegScreen extends AppCompatActivity {
                 String password = edit_Password2.getText().toString();
                 String retype = edit_Re_type.getText().toString();
                 String dobString = edit_DOB.getText().toString();
+                String caregiverName = edit_Patient_Caregiver_Name.getText().toString();
+                String doctorName = edit_Patient_Doctors_Name.getText().toString();
+                String doctorSurname = edit_Patient_Doctors_Surname.getText().toString();
+
 
                 // First check if all fields are filled
                 if (name.isEmpty() || surname.isEmpty() || mobile.isEmpty() || patient_D_Name.isEmpty() || patient_D_Surname.isEmpty() || patient_C_Name.isEmpty() || dobString.isEmpty() || username.isEmpty() || password.isEmpty() || retype.isEmpty()) {
@@ -156,7 +164,7 @@ public class Patients_RegScreen extends AppCompatActivity {
                 }
 
                 // All validations passed, proceed with registration
-                cadastrarUsuario(v, username, password);
+                cadastrarUsuario(v, edit_email.getText().toString(), edit_Password2.getText().toString(), caregiverName, doctorName, doctorSurname);
             }
         });
     }
@@ -236,24 +244,23 @@ public class Patients_RegScreen extends AppCompatActivity {
     }
 
 
-    private void cadastrarUsuario(View v, String email, String password) {
+    // Método atualizado com parâmetro adicional para o nome do cuidador
+    private void cadastrarUsuario(View v, String email, String password, String caregiverName, String doctorName, String doctorSurname) {
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    saveUserData();
-                    Snackbar snackbar = Snackbar.make(v, errorMessages[1], Snackbar.LENGTH_SHORT);
+                    // Obtém o ID do usuário recém-criado
+                    String patientId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    // Chama saveUserData passando o ID do paciente, o nome do cuidador e os dados do médico
+                    saveUserData(patientId, caregiverName, doctorName, doctorSurname);
+
+                    Snackbar snackbar = Snackbar.make(v, "Registration successful!", Snackbar.LENGTH_SHORT);
                     snackbar.setBackgroundTint(Color.WHITE);
                     snackbar.setTextColor(Color.BLACK);
                     snackbar.show();
                 } else {
-                    String error = "Registration failed due to an error";
-                    try {
-                        throw task.getException();
-                    } catch (Exception e) {
-                        error = e.getMessage();
-                    }
-
+                    String error = "Registration failed: " + task.getException().getMessage();
                     Snackbar snackbar = Snackbar.make(v, error, Snackbar.LENGTH_LONG);
                     snackbar.setBackgroundTint(Color.RED);
                     snackbar.setTextColor(Color.BLACK);
@@ -263,33 +270,88 @@ public class Patients_RegScreen extends AppCompatActivity {
         });
     }
 
-    private void saveUserData() {
+
+    private void linkCaregiverToPatient(String caregiverName, String patientId) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        // Buscar o cuidador pelo nome na coleção "Caregiver"
+        db.collection("Caregiver") // Assume que "Caregiver" é uma coleção direta
+                .whereEqualTo("name", caregiverName)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        QuerySnapshot querySnapshot = task.getResult();
+                        if (!querySnapshot.isEmpty()) {
+                            // Assume-se que só haja um cuidador com esse nome; pegamos o ID do primeiro documento
+                            String caregiverId = querySnapshot.getDocuments().get(0).getId();
+
+                            // Atualiza o documento do paciente com o ID do cuidador
+                            db.collection("users") // Substitua "users" se a coleção tiver um nome diferente
+                                    .document(patientId)
+                                    .update("IDcaregiver", caregiverId)
+                                    .addOnSuccessListener(aVoid -> Log.d("Firestore", "Caregiver ID linked successfully to patient."))
+                                    .addOnFailureListener(e -> Log.e("Firestore", "Error linking caregiver ID", e));
+                        } else {
+                            Log.d("Firestore", "No caregiver found with that name.");
+                        }
+                    } else {
+                        Log.e("Firestore", "Error searching for caregiver", task.getException());
+                    }
+                });
+    }
+
+    private void linkDoctorToPatient(String doctorName, String doctorSurname, String patientId) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        // Buscar o médico pelo nome e sobrenome na coleção "Doctor"
+        db.collection("Doctor")
+                .whereEqualTo("DoctorName", doctorName)
+                .whereEqualTo("DoctorSurname", doctorSurname)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        QuerySnapshot querySnapshot = task.getResult();
+                        if (!querySnapshot.isEmpty()) {
+                            // Assume-se que só haja um médico com esse nome e sobrenome; pegamos o ID do primeiro documento
+                            String doctorId = querySnapshot.getDocuments().get(0).getId();
+
+                            // Atualiza o documento do paciente com o ID do médico
+                            db.collection("users") // Substitua "users" se a coleção tiver um nome diferente
+                                    .document(patientId)
+                                    .update("IDdoctor", doctorId)
+                                    .addOnSuccessListener(aVoid -> Log.d("Firestore", "Doctor ID linked successfully to patient."))
+                                    .addOnFailureListener(e -> Log.e("Firestore", "Error linking doctor ID", e));
+                        } else {
+                            Log.d("Firestore", "No doctor found with that name and surname.");
+                        }
+                    } else {
+                        Log.e("Firestore", "Error searching for doctor", task.getException());
+                    }
+                });
+    }
+
+
+    private void saveUserData(String patientId, String caregiverName, String doctorName, String doctorSurname) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         Map<String, Object> user = new HashMap<>();
         user.put("name", edit_name.getText().toString());
         user.put("surname", edit_surname.getText().toString());
         user.put("mobile", edit_Mobile.getText().toString());
-        user.put("doctor_name", edit_Patient_Doctors_Name.getText().toString());
-        user.put("doctor_surname", edit_Patient_Doctors_Surname.getText().toString());
-        user.put("caregiver_name", edit_Patient_Caregiver_Name.getText().toString());
+        user.put("doctor_name", doctorName); // Usa o nome do médico passado como parâmetro
+        user.put("doctor_surname", doctorSurname); // Usa o sobrenome do médico passado como parâmetro
+        user.put("caregiver_name", caregiverName);
         user.put("date_of_birth", edit_DOB.getText().toString());
         user.put("username", edit_email.getText().toString());
 
-
-
-        DocumentReference documentReference = db.collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        documentReference.set(user)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d("Firestore", "User data successfully saved.");
-                    }
+        DocumentReference newUserDocRef = db.collection("users").document(patientId);
+        newUserDocRef.set(user)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("Firestore", "User data successfully saved.");
+                    linkCaregiverToPatient(caregiverName, patientId); // Continua a vincular o cuidador
+                    linkDoctorToPatient(doctorName, doctorSurname, patientId); // Adiciona chamada para vincular o médico
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e("Firestore", "Error saving user data", e);
-                    }
+                .addOnFailureListener(e -> {
+                    Log.e("Firestore", "Error saving user data", e);
                 });
     }
 
