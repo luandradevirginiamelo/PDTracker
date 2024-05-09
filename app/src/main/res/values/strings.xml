@@ -1,11 +1,18 @@
 <resources>
     <string name="app_name">PDTracker</string>
     <string name="Login">Login</string>
-    <string name="text_Register">Fisrt-Time User?Register Here</string>
-    <string name="text_Forgotten">Forgotten Password?Click Here</string>
+    <string name="text_Register">First-Time User? Register Here</string>
+    <string name="text_Forgotten">Forgotten Password? Click Here</string>
     <string name="title_Patient">Register Here</string>
     <string name="title_send_reset_password">Send Reset Password Link</string>
     <string name="text_logout">Logout Here</string>
     <string name="title_CUPP">Create/Update Patient Profile</string>
-
+    <string name="hint_note_text">Enter updated note text</string>
+    <string name="hint_next_of_kin">Enter updated next of kin</string>
+    <string name="hint_next_of_kin_mobile">Enter updated next of kin mobile number</string>
+    <string-array name="update_options_array">
+        <item>Update Notes Text</item>
+        <item>Update Next of Kin</item>
+        <item>Update N.O.K. Mobile No</item>
+    </string-array>
 </resources>

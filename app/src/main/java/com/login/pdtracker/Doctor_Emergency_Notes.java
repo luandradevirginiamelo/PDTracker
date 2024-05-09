@@ -14,11 +14,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.login.pdtracker.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +24,6 @@ import java.util.List;
 public class Doctor_Emergency_Notes extends AppCompatActivity {
 
     private Spinner spinnerUsers;
-
     private AppCompatButton bt_bdb;
     private FirebaseFirestore db;
     private List<String> userIDs = new ArrayList<>(); // Initialize the list here
@@ -44,7 +41,7 @@ public class Doctor_Emergency_Notes extends AppCompatActivity {
         IniciarComponentes();
 
         // Button to go back to dashboard
-        AppCompatButton bt_bdb = findViewById(R.id.bt_bdb);
+        bt_bdb = findViewById(R.id.bt_bdb);
         bt_bdb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,9 +54,34 @@ public class Doctor_Emergency_Notes extends AppCompatActivity {
         // Fetch users from Firestore where DoctorID matches logged doctor's documentID
         fetchUsers();
 
+        // Create button click listener
+        bCreate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Check if a user is selected
+                if (!userIDs.isEmpty()) {
+                    // Pass the selected user's ID to the next activity
+                    Intent intent = new Intent(Doctor_Emergency_Notes.this, Doctors_Create_Note.class);
+                    intent.putExtra("selectedUserID", userIDs.get(spinnerUsers.getSelectedItemPosition()));
+                    startActivity(intent);
+                }
+            }
+        });
+
+        // Update button click listener
+        bUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Check if a user is selected
+                if (!userIDs.isEmpty()) {
+                    // Pass the selected user's ID to the next activity
+                    Intent intent = new Intent(Doctor_Emergency_Notes.this, Doctor_Update_Note_Selection.class);
+                    intent.putExtra("selectedUserID", userIDs.get(spinnerUsers.getSelectedItemPosition()));
+                    startActivity(intent);
+                }
+            }
+        });
     }
-
-
 
     private void fetchUsers() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -115,27 +137,6 @@ public class Doctor_Emergency_Notes extends AppCompatActivity {
                         }
                     }
                 });
-        spinnerUsers.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                // Pass the selected user's ID to the next activity
-                String selectedUserID = userIDs.get(position);
-                bCreate.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // Go to Doctors_Create_Note activity
-                        Intent intent = new Intent(Doctor_Emergency_Notes.this, Doctors_Create_Note.class);
-                        intent.putExtra("selectedUserID", selectedUserID);
-                        startActivity(intent);
-                    }
-                });
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // Do nothing
-            }
-        });
     }
 
     private void IniciarComponentes() {

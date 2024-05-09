@@ -22,6 +22,24 @@
             android:name=".Viewlist_ofpatientfalldetection"
             android:exported="false" />
         <activity
+            android:name=".Doctor_Update_Note_Selection"
+            android:exported="false" />
+
+        <activity
+            android:name=".Doctors_View_Abnormalities_Patients"
+            android:exported="false" />
+
+        <activity
+            android:name=".Doctor_Emergency_Note_Edition"
+            android:exported="false" />
+
+
+
+        <activity
+            android:name=".Doctor_Abnormal_Send"
+            android:exported="false" />
+
+        <activity
             android:name=".window_contact_patient_caregiver_paramedics"
             android:exported="false" />
         <activity

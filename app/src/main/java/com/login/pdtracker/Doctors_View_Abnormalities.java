@@ -1,7 +1,10 @@
 package com.login.pdtracker;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
@@ -10,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -25,7 +30,12 @@ public class Doctors_View_Abnormalities extends AppCompatActivity {
 
     private Spinner spinnerUsers;
     private FirebaseFirestore db;
-    private List<String> userNamesWithDate = new ArrayList<>(); // Initialize the list here
+    private List<String> userIDs = new ArrayList<>(); // Initialize the list here
+
+    interface Callback<T> {
+        void onSuccess(T result);
+        void onError(String message);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,84 +44,113 @@ public class Doctors_View_Abnormalities extends AppCompatActivity {
 
         // Initialize Firebase Firestore
         db = FirebaseFirestore.getInstance();
+
+        // Initialize spinner
         spinnerUsers = findViewById(R.id.spinner_users);
 
+
+        AppCompatButton bt_view = findViewById(R.id.View);
+        bt_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Get the selected user ID from the spinner
+                String selectedUserID = userIDs.get(spinnerUsers.getSelectedItemPosition());
+                // Start the next activity and pass the selected user ID
+                Intent intent = new Intent(Doctors_View_Abnormalities.this, Doctors_View_Abnormalities_Patients.class);
+                intent.putExtra("selectedUserID", selectedUserID);
+                startActivity(intent);
+            }
+        });
+
         // Button to go back to dashboard
-        AppCompatButton bt_bdb = findViewById(R.id.bt_bdb2);
+        AppCompatButton bt_bdb = findViewById(R.id.bt_bdb);
         bt_bdb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Go back to Doctors_Dashboard_Screen activity
-                finish();
+                Intent intent = new Intent(Doctors_View_Abnormalities.this, Doctors_Dashboard_Screen.class);
+                startActivity(intent);
             }
         });
 
-        // Initialize spinner adapter
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, new ArrayList<>());
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerUsers.setAdapter(adapter);
-
-        // Fetch users
+        // Fetch users from Firestore where DoctorID matches logged doctor's documentID
         fetchUsers();
     }
 
     private void fetchUsers() {
+        // Get the UID of the logged-in user
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
-            String userUID = currentUser.getUid();
+            String doctorUID = currentUser.getUid();
 
-            db.collection("Doctor")
-                    .document(userUID)
+            // Query the Doctor collection to find the DoctorID where userAuthID == doctorUID
+            FirebaseFirestore.getInstance().collection("Doctor")
+                    .whereEqualTo("userAuthID", doctorUID)
                     .get()
-                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                         @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (task.isSuccessful()) {
-                                DocumentSnapshot document = task.getResult();
-                                if (document.exists()) {
-                                    String doctorID = document.getString("DoctorID");
-                                    if (doctorID != null) {
-                                        fetchUsersByDoctorID(doctorID);
-                                    }
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            if (!queryDocumentSnapshots.isEmpty()) {
+                                // Retrieve the first document's DoctorID (assuming there's only one matching document)
+                                DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
+                                String doctorID = documentSnapshot.getString("DoctorID");
+                                if (doctorID != null) {
+                                    fetchUsersByDoctorID(doctorID);
+                                } else {
+                                    // Handle the case where DoctorID is null
+                                    String message = "DoctorID is null";
+                                    Log.e("Error", message);
                                 }
                             } else {
-                                // Handle errors
+                                // Handle the case where no matching document is found
+                                String message = "Doctor is not logged in";
+                                Log.e("Error", message);
                             }
                         }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            // Handle failures
+                            String message = "Failed to fetch Doctor";
+                            Log.e("Error", message, e);
+                        }
                     });
+        } else {
+            // Handle the case where the current user is null
+            String message = "Current user is null";
+            Log.e("Error", message);
         }
     }
 
     private void fetchUsersByDoctorID(String doctorID) {
-        db.collection("AbnormalHeartRateDetected")
+        db.collection("users")
                 .whereEqualTo("DoctorID", doctorID)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            userNamesWithDate.clear(); // Clear the list before adding new user names with date
+                            userIDs.clear(); // Clear the list before adding new user IDs
+                            List<String> userNames = new ArrayList<>();
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                String patientName = document.getString("PatientName");
-                                String detectionTime = document.getTimestamp("DetectionTime").toDate().toString();
-                                String formattedDate = formatDate(detectionTime);
-                                userNamesWithDate.add(patientName + " - " + formattedDate);
+                                String userID = document.getId(); // Get the user ID
+                                userIDs.add(userID); // Add user ID to the list
+                                String name = document.getString("name") + " " + document.getString("surname");
+                                userNames.add(name);
                             }
-                            // Update spinner adapter data
-                            ArrayAdapter<String> adapter = (ArrayAdapter<String>) spinnerUsers.getAdapter();
-                            adapter.clear(); // Clear previous data
-                            adapter.addAll(userNamesWithDate); // Add new data
-                            adapter.notifyDataSetChanged(); // Notify spinner to refresh its UI
+                            ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                                    Doctors_View_Abnormalities.this,
+                                    android.R.layout.simple_spinner_item,
+                                    userNames
+                            );
+                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            spinnerUsers.setAdapter(adapter);
                         } else {
                             // Handle errors
+                            Log.e("Error", "Error fetching users: ", task.getException());
                         }
                     }
                 });
-    }
-
-    private String formatDate(String dateString) {
-        // Your date formatting logic here
-        return dateString; // Placeholder, replace with actual formatting
     }
 }

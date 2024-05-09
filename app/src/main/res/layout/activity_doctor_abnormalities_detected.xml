@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="80dp"
-        android:text="  Choose a Patient to\n         View Alerts"
+        android:text="  Choose a Patient to\n  View Abnormalities"
         android:textColor="@color/white"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -37,7 +37,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="Emergency Notes"
+        android:text="View List of Patients"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -47,7 +47,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/bt_bdb2"
+        android:id="@+id/bt_bdb"
         style="@style/Buttondoctor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
