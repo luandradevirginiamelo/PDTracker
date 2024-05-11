@@ -157,7 +157,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Normal Blood pressure (low/60)-(high/120)"
+            android:text="Normal Blood pressure (high/120)/(low/60)"
             android:textSize="14sp"
             app:layout_constraintTop_toBottomOf="@id/Nbloodpre"
             app:layout_constraintStart_toStartOf="@id/Nbloodpre" />
@@ -177,7 +177,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Threshold Blood pressure (low/40)-(high/200)"
+            android:text="Threshold Blood pressure (high/200)/(low/40)"
             android:textSize="14sp"
             app:layout_constraintTop_toBottomOf="@id/threshold_bloodpre"
             app:layout_constraintStart_toStartOf="@id/threshold_bloodpre" />

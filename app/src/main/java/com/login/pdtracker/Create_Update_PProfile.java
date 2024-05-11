@@ -213,12 +213,12 @@ public class Create_Update_PProfile extends AppCompatActivity {
         String nbpStr = nbpEditText.getText().toString();
         if (!nbpStr.isEmpty()) {
             try {
-                String[] nbpParts = nbpStr.split("-");
+                String[] nbpParts = nbpStr.split("/");
                 if (nbpParts.length == 2) {
                     int nbpLow = Integer.parseInt(nbpParts[0]);
                     int nbpHigh = Integer.parseInt(nbpParts[1]);
-                    if (nbpLow < 60 || nbpHigh > 120) {
-                        nbpEditText.setError("Normal Blood Pressure should be between 60-120.");
+                    if (nbpHigh > 120 || nbpLow < 60) {
+                        nbpEditText.setError("Normal Blood Pressure should be between bphigh120-bplow60.");
                         return false;
                     }
                 } else {
@@ -238,11 +238,11 @@ public class Create_Update_PProfile extends AppCompatActivity {
         String tbpStr = tbpEditText.getText().toString();
         if (!tbpStr.isEmpty()) {
             try {
-                String[] tbpParts = tbpStr.split("-");
+                String[] tbpParts = tbpStr.split("/");
                 if (tbpParts.length == 2) {
                     int tbpLow = Integer.parseInt(tbpParts[0]);
                     int tbpHigh = Integer.parseInt(tbpParts[1]);
-                    if (tbpLow < 40 || tbpHigh > 200) {
+                    if (tbpHigh > 200 || tbpLow < 40) {
                         tbpEditText.setError("Threshold Blood Pressure should be between 40-200.");
                         return false;
                     }

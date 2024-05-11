@@ -103,6 +103,19 @@
 
     </style>
 
+    <style name="FancyTextView">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#FF5722</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:shadowColor">#000</item>
+        <item name="android:shadowDx">4</item>
+        <item name="android:shadowDy">4</item>
+        <item name="android:shadowRadius">2</item>
+        <item name="android:background">@drawable/text_view_gradient</item>
+    </style>
+
 
 
 

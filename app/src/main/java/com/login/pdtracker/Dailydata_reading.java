@@ -14,26 +14,44 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Map;
+import java.util.Calendar;
 
 public class Dailydata_reading extends AppCompatActivity {
 
-    private String smartwatchID;
-    private TextView dataDisplay;
+    private TextView textViewBloodPressure, textViewBloodPressureAbnormality, textViewFallDetected,
+            textViewHeartRateAbnormality, textViewCoordinates, textViewOxygenLevels, textViewSleepQuality;
 
-    @Override
+    private TextView textViewMaxHeartRateAfternoon, textViewMaxHeartRateMorning,
+            textViewMinHeartRateAfternoon, textViewMinHeartRateMorning;
+
+      @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dailydata_reading);
 
-        Button syncButton = findViewById(R.id.btn_sync);
-        dataDisplay = findViewById(R.id.data_display);
+        initializeUIComponents();
 
+        Button syncButton = findViewById(R.id.btn_sync);
         syncButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 fetchSmartwatchIDAndSyncData();
             }
         });
+    }
+
+    private void initializeUIComponents() {
+        textViewBloodPressure = findViewById(R.id.textView_bloodPressure);
+        textViewBloodPressureAbnormality = findViewById(R.id.textView_bloodPressureAbnormality);
+        textViewFallDetected = findViewById(R.id.textView_fallDetected);
+        textViewHeartRateAbnormality = findViewById(R.id.textView_heartRateAbnormality);
+        textViewCoordinates = findViewById(R.id.textView_coordinates);
+        textViewOxygenLevels = findViewById(R.id.textView_oxygenLevels);
+        textViewSleepQuality = findViewById(R.id.textView_sleepQuality);
+        textViewMaxHeartRateAfternoon = findViewById(R.id.textView_maxHeartRateAfternoon);
+        textViewMaxHeartRateMorning = findViewById(R.id.textView_maxHeartRateMorning);
+        textViewMinHeartRateAfternoon = findViewById(R.id.textView_minHeartRateAfternoon);
+        textViewMinHeartRateMorning = findViewById(R.id.textView_minHeartRateMorning);
     }
 
     private void fetchSmartwatchIDAndSyncData() {
@@ -47,22 +65,22 @@ public class Dailydata_reading extends AppCompatActivity {
                         if (task.isSuccessful() && task.getResult() != null) {
                             DocumentSnapshot document = task.getResult();
                             if (document.exists()) {
-                                smartwatchID = document.getString("smartID");
+                                String smartwatchID = document.getString("smartID");
                                 if (smartwatchID != null && !smartwatchID.isEmpty()) {
                                     syncHealthData(smartwatchID);
                                 } else {
-                                    dataDisplay.setText("No smartwatch ID found.");
+                                    textViewBloodPressure.setText("No smartwatch ID found.");
                                 }
                             } else {
-                                dataDisplay.setText("No document found.");
+                                textViewBloodPressure.setText("No document found.");
                             }
                         } else {
                             Log.e("Firestore Error", "Failed to fetch smartwatch ID", task.getException());
-                            dataDisplay.setText("Failed to fetch smartwatch ID.");
+                            textViewBloodPressure.setText("Failed to fetch smartwatch ID.");
                         }
                     });
         } else {
-            dataDisplay.setText("User not found.");
+            textViewBloodPressure.setText("User not found.");
         }
     }
 
@@ -73,26 +91,54 @@ public class Dailydata_reading extends AppCompatActivity {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null) {
                         if (task.getResult().getData() != null) {
-                            Map<String, Object> healthData = task.getResult().getData();
-                            dataDisplay.setText(formatData(healthData));
+                            updateUI(task.getResult().getData());
                         } else {
-                            dataDisplay.setText("No health data found for the smartwatch ID.");
+                            textViewBloodPressure.setText("No health data found for the smartwatch ID.");
                         }
                     } else {
                         Log.e("Firestore Error", "Failed to fetch health data", task.getException());
-                        dataDisplay.setText("Failed to fetch health data.");
+                        textViewBloodPressure.setText("Failed to fetch health data.");
                     }
                 });
     }
 
-    private String formatData(Map<String, Object> data) {
-        StringBuilder formattedData = new StringBuilder();
-        for (Map.Entry<String, Object> entry : data.entrySet()) {
-            formattedData.append(entry.getKey())
-                    .append(": ")
-                    .append(entry.getValue().toString())
-                    .append("\n");  // Add a new line for each data entry
+    private void updateUI(Map<String, Object> data) {
+        textViewBloodPressure.setText("Blood Pressure: " + data.get("Blood Pressure"));
+        textViewBloodPressureAbnormality.setText("Blood Pressure Abnormality: " + (data.get("Blood Pressure Abnormality").equals("Y") ? "Yes" : "No"));
+        textViewFallDetected.setText("Fall Detected: " + data.get("Fall Detected"));
+        textViewHeartRateAbnormality.setText("Heart Rate Abnormality: " + (data.get("Heart Rate Abnormality").equals("Y") ? "Yes" : "No"));
+        textViewCoordinates.setText("Coordinates: " + data.get("Latitude") + ", " + data.get("Longitude"));
+        textViewOxygenLevels.setText("Oxygen Levels: " + data.get("Oxygen Levels"));
+        textViewSleepQuality.setText("Sleep Quality: " + data.get("Sleep Quality"));
+        textViewMaxHeartRateAfternoon.setText("Max Heart Rate Afternoon: " + data.get("Max Heart Rate Afternoon"));
+        textViewMaxHeartRateMorning.setText("Max Heart Rate Morning: " + data.get("Max Heart Rate Morning"));
+        textViewMinHeartRateAfternoon.setText("Min Heart Rate Afternoon: " + data.get("Min Heart Rate Afternoon"));
+        textViewMinHeartRateMorning.setText("Min Heart Rate Morning: " + data.get("Min Heart Rate Morning"));
+
+    }
+
+
+
+    private void updateHeartRateVisibility() {
+        Calendar calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+
+        // Determine if it's before noon (morning) or after (afternoon)
+        boolean isMorning = hour < 12;
+
+        // Update visibility based on time of day
+        textViewMaxHeartRateMorning.setVisibility(isMorning ? View.VISIBLE : View.GONE);
+        textViewMinHeartRateMorning.setVisibility(isMorning ? View.VISIBLE : View.GONE);
+        textViewMaxHeartRateAfternoon.setVisibility(isMorning ? View.GONE : View.VISIBLE);
+        textViewMinHeartRateAfternoon.setVisibility(isMorning ? View.GONE : View.VISIBLE);
+
+        // If it's not the correct time, clear the text
+        if (isMorning) {
+            textViewMaxHeartRateAfternoon.setText("");
+            textViewMinHeartRateAfternoon.setText("");
+        } else {
+            textViewMaxHeartRateMorning.setText("");
+            textViewMinHeartRateMorning.setText("");
         }
-        return formattedData.toString();
     }
 }

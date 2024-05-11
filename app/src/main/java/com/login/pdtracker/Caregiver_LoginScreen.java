@@ -63,7 +63,7 @@ public class Caregiver_LoginScreen extends AppCompatActivity {
         textForgotten.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Caregiver_LoginScreen.this, Caregiver_ResetScreen.class);
+                Intent intent = new Intent(Caregiver_LoginScreen.this, Caregiver_Home.class);
                 startActivity(intent);
 
             }

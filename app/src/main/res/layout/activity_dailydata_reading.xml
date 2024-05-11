@@ -39,14 +39,142 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
+        style="@style/FancyTextView"
         android:id="@+id/data_display"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
         android:text="Press Sync to load data..."
         android:textSize="16sp"
         app:layout_constraintTop_toBottomOf="@id/btn_sync"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+
+    <TextView
+        android:id="@+id/textView_currentTime"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="40dp"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/data_display" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/bt_bdb"
+        style="@style/Button2"
+        android:text="Back to dashboard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical"
+        android:padding="16dp"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView_currentTime">
+
+        <TextView
+            android:id="@+id/textView_bloodPressure"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Normal Blood Pressure:"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textView_bloodPressureAbnormality"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Threshould Blood Pressure: (Y/N)"
+            android:textSize="16sp" />
+
+
+
+        <TextView
+            android:id="@+id/textView_heartRateAbnormality"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Heart Rate Abnormality: Yes"
+            android:textSize="16sp" />
+
+
+        <TextView
+            android:id="@+id/textView_oxygenLevels"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Oxygen Levels: "
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textView_sleepQuality"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sleep Quality:"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textView_fallDetected"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Fall Detected: ?"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textView_coordinates"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:drawableLeft="@drawable/icon_gps"
+            android:text=""
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Heart Rate Details"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView_maxHeartRateAfternoon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Max Heart Rate Afternoon:"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textView_maxHeartRateMorning"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Max Heart Rate Morning:"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textView_minHeartRateAfternoon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Min Heart Rate Afternoon:"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textView_minHeartRateMorning"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Min Heart Rate Morning:"
+            android:textSize="16sp" />
+
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
