@@ -142,11 +142,11 @@ public class Doctors_Create_Note extends AppCompatActivity {
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists()) {
                     // Extract DoctorID from the user document
-                    Integer doctorID = documentSnapshot.getLong("DoctorID").intValue();
+                    //Integer doctorID = documentSnapshot.getLong("DoctorID").intValue();
 
                     // Create a new document with the collected data
                     Map<String, Object> note = new HashMap<>();
-                    note.put("DoctorID", doctorID); // Populate DoctorID with the fetched value
+                    //note.put("DoctorID", doctorID); // Populate DoctorID with the fetched value
                     note.put("NotesDate", FieldValue.serverTimestamp());
                     note.put("NotesText", doctorsNotes);
                     note.put("PatientAllergies", allergies);

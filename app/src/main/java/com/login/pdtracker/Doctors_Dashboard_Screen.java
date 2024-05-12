@@ -55,7 +55,7 @@ public class Doctors_Dashboard_Screen extends AppCompatActivity {
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Doctors_Dashboard_Screen.this, Doctors_Update_Note.class);
+                Intent intent = new Intent(Doctors_Dashboard_Screen.this, Doctor_Emergency_Notes.class);
                 startActivity(intent);
             }
         });
@@ -72,7 +72,7 @@ public class Doctors_Dashboard_Screen extends AppCompatActivity {
         b3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Doctors_Dashboard_Screen.this, Doctor_Emergency_Notes.class);
+                Intent intent = new Intent(Doctors_Dashboard_Screen.this, Doctors_View_Abnormalities.class);
                 startActivity(intent);
             }
         });

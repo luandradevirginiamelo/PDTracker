@@ -22,16 +22,23 @@
             android:name=".Viewlist_ofpatientfalldetection"
             android:exported="false" />
         <activity
-            android:name=".window_contact_patient_caregiver_paramedics"
+            android:name=".Doctors_View_Abnormalities"
             android:exported="false" />
         <activity
-            android:name=".window_view_selected_alert_details"
+            android:name=".Doctor_Emergency_Note_Edition"
+            android:exported="false" />
+
+        <activity
+            android:name=".Doctors_View_Abnormalities_Patients"
             android:exported="false" />
         <activity
-            android:name=".ViewAbnormal_conditiondetected"
+            android:name=".Doctor_Abnormal_Send"
             android:exported="false" />
         <activity
             android:name=".Doctor_Forgetpassword"
+            android:exported="false" />
+        <activity
+            android:name=".Doctor_Update_Note_Selection"
             android:exported="false" />
         <activity
             android:name=".Doctors_View_Daily_Reads_By_Patient"

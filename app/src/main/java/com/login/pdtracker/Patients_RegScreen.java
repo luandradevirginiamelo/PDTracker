@@ -318,7 +318,7 @@ public class Patients_RegScreen extends AppCompatActivity {
                             // Atualiza o documento do paciente com o ID do médico
                             db.collection("users") // Substitua "users" se a coleção tiver um nome diferente
                                     .document(patientId)
-                                    .update("IDdoctor", doctorId)
+                                    .update("DoctorID", doctorId)
                                     .addOnSuccessListener(aVoid -> Log.d("Firestore", "Doctor ID linked successfully to patient."))
                                     .addOnFailureListener(e -> Log.e("Firestore", "Error linking doctor ID", e));
                         } else {

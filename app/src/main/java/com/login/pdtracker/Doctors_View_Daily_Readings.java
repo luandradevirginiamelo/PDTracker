@@ -30,7 +30,7 @@ public class Doctors_View_Daily_Readings extends AppCompatActivity {
 
     private Spinner spinnerUsers;
     private FirebaseFirestore db;
-    private List<String> userIDs = new ArrayList<>(); // Initialize the list here
+    private List<String> userIDs = new ArrayList<>();
 
     interface Callback<T> {
         void onSuccess(T result);
@@ -42,34 +42,43 @@ public class Doctors_View_Daily_Readings extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctor_view_daily_readings);
 
-        // Initialize Firebase Firestore
         db = FirebaseFirestore.getInstance();
 
-        // Initialize spinner
         spinnerUsers = findViewById(R.id.spinner_users);
 
         AppCompatButton bt_view = findViewById(R.id.View);
         bt_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Start the next activity
-                Intent intent = new Intent(Doctors_View_Daily_Readings.this, Doctors_View_Daily_Reads_By_Patient.class);
-                startActivity(intent);
+                // Get the selected user's position in the spinner
+                int selectedPosition = spinnerUsers.getSelectedItemPosition();
+
+                // Check if a user is selected
+                if (selectedPosition != AdapterView.INVALID_POSITION) {
+                    // Get the corresponding user ID from the list
+                    String selectedUserID = userIDs.get(selectedPosition);
+
+                    // Pass the selected user's document ID to the next activity
+                    Intent intent = new Intent(Doctors_View_Daily_Readings.this, Doctors_View_Daily_Reads_By_Patient.class);
+                    intent.putExtra("selectedUserID", selectedUserID);
+                    startActivity(intent);
+                } else {
+                    // Handle case when no user is selected
+                    Log.e("Error", "No user selected");
+                }
             }
         });
 
-        // Button to go back to dashboard
+
         AppCompatButton bt_bdb = findViewById(R.id.bt_bdb);
         bt_bdb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Go back to Doctors_Dashboard_Screen activity
                 Intent intent = new Intent(Doctors_View_Daily_Readings.this, Doctors_Dashboard_Screen.class);
                 startActivity(intent);
             }
         });
 
-        // Fetch users from Firestore where DoctorID matches logged doctor's documentID
         getLoggedDoctorDocumentID(new Callback<String>() {
             @Override
             public void onSuccess(String doctorDocumentID) {
@@ -78,7 +87,6 @@ public class Doctors_View_Daily_Readings extends AppCompatActivity {
 
             @Override
             public void onError(String message) {
-                // Handle errors
                 Log.e("Error", message);
             }
         });
@@ -86,17 +94,17 @@ public class Doctors_View_Daily_Readings extends AppCompatActivity {
 
     private void fetchUsers(String doctorDocumentID) {
         db.collection("users")
-                .whereEqualTo("DoctorID", 1) // Filter users where DoctorID matches logged doctor's documentID
+                .whereEqualTo("DoctorID", doctorDocumentID)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            userIDs.clear(); // Clear the list before adding new user IDs
+                            userIDs.clear();
                             List<String> userNames = new ArrayList<>();
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                String userID = document.getId(); // Get the user ID
-                                userIDs.add(userID); // Add user ID to the list
+                                String userID = document.getId();
+                                userIDs.add(userID);
                                 String name = document.getString("name") + " " + document.getString("surname");
                                 userNames.add(name);
                             }
@@ -108,20 +116,16 @@ public class Doctors_View_Daily_Readings extends AppCompatActivity {
                             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                             spinnerUsers.setAdapter(adapter);
                         } else {
-                            // Handle errors
+                            Log.e("Fetch Users", "Error getting users", task.getException());
                         }
                     }
                 });
     }
 
-    // Dummy method to get the logged doctor's documentID
     private void getLoggedDoctorDocumentID(Callback<String> callback) {
-        // Get the UID of the logged-in user
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
             String doctorUID = currentUser.getUid();
-
-            // Query the Doctor collection to find the documentID where userAuthID == doctorUID
             FirebaseFirestore.getInstance().collection("Doctor")
                     .whereEqualTo("userAuthID", doctorUID)
                     .get()
@@ -129,13 +133,10 @@ public class Doctors_View_Daily_Readings extends AppCompatActivity {
                         @Override
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                             if (!queryDocumentSnapshots.isEmpty()) {
-                                // Retrieve the first document's ID (assuming there's only one matching document)
                                 DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
                                 String doctorDocumentID = documentSnapshot.getId();
-                                // Use the retrieved doctor documentID
                                 callback.onSuccess(doctorDocumentID);
                             } else {
-                                // Handle the case where no matching document is found
                                 String message = "Doctor is not logged in";
                                 callback.onError(message);
                             }
@@ -144,17 +145,13 @@ public class Doctors_View_Daily_Readings extends AppCompatActivity {
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            // Handle failures
                             String message = "Doctor is not logged in";
                             callback.onError(message);
                         }
                     });
         } else {
-            // Handle the case where the current user is null
             String message = "Current user is null";
             callback.onError(message);
         }
     }
 }
-
-
