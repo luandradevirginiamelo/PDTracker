@@ -91,6 +91,89 @@ public class Doctor_Abnormal_Send extends AppCompatActivity {
                 });
     }
 
+    private void fetchAbnormalities() {
+        db.collection("patient_profiles")
+                .document(selectedDocumentId)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful() && task.getResult() != null) {
+                            DocumentSnapshot patientProfileDoc = task.getResult();
+                            String smartID = patientProfileDoc.getString("smartID");
+                            if (smartID != null) {
+                                db.collection("health_data")
+                                        .document(smartID)
+                                        .get()
+                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                if (task.isSuccessful() && task.getResult() != null) {
+                                                    DocumentSnapshot healthDataDoc = task.getResult();
+                                                    String maxHeartRateMorning = healthDataDoc.getString("Max Heart Rate Morning");
+                                                    String maxHeartRateAfternoon = healthDataDoc.getString("Max Heart Rate Afternoon");
+                                                    String minHeartRateMorning = healthDataDoc.getString("Min Heart Rate Morning");
+                                                    String minHeartRateAfternoon = healthDataDoc.getString("Min Heart Rate Afternoon");
+                                                    String bloodPressure = healthDataDoc.getString("Blood Pressure");
+
+                                                    // Fetch threshold heart and blood pressure from patient_profile
+                                                    String thresholdHeart = patientProfileDoc.getString("threshold heart");
+                                                    String thresholdBloodPressure = patientProfileDoc.getString("threshold blood pressure");
+
+                                                    // Check for heart rate abnormalities
+                                                    int maxHeartRate = Math.max(Integer.parseInt(maxHeartRateMorning), Integer.parseInt(maxHeartRateAfternoon));
+                                                    int minHeartRate = Math.min(Integer.parseInt(minHeartRateMorning), Integer.parseInt(minHeartRateAfternoon));
+                                                    final String heartRateAbnormality;
+                                                    if (maxHeartRate > Integer.parseInt(thresholdHeart) || minHeartRate < Integer.parseInt(thresholdHeart)) {
+                                                        heartRateAbnormality = "Heart Rate Abnormality: " + Math.max(maxHeartRate, minHeartRate);
+                                                    } else {
+                                                        heartRateAbnormality = null;
+                                                    }
+
+                                                    // Check for blood pressure abnormalities
+                                                    String[] bloodPressureValues = bloodPressure.split("/");
+                                                    int systolicBP = Integer.parseInt(bloodPressureValues[0]);
+                                                    int diastolicBP = Integer.parseInt(bloodPressureValues[1]);
+                                                    final String bloodPressureAbnormality;
+                                                    if (systolicBP > Integer.parseInt(thresholdBloodPressure) || diastolicBP > Integer.parseInt(thresholdBloodPressure)) {
+                                                        bloodPressureAbnormality = "Blood Pressure Alert: " + bloodPressure;
+                                                    } else {
+                                                        bloodPressureAbnormality = null;
+                                                    }
+
+                                                    // Update the TextViews with detected abnormalities
+                                                    runOnUiThread(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            if (heartRateAbnormality != null) {
+                                                                TextView abnormalDetectedText = findViewById(R.id.AbnormalDetectedText);
+                                                                abnormalDetectedText.setText(heartRateAbnormality);
+                                                            } else if (bloodPressureAbnormality != null) {
+                                                                TextView abnormalDetectedText = findViewById(R.id.AbnormalDetectedText);
+                                                                abnormalDetectedText.setText(bloodPressureAbnormality);
+                                                            } else {
+                                                                TextView abnormalDetectedText = findViewById(R.id.AbnormalDetectedText);
+                                                                abnormalDetectedText.setText("No abnormalities detected");
+                                                            }
+                                                        }
+                                                    });
+                                                } else {
+                                                    Log.e("Doctor_Abnormal_Send", "Error fetching health data");
+                                                }
+                                            }
+                                        });
+                            } else {
+                                Log.e("Doctor_Abnormal_Send", "Smart ID is null");
+                            }
+                        } else {
+                            Log.e("Doctor_Abnormal_Send", "Error fetching patient profile");
+                        }
+                    }
+                });
+    }
+
+
+
     private void fetchCareGiverDetails() {
         db.collection("Caregiver")
                 .document(caregiverID)

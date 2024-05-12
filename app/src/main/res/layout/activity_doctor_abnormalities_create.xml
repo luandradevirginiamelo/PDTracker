@@ -51,7 +51,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Normal Blood Pressure: "
-        android:textColor="@color/Turquoise"
+        android:textColor="@color/white"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -63,11 +63,35 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Limits: "
-        android:textColor="@android:color/holo_orange_dark"
+        android:textColor="@color/white"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewCareGiverName" />
+
+    <TextView
+        android:id="@+id/AbnormalDetected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Abnormality Detected: "
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewCaregiverNo" />
+
+    <TextView
+        android:id="@+id/AbnormalDetectedText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Abnormality Detected: "
+        android:textColor="@android:color/holo_orange_dark"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/AbnormalDetected" />
 
     <EditText
         android:id="@+id/Notification"
@@ -80,7 +104,7 @@
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewCaregiverNo" />
+        app:layout_constraintTop_toBottomOf="@+id/AbnormalDetectedText" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/bt_bdb"
