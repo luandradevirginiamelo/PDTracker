@@ -18,7 +18,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import com.google.firebase.Timestamp;
 
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,6 +35,8 @@ public class Doctor_Abnormal_Send extends AppCompatActivity {
     private String patientSmartWatchDevice;
     private String doctorID;
     private String caregiverID;
+
+    private TextView abnormalDetectedText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,9 +58,17 @@ public class Doctor_Abnormal_Send extends AppCompatActivity {
         textViewCareGiverName = findViewById(R.id.textViewCareGiverName);
         textViewCaregiverNo = findViewById(R.id.textViewCaregiverNo);
         editTextNotification = findViewById(R.id.Notification);
+        abnormalDetectedText = findViewById(R.id.AbnormalDetectedText);
 
         // Fetch patient details and then fetch caregiver details
         fetchPatientDetails();
+        fetchAbnormalities();
+        findViewById(R.id.SendNotification).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendNotification();
+            }
+        });
     }
 
     private void fetchPatientDetails() {
@@ -110,10 +119,10 @@ public class Doctor_Abnormal_Send extends AppCompatActivity {
                                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                                 if (task.isSuccessful() && task.getResult() != null) {
                                                     DocumentSnapshot healthDataDoc = task.getResult();
-                                                    String maxHeartRateMorning = healthDataDoc.getString("Max Heart Rate Morning");
-                                                    String maxHeartRateAfternoon = healthDataDoc.getString("Max Heart Rate Afternoon");
-                                                    String minHeartRateMorning = healthDataDoc.getString("Min Heart Rate Morning");
-                                                    String minHeartRateAfternoon = healthDataDoc.getString("Min Heart Rate Afternoon");
+                                                    String maxHeartRateMorning = String.valueOf(healthDataDoc.getLong("Max Heart Rate Morning"));
+                                                    String maxHeartRateAfternoon = String.valueOf(healthDataDoc.getLong("Max Heart Rate Afternoon"));
+                                                    String minHeartRateMorning = String.valueOf(healthDataDoc.getLong("Min Heart Rate Morning"));
+                                                    String minHeartRateAfternoon = String.valueOf(healthDataDoc.getLong("Min Heart Rate Afternoon"));
                                                     String bloodPressure = healthDataDoc.getString("Blood Pressure");
 
                                                     // Fetch threshold heart and blood pressure from patient_profile
@@ -125,7 +134,7 @@ public class Doctor_Abnormal_Send extends AppCompatActivity {
                                                     int minHeartRate = Math.min(Integer.parseInt(minHeartRateMorning), Integer.parseInt(minHeartRateAfternoon));
                                                     final String heartRateAbnormality;
                                                     if (maxHeartRate > Integer.parseInt(thresholdHeart) || minHeartRate < Integer.parseInt(thresholdHeart)) {
-                                                        heartRateAbnormality = "Heart Rate Abnormality: " + Math.max(maxHeartRate, minHeartRate);
+                                                        heartRateAbnormality = "Heart Rate Abnormality: " + Math.max(maxHeartRate, minHeartRate) +"BPM";
                                                     } else {
                                                         heartRateAbnormality = null;
                                                     }
@@ -135,7 +144,13 @@ public class Doctor_Abnormal_Send extends AppCompatActivity {
                                                     int systolicBP = Integer.parseInt(bloodPressureValues[0]);
                                                     int diastolicBP = Integer.parseInt(bloodPressureValues[1]);
                                                     final String bloodPressureAbnormality;
-                                                    if (systolicBP > Integer.parseInt(thresholdBloodPressure) || diastolicBP > Integer.parseInt(thresholdBloodPressure)) {
+
+                                                    String[] bloodPressureLimitsValues = thresholdBloodPressure.split("/");
+                                                    int LimitsystolicBP = Integer.parseInt(bloodPressureLimitsValues[0]);
+                                                    int LimitdiastolicBP = Integer.parseInt(bloodPressureLimitsValues[1]);
+
+
+                                                    if (systolicBP > LimitsystolicBP || diastolicBP > LimitdiastolicBP) {
                                                         bloodPressureAbnormality = "Blood Pressure Alert: " + bloodPressure;
                                                     } else {
                                                         bloodPressureAbnormality = null;
@@ -145,14 +160,20 @@ public class Doctor_Abnormal_Send extends AppCompatActivity {
                                                     runOnUiThread(new Runnable() {
                                                         @Override
                                                         public void run() {
-                                                            if (heartRateAbnormality != null) {
-                                                                TextView abnormalDetectedText = findViewById(R.id.AbnormalDetectedText);
+                                                            TextView abnormalDetectedText = findViewById(R.id.AbnormalDetectedText);
+                                                            if (heartRateAbnormality != null && bloodPressureAbnormality != null) {
+                                                                // Concatenate both abnormalities if both are not null
+                                                                int maxHeartRate = Integer.parseInt(maxHeartRateMorning);
+                                                                int minHeartRate = Integer.parseInt(minHeartRateMorning);
+                                                                abnormalDetectedText.setText("Heart Rate peak " + Math.max(maxHeartRate, minHeartRate) + " BPMs registered and " + bloodPressureAbnormality);
+                                                            } else if (heartRateAbnormality != null) {
+                                                                // Set text for heart rate abnormality
                                                                 abnormalDetectedText.setText(heartRateAbnormality);
                                                             } else if (bloodPressureAbnormality != null) {
-                                                                TextView abnormalDetectedText = findViewById(R.id.AbnormalDetectedText);
+                                                                // Set text for blood pressure abnormality
                                                                 abnormalDetectedText.setText(bloodPressureAbnormality);
                                                             } else {
-                                                                TextView abnormalDetectedText = findViewById(R.id.AbnormalDetectedText);
+                                                                // Set text if no abnormalities detected
                                                                 abnormalDetectedText.setText("No abnormalities detected");
                                                             }
                                                         }
@@ -190,19 +211,40 @@ public class Doctor_Abnormal_Send extends AppCompatActivity {
                 });
     }
 
-    public void sendNotification(View view) {
+    public void sendNotification() {
         String notificationText = editTextNotification.getText().toString();
         if (!notificationText.isEmpty()) {
+            // Create a map to store the data
             Map<String, Object> notificationData = new HashMap<>();
-            notificationData.put("PatientID", patientID);
-            notificationData.put("PatientSmartWatchDevice", patientSmartWatchDevice);
+
+            // Add the values from TextViews
+            notificationData.put("Patient Name", textViewPatientName.getText().toString());
+            notificationData.put("Patient Mobile", textViewPatientMobile.getText().toString());
+            notificationData.put("Caregiver Name", textViewCareGiverName.getText().toString());
+            notificationData.put("Caregiver Mobile", textViewCaregiverNo.getText().toString());
+
+            // Check if abnormalDetectedText is not null before accessing its text
+            if (abnormalDetectedText != null) {
+                notificationData.put("Abnormality Detected", abnormalDetectedText.getText().toString());
+            } else {
+                notificationData.put("Abnormality Detected", "");
+            }
+
+            // Add the PatientID
+            notificationData.put("PatientID", selectedDocumentId);
+
+            // Add the notification text
             notificationData.put("TextNotification", notificationText);
+
+            // Add timestamp
             notificationData.put("Notification", Timestamp.now());
+
+            // Add the DoctorID and CaregiverID
             notificationData.put("DoctorID", doctorID);
             notificationData.put("Caregiver", caregiverID);
 
-            // Add the notification to the Firestore collection
-            db.collection("AbnormalitiesDetectedNotes")
+            // Add the notification data to the Firestore collection
+            db.collection("Notification_For_Patient_Abnormal_Detected")
                     .document()
                     .set(notificationData)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -211,6 +253,9 @@ public class Doctor_Abnormal_Send extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 Toast.makeText(Doctor_Abnormal_Send.this, "Notification sent successfully", Toast.LENGTH_SHORT).show();
 
+                                // Navigate to the doctor's dashboard screen
+                                Intent intent = new Intent(Doctor_Abnormal_Send.this, Doctors_Dashboard_Screen.class);
+                                startActivity(intent);
                                 finish();
                             } else {
                                 Toast.makeText(Doctor_Abnormal_Send.this, "Failed to send notification", Toast.LENGTH_SHORT).show();
@@ -221,4 +266,5 @@ public class Doctor_Abnormal_Send extends AppCompatActivity {
             Toast.makeText(this, "Please enter notification text", Toast.LENGTH_SHORT).show();
         }
     }
+
 }
