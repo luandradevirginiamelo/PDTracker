@@ -16,13 +16,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-
     <TextView
         android:id="@+id/title_dailydata"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:text="Daily readings from patient's smartwatch"
+        android:layout_marginTop="50dp"
+        android:text="Daily Data from Smart Watch"
         android:textColor="@color/black"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -30,133 +29,165 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/bt_bdb7"
-        style="@style/Buttoncaregiver"
-        android:text="Back to dashboard"
+        android:id="@+id/btn_sync"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        app:layout_constraintTop_toBottomOf="@id/ContainerComponents"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/ContainerComponents"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:text="Sync Data"
+        android:layout_marginTop="16dp"
         app:layout_constraintTop_toBottomOf="@id/title_dailydata"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+        style="@style/FancyTextView"
+        android:id="@+id/data_display"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:text="Press Sync to load data..."
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/btn_sync"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+    <TextView
+        android:id="@+id/textView_currentTime"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="40dp"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/data_display" />
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/bt_bdb"
+        style="@style/Button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back to dashboard"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical"
+        android:padding="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView_currentTime">
+
+        <TextView
+            android:id="@+id/textView_bloodPressure"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Normal Blood Pressure:"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textView_bloodPressureAbnormality"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Threshould Blood Pressure: (Y/N)"
+            android:textSize="16sp" />
 
 
 
         <TextView
-            android:id="@+id/patnameme"
-            android:textStyle="bold"
-            android:layout_width="250dp"
-            android:layout_height="40dp"
-            android:visibility="visible"
-            android:hint="Patient name:"
-            android:inputType="text" />
+            android:id="@+id/textView_heartRateAbnormality"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Heart Rate Abnormality: Yes"
+            android:textSize="16sp" />
 
 
         <TextView
-            android:id="@+id/currentheart_rateam"
-            android:textStyle="bold"
-            android:layout_width="250dp"
-            android:layout_height="40dp"
-            android:visibility="visible"
-            android:hint="Recording Heart Rate (a.m):"
-            android:inputType="text"
-            app:layout_constraintStart_toStartOf="@id/patnameme"
-            app:layout_constraintTop_toBottomOf="@id/patnameme" />
-
+            android:id="@+id/textView_oxygenLevels"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Oxygen Levels: "
+            android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/currentheart_ratepm"
-            android:textStyle="bold"
-            android:layout_width="250dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:hint="Recording Heart Rate (p.m):"
-            android:inputType="text"
-            app:layout_constraintStart_toStartOf="@id/currentheart_rateam"
-            app:layout_constraintTop_toBottomOf="@id/currentheart_rateam" />
-
+            android:id="@+id/textView_sleepQuality"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sleep Quality:"
+            android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/abnormality_heart"
-            android:textStyle="bold"
-            android:layout_width="250dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:hint="Abnormality Heart rate detected (Y/N):"
-            android:inputType="text"
-            app:layout_constraintStart_toStartOf="@+id/currentheart_ratepm"
-            app:layout_constraintTop_toBottomOf="@+id/currentheart_ratepm" />
-
+            android:id="@+id/textView_fallDetected"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Fall Detected: ?"
+            android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/blood_pnormal"
-            android:textStyle="bold"
-            android:layout_width="250dp"
-            android:layout_height="40dp"
+            android:id="@+id/textView_coordinates"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
             android:layout_marginTop="20dp"
-            android:hint="Blood Pressure(a.m):"
-            android:inputType="text"
-            app:layout_constraintStart_toStartOf="@+id/abnormality_heart"
-            app:layout_constraintTop_toBottomOf="@+id/abnormality_heart" />
-
+            android:drawableLeft="@drawable/icon_gps"
+            android:text=""
+            android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/bp_pm"
-            android:textStyle="bold"
-            android:layout_width="250dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:hint="Blood Pressure(p.m):"
-            android:inputType="text"
-            app:layout_constraintStart_toStartOf="@+id/blood_pnormal"
-            app:layout_constraintTop_toBottomOf="@+id/blood_pnormal" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Heart Rate Details"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/abnormality_bloodp"
-            android:textStyle="bold"
-            android:layout_width="250dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:hint="Abnormality blood pressure detected (Y/N):"
-            android:inputType="text"
-            app:layout_constraintStart_toStartOf="@+id/bp_pm"
-            app:layout_constraintTop_toBottomOf="@+id/bp_pm" />
+            android:id="@+id/textView_maxHeartRateAfternoon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Max Heart Rate Afternoon:"
+            android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/gps"
-            android:textStyle="bold"
-            android:layout_width="250dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:hint="Patient current GPS location:"
-            android:inputType="text"
-            app:layout_constraintStart_toStartOf="@+id/abnormality_bloodp"
-            app:layout_constraintTop_toBottomOf="@+id/abnormality_bloodp" />
-
+            android:id="@+id/textView_maxHeartRateMorning"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Max Heart Rate Morning:"
+            android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/doctor_name"
-            android:textStyle="bold"
-            android:layout_width="250dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:hint="Doctor name:"
-            android:inputType="text"
-            app:layout_constraintStart_toStartOf="@+id/gps"
-            app:layout_constraintTop_toBottomOf="@+id/gps" />
+            android:id="@+id/textView_minHeartRateAfternoon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Min Heart Rate Afternoon:"
+            android:textSize="16sp" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/textView_minHeartRateMorning"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Min Heart Rate Morning:"
+            android:textSize="16sp" />
+
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/Smartw_ID"
+        style="@style/Edit_Text2"
+        android:layout_width="280dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="8dp"
+        android:hint="SmartWatch ID"
+        android:inputType="text"
+        app:layout_constraintBottom_toTopOf="@id/bt_bdb"
+        app:layout_constraintStart_toStartOf="@id/bt_bdb"
+        app:layout_constraintEnd_toEndOf="@id/bt_bdb" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

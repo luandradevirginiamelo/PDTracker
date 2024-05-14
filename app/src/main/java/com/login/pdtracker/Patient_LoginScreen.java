@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,15 +26,17 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class Patient_LoginScreen extends AppCompatActivity {
 
-    private TextView textRegister;
+    private static final String TAG = "Patient_LoginScreen";
+    private TextView textRegister, textForgotten;
     private EditText edit_email, edit_senha;
     private Button bt_login;
-    String[] errorMessages = {"Please complete all required fields to proceed", "Login Successfully!"};
     private ProgressBar progressbar;
-    private TextView textForgotten;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance(); // Firestore instance
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,56 +49,51 @@ public class Patient_LoginScreen extends AppCompatActivity {
             return insets;
         });
 
-        // Initialize the button
+        initComponents();
+        setupButtons();
+    }
+
+    private void initComponents() {
+        textRegister = findViewById(R.id.Register);
+        textForgotten = findViewById(R.id.Forgotten);
+        edit_email = findViewById(R.id.edit_email);
+        edit_senha = findViewById(R.id.edit_senha);
         bt_login = findViewById(R.id.bt_login);
+        progressbar = findViewById(R.id.progressbar);
+    }
 
-        // Initialize components after setting up the layout
-        IniciarComponentes();
-
-        textRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Patient_LoginScreen.this, Patients_RegScreen.class);
-                startActivity(intent);
-            }
+    private void setupButtons() {
+        textRegister.setOnClickListener(v -> {
+            Intent intent = new Intent(Patient_LoginScreen.this, Patients_RegScreen.class);
+            startActivity(intent);
         });
 
-        textForgotten.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Patient_LoginScreen.this, Reset_PasswordScreen.class);
-                startActivity(intent);
-
-            }
+        textForgotten.setOnClickListener(v -> {
+            Intent intent = new Intent(Patient_LoginScreen.this, Reset_PasswordScreen.class);
+            startActivity(intent);
         });
 
-        bt_login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String email = edit_email.getText().toString();
-                String password = edit_senha.getText().toString();
+        bt_login.setOnClickListener(v -> {
+            String email = edit_email.getText().toString();
+            String password = edit_senha.getText().toString();
 
-                if (email.isEmpty() || password.isEmpty()) {
-                    Snackbar snackbar = Snackbar.make(v, errorMessages[0], Snackbar.LENGTH_SHORT);
-                    snackbar.setBackgroundTint(Color.WHITE);
-                    snackbar.setTextColor(Color.BLACK);
-                    snackbar.show();
-                } else {
-                    AutenticarUsuario();
-                }
+            if (email.isEmpty() || password.isEmpty()) {
+                Snackbar.make(v, "Please complete all required fields to proceed", Snackbar.LENGTH_SHORT)
+                        .setBackgroundTint(Color.WHITE)
+                        .setTextColor(Color.BLACK)
+                        .show();
+            } else {
+                authenticateUser(email, password);
             }
         });
     }
-    private void AutenticarUsuario() {
-        String email = edit_email.getText().toString();
-        String password = edit_senha.getText().toString();
 
+    private void authenticateUser(String email, String password) {
         if (!isEmailValid(email)) {
-            // Se o email não estiver em um formato válido, exibir mensagem de erro
-            Snackbar snackbar = Snackbar.make(bt_login, "Invalid email format. Please enter a valid email address.", Snackbar.LENGTH_SHORT);
-            snackbar.setBackgroundTint(Color.WHITE);
-            snackbar.setTextColor(Color.RED);
-            snackbar.show();
+            Snackbar.make(bt_login, "Invalid email format. Please enter a valid email address.", Snackbar.LENGTH_SHORT)
+                    .setBackgroundTint(Color.WHITE)
+                    .setTextColor(Color.RED)
+                    .show();
             return;
         }
 
@@ -103,59 +101,58 @@ public class Patient_LoginScreen extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    progressbar.setVisibility(View.VISIBLE);
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            PatientsDashboard();
-                        }
-                    }, 3000);
-                } else {
-                    // Capturando exceção específica para email não cadastrado
-                    if (task.getException() instanceof FirebaseAuthInvalidUserException) {
-                        Snackbar snackbar = Snackbar.make(bt_login, "Email not registered. Please register first.", Snackbar.LENGTH_SHORT);
-                        snackbar.setBackgroundTint(Color.WHITE);
-                        snackbar.setTextColor(Color.RED);
-                        snackbar.show();
-                    } else if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                        // Se a senha estiver incorreta, exibir mensagem de erro
-                        Snackbar snackbar = Snackbar.make(bt_login, "Wrong password. Please try again.", Snackbar.LENGTH_SHORT);
-                        snackbar.setBackgroundTint(Color.WHITE);
-                        snackbar.setTextColor(Color.RED);
-                        snackbar.show();
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if (user != null) {
+                        updateFCMTokenAndNavigate(user);
                     }
+                } else {
+                    handleLoginFailure(task.getException());
                 }
             }
         });
     }
 
+    private void updateFCMTokenAndNavigate(FirebaseUser user) {
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+            if (!task.isSuccessful()) {
+                Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                return;
+            }
+            String token = task.getResult();
+            Log.d(TAG, "FCM Token: " + token);
+
+            db.collection("users").document(user.getUid())
+                    .update("fcmToken", token)
+                    .addOnSuccessListener(aVoid -> {
+                        Log.d(TAG, "Token updated successfully.");
+                        progressbar.setVisibility(View.VISIBLE);
+                        new Handler().postDelayed(this::goToPatientDashboard, 3000);
+                    })
+                    .addOnFailureListener(e -> Log.w(TAG, "Error updating token", e));
+        });
+    }
+
+    private void handleLoginFailure(Exception exception) {
+        if (exception instanceof FirebaseAuthInvalidUserException) {
+            Snackbar.make(bt_login, "Email not registered. Please register first.", Snackbar.LENGTH_SHORT)
+                    .setBackgroundTint(Color.WHITE)
+                    .setTextColor(Color.RED)
+                    .show();
+        } else if (exception instanceof FirebaseAuthInvalidCredentialsException) {
+            Snackbar.make(bt_login, "Wrong password. Please try again.", Snackbar.LENGTH_SHORT)
+                    .setBackgroundTint(Color.WHITE)
+                    .setTextColor(Color.RED)
+                    .show();
+        }
+    }
+
     private boolean isEmailValid(String email) {
-        // Esta é uma validação básica para verificar o formato do email
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        FirebaseUser userlogon = FirebaseAuth.getInstance().getCurrentUser();
-
-         if (userlogon !=null){
-             PatientsDashboard();
-         }
-    }
-
-    private void PatientsDashboard() {
+    private void goToPatientDashboard() {
         Intent intent = new Intent(Patient_LoginScreen.this, Patients_Home.class);
         startActivity(intent);
         finish();
     }
-
-    private void IniciarComponentes() {
-        textRegister = findViewById(R.id.Register);
-        textForgotten = findViewById(R.id.Forgotten);
-        edit_email = findViewById(R.id.edit_email);
-        edit_senha = findViewById(R.id.edit_senha);
-        progressbar = findViewById(R.id.progressbar);
-    }
 }
-
