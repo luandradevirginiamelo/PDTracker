@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background3"
+        tools:context=".Doctors_View_Daily_Reads_By_Patient">
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="16dp"
+        android:src="@drawable/logo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewPatientName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="150dp"
+        android:text="Patient Name"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="@id/logo"/>
+
+    <TextView
+        android:id="@+id/textViewPatientMobile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="BloodPressure: "
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textViewPatientName" />
+
+    <TextView
+        android:id="@+id/textViewCareGiverName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Normal Blood Pressure: "
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewPatientMobile" />
+
+    <TextView
+        android:id="@+id/textViewCaregiverNo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Limits: "
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewCareGiverName" />
+
+    <TextView
+        android:id="@+id/AbnormalDetected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Abnormality Detected: "
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewCaregiverNo" />
+
+    <TextView
+        android:id="@+id/AbnormalDetectedText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Abnormality Detected: "
+        android:textColor="@android:color/holo_orange_dark"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/AbnormalDetected" />
+
+    <TextView
+        android:id="@+id/FallDetected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Fall Detected at: "
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/AbnormalDetectedText" />
+
+    <TextView
+        android:id="@+id/FallDetectedText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Abnormality Detected: "
+        android:textColor="@android:color/holo_orange_dark"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/FallDetected" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/CallPatient"
+        style="@style/Buttondoctor"
+        android:layout_width="337dp"
+        android:layout_height="61dp"
+        android:layout_marginTop="30dp"
+        android:text="Call Patient"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/FallDetectedText" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/CallCaregiver"
+        style="@style/Buttondoctor"
+        android:layout_width="337dp"
+        android:layout_height="61dp"
+        android:layout_marginTop="20dp"
+        android:text="Call Caregiver"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/CallPatient" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/CallParamedic"
+        style="@style/Buttondoctor"
+        android:layout_width="337dp"
+        android:layout_height="61dp"
+        android:layout_marginTop="20dp"
+        android:text="Call Paramedic"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/CallCaregiver" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/SendNotificationParamedic"
+        style="@style/Buttondoctor"
+        android:layout_width="337dp"
+        android:layout_height="61dp"
+        android:layout_marginTop="20dp"
+        android:text="Send Notification to Paramedics"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/CallParamedic" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/bt_bdb"
+        style="@style/Buttondoctor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="128dp"
+        android:layout_marginTop="30dp"
+        android:text="Back to dashboard"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/SendNotificationParamedic" />
+
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:text="Fall Alert!!!"
+        tools:layout_editor_absoluteX="112dp"
+        tools:layout_editor_absoluteY="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/logo" />
+</androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>

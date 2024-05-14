@@ -19,26 +19,22 @@
 
 
     <androidx.appcompat.widget.AppCompatButton
-        style="@style/Button"
         android:id="@+id/Patienthome"
+        style="@style/Button"
+        android:layout_marginTop="120dp"
         android:text="PATIENT"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="90dp"
-        app:layout_constraintTop_toBottomOf="@id/logo"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/logo" />
 
     <androidx.appcompat.widget.AppCompatButton
-        style="@style/Buttondoctor"
         android:id="@+id/b3D"
+        style="@style/Buttondoctor"
+        android:layout_marginTop="30dp"
         android:text="DOCTOR"
-        android:layout_marginTop="10dp"
-        app:layout_constraintTop_toBottomOf="@id/Patienthome"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/Patienthome" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/b4C"
@@ -47,7 +43,18 @@
         app:layout_constraintTop_toBottomOf="@id/b3D"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="30dp"/>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/b4C"
+        app:srcCompat="@drawable/griffith_college_black_logo_2_1024x403" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

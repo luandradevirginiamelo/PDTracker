@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -13,6 +14,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
@@ -136,17 +139,14 @@ public class Doctors_Create_Note extends AppCompatActivity {
         // Create a reference to the user document in Firestore
         DocumentReference userRef = db.collection("users").document(selectedUserID);
 
-        // Fetch the user document
-        userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        // Fetch the DoctorID asynchronously
+        fetchDoctorID(selectedUserID).addOnSuccessListener(new OnSuccessListener<String>() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()) {
-                    // Extract DoctorID from the user document
-                    //Integer doctorID = documentSnapshot.getLong("DoctorID").intValue();
-
+            public void onSuccess(String doctorID) {
+                if (doctorID != null) {
                     // Create a new document with the collected data
                     Map<String, Object> note = new HashMap<>();
-                    //note.put("DoctorID", doctorID); // Populate DoctorID with the fetched value
+                    note.put("DoctorID", doctorID); // Populate DoctorID with the fetched value
                     note.put("NotesDate", FieldValue.serverTimestamp());
                     note.put("NotesText", doctorsNotes);
                     note.put("PatientAllergies", allergies);
@@ -175,16 +175,52 @@ public class Doctors_Create_Note extends AppCompatActivity {
                                 }
                             });
                 } else {
-                    // User document does not exist
-                    Toast.makeText(Doctors_Create_Note.this, "User document not found", Toast.LENGTH_SHORT).show();
+                    // DoctorID is null, handle appropriately
+                    Toast.makeText(Doctors_Create_Note.this, "DoctorID not found", Toast.LENGTH_SHORT).show();
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 // Handle errors
-                Toast.makeText(Doctors_Create_Note.this, "Failed to fetch user document", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Doctors_Create_Note.this, "Failed to fetch DoctorID", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private Task<String> fetchDoctorID(String selectedUserID) {
+        // Initialize a Task object to handle the asynchronous operation
+        TaskCompletionSource<String> taskCompletionSource = new TaskCompletionSource<>();
+
+        // Fetch data from Firestore based on the selected user's ID
+        FirebaseFirestore.getInstance().collection("users")
+                .document(selectedUserID)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) {
+                            // Extract DoctorID from document
+                            String doctorID = documentSnapshot.getString("DoctorID");
+
+                            // Resolve the Task with the retrieved DoctorID
+                            taskCompletionSource.setResult(doctorID);
+                        } else {
+                            // If the document does not exist, resolve with null
+                            taskCompletionSource.setResult(null);
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Handle failure by resolving with null and logging the error
+                        taskCompletionSource.setResult(null);
+                        Log.e("Firestore", "Error fetching patient profile document", e);
+                    }
+                });
+
+        // Return the Task object's future result
+        return taskCompletionSource.getTask();
     }
 }

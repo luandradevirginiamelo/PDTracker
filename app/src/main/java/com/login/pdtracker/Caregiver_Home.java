@@ -54,14 +54,14 @@ public class Caregiver_Home extends AppCompatActivity {
         b2c.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Caregiver_Home.this, Daily_data_reading_Caregiver.class);
+                Intent intent = new Intent(Caregiver_Home.this, Caregiver_View_Daily_Readings.class);
                 startActivity(intent);
             }
         });
         b4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Caregiver_Home.this, Alerts_Falldetection_Caregiver.class);
+                Intent intent = new Intent(Caregiver_Home.this, Fall_Conditions_Caregiver.class);
                 startActivity(intent);
             }
         });

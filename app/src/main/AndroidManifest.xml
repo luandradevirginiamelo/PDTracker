@@ -3,7 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.login.pdtracker">
 
+
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-feature android:name="android.hardware.telephony" android:required="false" />
+
 
     <application
         android:allowBackup="true"
@@ -15,6 +18,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PDTracker"
         tools:targetApi="31">
+        <service
+            android:name=".MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+
+        </service>
         <activity
             android:name=".send_doctors_note_to_paramedics"
             android:exported="false" />
@@ -31,9 +42,19 @@
         <activity
             android:name=".Doctors_View_Abnormalities_Patients"
             android:exported="false" />
+
+        <activity
+            android:name=".Doctors_View_Fall_Patients"
+            android:exported="false" />
+
         <activity
             android:name=".Doctor_Abnormal_Send"
             android:exported="false" />
+
+        <activity
+            android:name=".Doctor_Fall_Send"
+            android:exported="false" />
+
         <activity
             android:name=".Doctor_Forgetpassword"
             android:exported="false" />
@@ -74,8 +95,35 @@
             android:name=".Caregiver_RegScreen"
             android:exported="false" />
         <activity
-            android:name=".Caregiver_ResetScreen"
+            android:name=".Caregiver_View_Daily_Readings"
             android:exported="false" />
+
+        <activity
+            android:name=".Caregiver_View_Fall_Patients"
+            android:exported="false" />
+
+
+        <activity
+            android:name=".Caregiver_Fall_Send"
+            android:exported="false" />
+
+
+
+        <activity
+            android:name=".Fall_Conditions_Caregiver"
+            android:exported="false" />
+
+        <activity
+            android:name=".Caregiver_View_Daily_Reads_By_Patient"
+            android:exported="false" />
+        <activity
+            android:name=".Caregiver_View_Abnormalities_Patients"
+            android:exported="false" />
+        <activity
+            android:name=".Caregiver_View_Abnormal_End"
+            android:exported="false" />
+
+
         <activity
             android:name=".Caregiver_LoginScreen"
             android:exported="false" />
@@ -109,7 +157,11 @@
         <activity
             android:name=".Home_App"
             android:exported="true">
+
+
+
             <intent-filter>
+
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
