@@ -26,29 +26,8 @@
             android:name="com.google.android.wearable.standalone"
             android:value="true" />
 
-        <activity
-            android:name="com.login.wearosfinal.presentation.RegistrationScreen"
-            android:exported="true"
-            android:taskAffinity=""
-            android:theme="@style/RegistrationScreenTheme.Starting">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name="com.login.wearosfinal.presentation.RegisterScreen"
-            android:exported="true"
-            android:taskAffinity=""
-            android:theme="@style/RegisterScreenTheme.Starting">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity> <!-- Reference to the custom AppCompat theme -->
-        <!-- Main Activity -->
+         <!-- Main Activity -->
         <activity
             android:name="com.login.wearosfinal.Screen1"
             android:exported="true"
