@@ -25,6 +25,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
+
 import android.app.DatePickerDialog;
 import android.widget.DatePicker;
 import android.os.Handler;
@@ -255,6 +257,7 @@ public class Patients_RegScreen extends AppCompatActivity {
                     // Chama saveUserData passando o ID do paciente, o nome do cuidador e os dados do médico
                     saveUserData(patientId, caregiverName, doctorName, doctorSurname);
 
+
                     Snackbar snackbar = Snackbar.make(v, "Registration successful!", Snackbar.LENGTH_SHORT);
                     snackbar.setBackgroundTint(Color.WHITE);
                     snackbar.setTextColor(Color.BLACK);
@@ -333,25 +336,37 @@ public class Patients_RegScreen extends AppCompatActivity {
 
     private void saveUserData(String patientId, String caregiverName, String doctorName, String doctorSurname) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        Map<String, Object> user = new HashMap<>();
-        user.put("name", edit_name.getText().toString());
-        user.put("surname", edit_surname.getText().toString());
-        user.put("mobile", edit_Mobile.getText().toString());
-        user.put("doctor_name", doctorName); // Usa o nome do médico passado como parâmetro
-        user.put("doctor_surname", doctorSurname); // Usa o sobrenome do médico passado como parâmetro
-        user.put("caregiver_name", caregiverName);
-        user.put("date_of_birth", edit_DOB.getText().toString());
-        user.put("username", edit_email.getText().toString());
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (task.isSuccessful() && task.getResult() != null) {
+                            String token = task.getResult();
+                            Map<String, Object> user = new HashMap<>();
+                            user.put("name", edit_name.getText().toString());
+                            user.put("surname", edit_surname.getText().toString());
+                            user.put("mobile", edit_Mobile.getText().toString());
+                            user.put("doctor_name", doctorName); // Usa o nome do médico passado como parâmetro
+                            user.put("doctor_surname", doctorSurname); // Usa o sobrenome do médico passado como parâmetro
+                            user.put("caregiver_name", caregiverName);
+                            user.put("date_of_birth", edit_DOB.getText().toString());
+                            user.put("username", edit_email.getText().toString());
+                            user.put("fcm_token", token);
 
-        DocumentReference newUserDocRef = db.collection("users").document(patientId);
-        newUserDocRef.set(user)
-                .addOnSuccessListener(aVoid -> {
-                    Log.d("Firestore", "User data successfully saved.");
-                    linkCaregiverToPatient(caregiverName, patientId); // Continua a vincular o cuidador
-                    linkDoctorToPatient(doctorName, doctorSurname, patientId); // Adiciona chamada para vincular o médico
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("Firestore", "Error saving user data", e);
+                            DocumentReference newUserDocRef = db.collection("users").document(patientId);
+                            newUserDocRef.set(user)
+                                    .addOnSuccessListener(aVoid -> {
+                                        Log.d("Firestore", "User data successfully saved.");
+                                        linkCaregiverToPatient(caregiverName, patientId); // Continua a vincular o cuidador
+                                        linkDoctorToPatient(doctorName, doctorSurname, patientId); // Adiciona chamada para vincular o médico
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.e("Firestore", "Error saving user data", e);
+                                    });
+                        } else {
+                            Log.e("FCM", "Error fetching FCM token", task.getException());
+                        }
+                    }
                 });
     }
 

@@ -48,6 +48,7 @@
         <EditText
             android:id="@+id/edit_email"
             style="@style/Edit_Text"
+            android:textColor="@color/black"
             android:hint="Email:"
             android:drawableRight="@drawable/ic_email"
             android:inputType="textEmailAddress"
@@ -58,6 +59,7 @@
         <EditText
             android:id="@+id/edit_Password"
             style="@style/Edit_Text"
+            android:textColor="@color/black"
             android:hint="Password:"
             android:inputType="textPassword"
             android:drawableRight="@drawable/ic_eye"

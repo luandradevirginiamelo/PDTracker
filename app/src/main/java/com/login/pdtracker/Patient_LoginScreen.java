@@ -25,6 +25,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
+
+import java.util.HashMap;
 
 public class Patient_LoginScreen extends AppCompatActivity {
 
@@ -91,7 +96,6 @@ public class Patient_LoginScreen extends AppCompatActivity {
         String password = edit_senha.getText().toString();
 
         if (!isEmailValid(email)) {
-            // Se o email não estiver em um formato válido, exibir mensagem de erro
             Snackbar snackbar = Snackbar.make(bt_login, "Invalid email format. Please enter a valid email address.", Snackbar.LENGTH_SHORT);
             snackbar.setBackgroundTint(Color.WHITE);
             snackbar.setTextColor(Color.RED);
@@ -103,6 +107,20 @@ public class Patient_LoginScreen extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if (user != null) {
+                        FirebaseMessaging.getInstance().getToken()
+                                .addOnCompleteListener(new OnCompleteListener<String>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<String> task) {
+                                        if (task.isSuccessful() && task.getResult() != null) {
+                                            String fcmToken = task.getResult();
+                                            // Store FCM token in Firestore
+                                            storeTokenInFirestore(user.getUid(), fcmToken);
+                                        }
+                                    }
+                                });
+                    }
                     progressbar.setVisibility(View.VISIBLE);
                     new Handler().postDelayed(new Runnable() {
                         @Override
@@ -111,14 +129,12 @@ public class Patient_LoginScreen extends AppCompatActivity {
                         }
                     }, 3000);
                 } else {
-                    // Capturando exceção específica para email não cadastrado
                     if (task.getException() instanceof FirebaseAuthInvalidUserException) {
                         Snackbar snackbar = Snackbar.make(bt_login, "Email not registered. Please register first.", Snackbar.LENGTH_SHORT);
                         snackbar.setBackgroundTint(Color.WHITE);
                         snackbar.setTextColor(Color.RED);
                         snackbar.show();
                     } else if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                        // Se a senha estiver incorreta, exibir mensagem de erro
                         Snackbar snackbar = Snackbar.make(bt_login, "Wrong password. Please try again.", Snackbar.LENGTH_SHORT);
                         snackbar.setBackgroundTint(Color.WHITE);
                         snackbar.setTextColor(Color.RED);
@@ -130,8 +146,15 @@ public class Patient_LoginScreen extends AppCompatActivity {
     }
 
     private boolean isEmailValid(String email) {
-        // Esta é uma validação básica para verificar o formato do email
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+    private void storeTokenInFirestore(String userId, String fcmToken) {
+        CollectionReference userTokensRef = FirebaseFirestore.getInstance().collection("UserTokens");
+        userTokensRef.document(userId)
+                .set(new HashMap<String, Object>() {{
+                    put("token", fcmToken);
+                }});
     }
 
     @Override
@@ -139,9 +162,9 @@ public class Patient_LoginScreen extends AppCompatActivity {
         super.onStart();
         FirebaseUser userlogon = FirebaseAuth.getInstance().getCurrentUser();
 
-         if (userlogon !=null){
-             PatientsDashboard();
-         }
+        if (userlogon != null) {
+            PatientsDashboard();
+        }
     }
 
     private void PatientsDashboard() {
@@ -158,4 +181,3 @@ public class Patient_LoginScreen extends AppCompatActivity {
         progressbar = findViewById(R.id.progressbar);
     }
 }
-

@@ -20,6 +20,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -163,6 +165,7 @@ public class Doctors_Create_Note extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(DocumentReference documentReference) {
                                     // Document successfully added
+                                    sendNotificationToPatient(selectedUserID);
                                     Toast.makeText(Doctors_Create_Note.this, "Note saved successfully", Toast.LENGTH_SHORT).show();
                                     finish(); // Close the activity after saving
                                 }
@@ -186,6 +189,39 @@ public class Doctors_Create_Note extends AppCompatActivity {
                 Toast.makeText(Doctors_Create_Note.this, "Failed to fetch DoctorID", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+    private void sendNotificationToPatient(String patientID) {
+        // Get the token of the patient from Firestore using patientID
+        db.collection("UserTokens").document(patientID)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) {
+                            String patientToken = documentSnapshot.getString("token");
+                            if (patientToken != null) {
+                                // Construct notification payload
+                                Map<String, String> data = new HashMap<>();
+                                data.put("title", "New Note Added");
+                                data.put("body", "A new note has been added by your doctor.");
+                                data.put("patientID", patientID);
+
+                                // Send FCM notification
+                                sendFCMNotification(patientToken, data);
+                            }
+                        }
+                    }
+                });
+    }
+
+    private void sendFCMNotification(String token, Map<String, String> data) {
+        // Construct notification message
+        RemoteMessage.Builder builder = new RemoteMessage.Builder(token);
+        builder.setData(data);
+        RemoteMessage message = builder.build();
+
+        // Send notification
+        FirebaseMessaging.getInstance().send(message);
     }
 
     private Task<String> fetchDoctorID(String selectedUserID) {

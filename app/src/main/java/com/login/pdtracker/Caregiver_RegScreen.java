@@ -23,6 +23,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -48,12 +49,12 @@ public class Caregiver_RegScreen extends AppCompatActivity {
     }
 
 
-    private void cadastrarUsuario(View v, String email, String password) {
+    private void registerUser(View v, String email, String password) {
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    saveUserData();
+                    saveUserData(v);
                     Snackbar snackbar = Snackbar.make(v, errorMessages[1], Snackbar.LENGTH_SHORT);
                     snackbar.setBackgroundTint(Color.WHITE);
                     snackbar.setTextColor(Color.BLACK);
@@ -75,29 +76,40 @@ public class Caregiver_RegScreen extends AppCompatActivity {
         });
     }
 
-    private void saveUserData() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        Map<String, Object> user = new HashMap<>();
-        user.put("name", caregiver_name_surname.getText().toString());
-        user.put("mobile", caregiver_Mobile.getText().toString());
-        user.put("email", caregiver_email.getText().toString());
-        user.put("password", caregiver_password2.getText().toString());
-        user.put("retype", caregiver_retypepassword.getText().toString());
-
-
-
-        DocumentReference documentReference = db.collection("Caregiver").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        documentReference.set(user)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
+    private void saveUserData(View v) {
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
                     @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d("Firestore", "User data successfully saved.");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e("Firestore", "Error saving user data", e);
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (task.isSuccessful() && task.getResult() != null) {
+                            String fcmToken = task.getResult();
+                            FirebaseFirestore db = FirebaseFirestore.getInstance();
+                            Map<String, Object> user = new HashMap<>();
+                            user.put("name", caregiver_name_surname.getText().toString());
+                            user.put("mobile", caregiver_Mobile.getText().toString());
+                            user.put("email", caregiver_email.getText().toString());
+                            user.put("password", caregiver_password2.getText().toString());
+                            user.put("retype", caregiver_retypepassword.getText().toString());
+                            user.put("token", fcmToken);
+
+                            db.collection("Caregiver").document(firebaseAuth.getCurrentUser().getUid())
+                                    .set(user)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Log.d("Firestore", "User data successfully saved.");
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.e("Firestore", "Error saving user data", e);
+                                        }
+                                    });
+                        } else {
+                            Snackbar.make(v, "Failed to retrieve FCM token", Snackbar.LENGTH_LONG).show();
+                        }
                     }
                 });
     }
@@ -253,19 +265,5 @@ public class Caregiver_RegScreen extends AppCompatActivity {
 
         registerUser(v, email, password);
     }
-
-    private void registerUser(View v, String email, String password) {
-        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
-                        saveUserData();
-                        Snackbar.make(v, errorMessages[1], Snackbar.LENGTH_LONG).show();
-                    } else {
-                        String error = "Registration failed due to an error: " + (task.getException() != null ? task.getException().getMessage() : "Unknown error");
-                        Snackbar.make(v, error, Snackbar.LENGTH_LONG).show();
-                    }
-                });
-    }
-
 
 }

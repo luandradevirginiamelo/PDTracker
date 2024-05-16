@@ -18,6 +18,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
@@ -25,6 +27,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
+
+import java.util.HashMap;
 
 public class Caregiver_LoginScreen extends AppCompatActivity {
 
@@ -103,6 +110,20 @@ public class Caregiver_LoginScreen extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if (user != null) {
+                        FirebaseMessaging.getInstance().getToken()
+                                .addOnCompleteListener(new OnCompleteListener<String>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<String> task) {
+                                        if (task.isSuccessful() && task.getResult() != null) {
+                                            String fcmToken = task.getResult();
+                                            // Store FCM token in Firestore
+                                            storeTokenInFirestore(user.getUid(), fcmToken);
+                                        }
+                                    }
+                                });
+                    }
                     progressbar.setVisibility(View.VISIBLE);
                     new Handler().postDelayed(new Runnable() {
                         @Override
@@ -132,6 +153,28 @@ public class Caregiver_LoginScreen extends AppCompatActivity {
     private boolean isEmailValid(String email) {
         // Esta é uma validação básica para verificar o formato do email
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+    private void storeTokenInFirestore(String userId, String fcmToken) {
+        // Create a reference to the Firestore collection "UserTokens"
+        CollectionReference userTokensRef = FirebaseFirestore.getInstance().collection("UserTokens");
+        // Create a document with user ID as document ID
+        userTokensRef.document(userId)
+                .set(new HashMap<String, Object>() {{
+                    put("token", fcmToken);
+                }})
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // Token stored successfully
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Failed to store token
+                    }
+                });
     }
 
     @Override
