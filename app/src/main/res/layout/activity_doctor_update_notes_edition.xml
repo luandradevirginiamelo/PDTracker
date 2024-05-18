@@ -153,6 +153,7 @@
         android:textColor="@color/black"
         android:inputType="text"
         android:text="Name"
+        android:maxLength="1000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"

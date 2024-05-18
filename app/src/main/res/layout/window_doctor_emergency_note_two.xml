@@ -2,7 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -11,16 +12,12 @@
         android:elevation="8dp">
 
         <!-- Spinner -->
-        <Spinner
-            android:id="@+id/spinner_users"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp" />
 
         <!-- EditText fields -->
         <EditText
             android:id="@+id/SpecCondition"
             style="@style/Edit_Text"
+            android:textColor="@color/black"
             android:hint="Patient specific medical condition:"
             android:padding="10dp"
             android:inputType="text"/>
@@ -28,6 +25,7 @@
         <EditText
             android:id="@+id/Allergies"
             style="@style/Edit_Text"
+            android:textColor="@color/black"
             android:hint="Patient Allergies: "
             android:padding="10dp"
             android:inputType="text"
@@ -36,6 +34,7 @@
         <EditText
             android:id="@+id/NextOfKin"
             style="@style/Edit_Text"
+            android:textColor="@color/black"
             android:hint="Patient Next of Kin Name + Surname:"
             android:padding="10dp"
             android:inputType="text"
@@ -52,23 +51,27 @@
         <EditText
             android:id="@+id/NextOfKinMobile"
             style="@style/Edit_Text"
+            android:layout_marginTop="8dp"
             android:hint="Patient Next of Kin Mobile"
-            android:padding="10dp"
-            android:maxLength="10"
             android:inputType="number"
-            android:layout_marginTop="8dp"/>
+            android:maxLength="10"
+            android:padding="10dp"
+            android:textColor="@color/black" />
 
         <EditText
             android:id="@+id/DoctorsNotes"
             style="@style/Edit_Text"
+            android:layout_marginTop="8dp"
             android:hint="Doctor's Notes in Case of Emergency:"
-            android:padding="10dp"
             android:inputType="text"
-            android:layout_marginTop="8dp"/>
+            android:padding="10dp"
+
+            android:textColor="@color/black" />
 
         <EditText
             android:id="@+id/ParamedicsNumber"
             style="@style/Edit_Text"
+            android:textColor="@color/black"
             android:hint="Paramedics Mobile Number:"
             android:padding="10dp"
             android:maxLength="10"

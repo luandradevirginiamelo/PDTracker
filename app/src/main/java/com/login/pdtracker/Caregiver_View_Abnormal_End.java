@@ -1,11 +1,14 @@
 package com.login.pdtracker;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -36,6 +39,15 @@ public class Caregiver_View_Abnormal_End extends AppCompatActivity {
         // Fetch and display relevant health data from Firestore
         fetchPatientName(selectedUserID);
         fetchHealthData(selectedUserID, documentID);
+
+        AppCompatButton bt_bdb = findViewById(R.id.bt_bdb);
+        bt_bdb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Caregiver_View_Abnormal_End .this, Caregiver_Home.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void fetchPatientName(String selectedUserID) {

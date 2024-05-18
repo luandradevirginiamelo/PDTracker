@@ -68,7 +68,7 @@ public class Caregiver_View_Daily_Readings extends AppCompatActivity {
         bt_bdb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Caregiver_View_Daily_Readings.this, Doctors_Dashboard_Screen.class);
+                Intent intent = new Intent(Caregiver_View_Daily_Readings.this, Caregiver_Home.class);
                 startActivity(intent);
             }
         });

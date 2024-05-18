@@ -190,38 +190,51 @@ public class Doctors_Create_Note extends AppCompatActivity {
             }
         });
     }
+
     private void sendNotificationToPatient(String patientID) {
-        // Get the token of the patient from Firestore using patientID
+        // Try to fetch the token from UserTokens collection first
         db.collection("UserTokens").document(patientID)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.exists()) {
+                        if (documentSnapshot.exists() && documentSnapshot.contains("token")) {
                             String patientToken = documentSnapshot.getString("token");
-                            if (patientToken != null) {
-                                // Construct notification payload
-                                Map<String, String> data = new HashMap<>();
-                                data.put("title", "New Note Added");
-                                data.put("body", "A new note has been added by your doctor.");
-                                data.put("patientID", patientID);
-
-                                // Send FCM notification
-                                sendFCMNotification(patientToken, data);
-                            }
+                            sendNotification(patientToken, "Attention! An Alert has been received, please verify PDTracker to know more!");
+                        } else {
+                            // If token not found in UserTokens, fetch it from users collection
+                            db.collection("users").document(patientID)
+                                    .get()
+                                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                            if (documentSnapshot.exists() && documentSnapshot.contains("fcm_token")) {
+                                                String patientToken = documentSnapshot.getString("fcm_token");
+                                                sendNotification(patientToken, "Attention! An Alert has been received, please verify PDTracker to know more!");
+                                            }
+                                        }
+                                    });
                         }
                     }
                 });
     }
 
-    private void sendFCMNotification(String token, Map<String, String> data) {
-        // Construct notification message
-        RemoteMessage.Builder builder = new RemoteMessage.Builder(token);
-        builder.setData(data);
-        RemoteMessage message = builder.build();
+    private void sendNotification(String token, String messageBody) {
+        if (token != null && !token.isEmpty()) {
+            // Construct notification payload
+            Map<String, String> data = new HashMap<>();
+            data.put("title", "New Note Added");
+            data.put("body", messageBody);
+            data.put("patientID", selectedUserID);
 
-        // Send notification
-        FirebaseMessaging.getInstance().send(message);
+            // Construct notification message
+            RemoteMessage.Builder builder = new RemoteMessage.Builder(token);
+            builder.setData(data);
+            RemoteMessage message = builder.build();
+
+            // Send notification
+            FirebaseMessaging.getInstance().send(message);
+        }
     }
 
     private Task<String> fetchDoctorID(String selectedUserID) {

@@ -52,7 +52,7 @@ public class Patients_Home extends AppCompatActivity {
         });
 
         b4.setOnClickListener(v -> {
-            Intent intent = new Intent(Patients_Home.this, Abnormal_Conditions.class);
+            Intent intent = new Intent(Patients_Home.this, Patient_View_Abnormalities_Patients.class);
             startActivity(intent);
         });
 

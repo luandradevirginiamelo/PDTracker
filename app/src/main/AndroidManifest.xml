@@ -56,6 +56,16 @@
             android:name=".Doctor_Fall_Send"
             android:exported="false" />
 
+
+        <activity
+            android:name=".Patient_View_Abnormalities_Patients"
+            android:exported="false" />
+
+        <activity
+            android:name=".Patient_View_Abnormal_End"
+            android:exported="false" />
+
+
         <activity
             android:name=".Doctor_Forgetpassword"
             android:exported="false" />

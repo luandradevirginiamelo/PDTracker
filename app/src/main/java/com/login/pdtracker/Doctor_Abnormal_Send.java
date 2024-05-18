@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -67,6 +68,15 @@ public class Doctor_Abnormal_Send extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 sendNotification();
+            }
+        });
+
+        AppCompatButton bt_bdb = findViewById(R.id.bt_bdb);
+        bt_bdb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Doctor_Abnormal_Send.this, Doctors_Dashboard_Screen.class);
+                startActivity(intent);
             }
         });
     }

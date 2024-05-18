@@ -194,15 +194,15 @@ public class Screen1 extends AppCompatActivity {
     private Map<String, Object> createFallDetectedProfile() {
         Map<String, Object> data = new HashMap<>();
         data.put("Min Heart Rate Morning", 60);  // Minimum morning heart rate
-        data.put("Max Heart Rate Morning", 90);  // Maximum morning heart rate
+        data.put("Max Heart Rate Morning", 190);  // Maximum morning heart rate
         data.put("Min Heart Rate Afternoon", 70);  // Minimum afternoon heart rate
-        data.put("Max Heart Rate Afternoon", 100);  // Maximum afternoon heart rate
-        data.put("Blood Pressure", "120/80");  // Normal blood pressure
+        data.put("Max Heart Rate Afternoon", 200);  // Maximum afternoon heart rate
+        data.put("Blood Pressure", "189/80");  // Normal blood pressure
         data.put("Oxygen Levels", 98);  // Normal oxygen levels
         data.put("Sleep Quality", "Good");
         data.put("Fall Detected", "Yes");
         data.put("Heart Rate Abnormality", "Y"); // Heart Rate Abnormality indicator
-        data.put("Blood Pressure Abnormality", "N"); // Blood Pressure Abnormality indicator
+        data.put("Blood Pressure Abnormality", "Y"); // Blood Pressure Abnormality indicator
         return data;
     }
 

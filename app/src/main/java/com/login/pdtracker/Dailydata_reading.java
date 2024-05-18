@@ -1,5 +1,6 @@
 package com.login.pdtracker;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -38,6 +39,12 @@ public class Dailydata_reading extends AppCompatActivity {
                 fetchSmartwatchIDAndSyncData();
             }
         });
+
+          findViewById(R.id.bt_bdb).setOnClickListener(v -> {
+              Intent intent = new Intent(Dailydata_reading.this, Patients_Home.class);
+              startActivity(intent);
+              finish();
+          });
     }
 
     private void initializeUIComponents() {

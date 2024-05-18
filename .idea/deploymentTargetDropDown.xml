@@ -18,23 +18,23 @@
               </deviceKey>
             </Target>
           </runningDeviceTargetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-05-16T17:07:30.175569900Z" />
+          <timeTargetWasSelectedWithDropDown value="2024-05-18T00:08:39.681338400Z" />
         </State>
       </entry>
       <entry key="wearosfinal">
         <State>
-          <targetSelectedWithDropDown>
+          <runningDeviceTargetSelectedWithDropDown>
             <Target>
-              <type value="QUICK_BOOT_TARGET" />
+              <type value="RUNNING_DEVICE_TARGET" />
               <deviceKey>
                 <Key>
-                  <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\yandr\.android\avd\Wear_OS_Small_Round_API_33.avd" />
+                  <type value="SERIAL_NUMBER" />
+                  <value value="65a852dd" />
                 </Key>
               </deviceKey>
             </Target>
-          </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-05-16T17:21:43.670375400Z" />
+          </runningDeviceTargetSelectedWithDropDown>
+          <timeTargetWasSelectedWithDropDown value="2024-05-17T21:13:19.149078600Z" />
         </State>
       </entry>
     </value>

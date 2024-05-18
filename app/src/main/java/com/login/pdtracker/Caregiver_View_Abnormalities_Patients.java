@@ -10,6 +10,7 @@ import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -58,6 +59,15 @@ public class Caregiver_View_Abnormalities_Patients extends AppCompatActivity {
                 Intent intent = new Intent(Caregiver_View_Abnormalities_Patients.this, Caregiver_View_Abnormal_End.class);
                 intent.putExtra("selectedUserID", selectedUserID);
                 intent.putExtra("documentID", documentID);
+                startActivity(intent);
+            }
+        });
+
+        AppCompatButton bt_bdb = findViewById(R.id.bt_bdb);
+        bt_bdb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Caregiver_View_Abnormalities_Patients.this, Caregiver_Home.class);
                 startActivity(intent);
             }
         });

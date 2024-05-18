@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -120,6 +121,14 @@ public class Caregiver_Fall_Send extends AppCompatActivity {
                         Log.e("Doctor_Fall_Send", "Error fetching paramedics number: ", e);
                     }
                 });
+            }
+        });
+        AppCompatButton bt_bdb = findViewById(R.id.bt_bdb);
+        bt_bdb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Caregiver_Fall_Send.this, Caregiver_Home.class);
+                startActivity(intent);
             }
         });
 
@@ -356,7 +365,7 @@ public class Caregiver_Fall_Send extends AppCompatActivity {
         if (requestCode == SMS_PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission granted, send SMS
-                sendSMS("0830707014", "Emergency Alert! A Parkinson patient has fallen at Latitude: "+latitudeFormated+" and longitude "+longitudeFormated+". Name: "+PatientName+" Contact: "+patientNumber);
+                sendSMS("0830707014", "Emergency Alert! A Parkinson patient has fallen at "+latitudeFormated+" and "+longitudeFormated+". Name: "+PatientName+" Contact: "+patientNumber+" Patient with serious Heart Abnormalities: High Blood Pressure and BPM.");
             } else {
                 Toast.makeText(this, "SMS permission denied", Toast.LENGTH_SHORT).show();
             }
@@ -364,7 +373,7 @@ public class Caregiver_Fall_Send extends AppCompatActivity {
     }
 
     void sendSMS(){
-        sendSMS("0830707014", "Emergency Alert! A Parkinson patient has fallen at Latitude: "+latitudeFormated+" and longitude "+longitudeFormated+". Name: "+PatientName+" Contact: "+patientNumber);
+        sendSMS("0830707014", "Emergency Alert! A Parkinson patient has fallen at "+latitudeFormated+" and "+longitudeFormated+". Name: "+PatientName+" Contact: "+patientNumber+" Patient with serious Heart Abnormalities: High Blood Pressure and BPM.");
     }
 
 }

@@ -304,6 +304,11 @@ public class Doctor_Fall_Send extends AppCompatActivity {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful() && task.getResult() != null) {
                             DocumentSnapshot fallDetectionDoc = task.getResult();
+                            Double latitude = fallDetectionDoc.getDouble("Latitude");
+                            Double longitude = fallDetectionDoc.getDouble("Longitude");
+                            latitudeFormated = "Latitude: " + latitude;
+                            longitudeFormated = "Longitude: " + longitude;
+
                             Timestamp fallTimestamp = fallDetectionDoc.getTimestamp("Time");
                             if (fallTimestamp != null) {
                                 Date fallDate = fallTimestamp.toDate();
@@ -345,7 +350,7 @@ public class Doctor_Fall_Send extends AppCompatActivity {
     }
 
     void sendSMS(){
-        sendSMS("0830707014", "Emergency Alert! A Parkinson patient has fallen at Latitude: "+latitudeFormated+" and longitude "+longitudeFormated+". Name: "+PatientName+" Contact: "+patientNumber);
+        sendSMS("0830707014", "Emergency Alert! A Parkinson patient has fallen at "+latitudeFormated+" and "+longitudeFormated+". Name: "+PatientName+" Contact: "+patientNumber+" Patient with serious Heart Abnormalities: High Blood Pressure and BPM.");
     }
 
 

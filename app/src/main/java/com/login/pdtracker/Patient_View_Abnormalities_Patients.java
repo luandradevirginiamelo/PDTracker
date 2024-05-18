@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
@@ -14,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -37,37 +38,50 @@ public class Patient_View_Abnormalities_Patients extends AppCompatActivity {
 
         spinner = findViewById(R.id.spinner_users);
 
-        // Retrieve the selected user's ID from the intent
-        selectedUserID = getIntent().getStringExtra("selectedUserID");
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            selectedUserID = currentUser.getUid();
+            Log.d("UserID", "Current user ID: " + selectedUserID);
+        } else {
+            Log.e("UserID", "No user is currently logged in.");
+            return;
+        }
 
         timeList = new ArrayList<>();
         timestampToDocID = new HashMap<>();
 
-        // Use the selectedUserID to fetch and display relevant health data from Firestore
         fetchHealthData(selectedUserID);
 
-        findViewById(R.id.View).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.bt_Create).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (timeList.isEmpty()) {
+                    Log.e("Spinner Error", "timeList is empty, nothing to select.");
+                    return;
+                }
                 // Get the selected timestamp from the spinner
                 String selectedTimestamp = timeList.get(spinner.getSelectedItemPosition());
                 // Get the corresponding document ID
                 String documentID = timestampToDocID.get(selectedTimestamp);
 
-                // Pass both selectedUserID and documentID to Doctor_Abnormal_Send class
-                Intent intent = new Intent(Patient_View_Abnormalities_Patients.this, Caregiver_View_Abnormal_End.class);
+                // Pass both selectedUserID and documentID to Caregiver_View_Abnormal_End class
+                Intent intent = new Intent(Patient_View_Abnormalities_Patients.this, Patient_View_Abnormal_End.class);
                 intent.putExtra("selectedUserID", selectedUserID);
                 intent.putExtra("documentID", documentID);
                 startActivity(intent);
             }
         });
+
+        findViewById(R.id.bt_bdb).setOnClickListener(v -> {
+            Intent intent = new Intent(Patient_View_Abnormalities_Patients.this, Patients_Home.class);
+            startActivity(intent);
+            finish();
+        });
     }
 
     private void fetchHealthData(String selectedUserID) {
-        // Initialize Firestore
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        // Fetch data from Firestore based on the selected user's ID
         db.collection("DoctorsNoteForPatientEmergency")
                 .whereEqualTo("PatientID", selectedUserID)
                 .get()
@@ -77,16 +91,23 @@ public class Patient_View_Abnormalities_Patients extends AppCompatActivity {
                         timeList.clear(); // Clear existing data
                         timestampToDocID.clear(); // Clear existing mapping
 
-                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                            Timestamp timestamp = document.getTimestamp("NotesDate");
-                            if (timestamp != null) {
-                                // Convert timestamp to string
-                                String time = timestamp.toDate().toString();
-                                // Store timestamp and corresponding document ID
-                                String documentID = document.getId();
-                                timeList.add(time);
-                                timestampToDocID.put(time, documentID);
+                        if (queryDocumentSnapshots.isEmpty()) {
+                            Log.d("Firestore", "No documents found for the user.");
+                        } else {
+                            for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                                Timestamp timestamp = document.getTimestamp("NotesDate");
+                                if (timestamp != null) {
+                                    // Convert timestamp to string
+                                    String time = timestamp.toDate().toString();
+                                    // Store timestamp and corresponding document ID
+                                    String documentID = document.getId();
+                                    timeList.add(time);
+                                    timestampToDocID.put(time, documentID);
+                                } else {
+                                    Log.w("Firestore", "Document with ID " + document.getId() + " has no timestamp.");
+                                }
                             }
+                            Log.d("Firestore", "Data fetched successfully.");
                         }
 
                         // Populate the spinner with timeList
@@ -102,6 +123,11 @@ public class Patient_View_Abnormalities_Patients extends AppCompatActivity {
     }
 
     private void populateSpinner(List<String> timeList) {
+        if (timeList.isEmpty()) {
+            Log.w("Spinner", "No data available to populate the spinner.");
+            return;
+        }
+
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, timeList);
 
