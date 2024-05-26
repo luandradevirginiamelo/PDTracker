@@ -1,8 +1,5 @@
 package com.login.pdtracker;
 
-
-import android.Manifest;
-
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,25 +19,20 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import com.google.firebase.Timestamp;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 public class Doctor_Fall_Send extends AppCompatActivity {
 
-
     private static final int SMS_PERMISSION_REQUEST_CODE = 100;
     private String longitudeFormated;
-
     private String latitudeFormated;
-
     private String PatientName;
     private String patientNumber;
     TextView textViewPatientName;
@@ -56,8 +47,9 @@ public class Doctor_Fall_Send extends AppCompatActivity {
     private String patientSmartWatchDevice;
     private String doctorID;
     private String caregiverID;
-
     private TextView abnormalDetectedText;
+    private String paramedicsNumber;
+    private String notesText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +60,6 @@ public class Doctor_Fall_Send extends AppCompatActivity {
         if (intent != null) {
             selectedDocumentId = intent.getStringExtra("selectedUserID");
             selectedNoteID = intent.getStringExtra("documentID");
-            System.out.print(selectedNoteID);
         }
 
         // Initialize Firebase Firestore
@@ -97,8 +88,6 @@ public class Doctor_Fall_Send extends AppCompatActivity {
             }
         });
 
-
-
         findViewById(R.id.CallCaregiver).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,9 +101,11 @@ public class Doctor_Fall_Send extends AppCompatActivity {
             public void onClick(View v) {
                 getParamedicsNumber(selectedDocumentId, new OnParamedicsNumberListener() {
                     @Override
-                    public void onParamedicsNumberRetrieved(String paramedicsNumber) {
+                    public void onParamedicsNumberRetrieved(String paramedicsNumber, String notesText) {
                         // Call the paramedics using the retrieved number
                         callPhoneNumber(paramedicsNumber);
+                        Doctor_Fall_Send.this.paramedicsNumber = paramedicsNumber;
+                        Doctor_Fall_Send.this.notesText = notesText;
                     }
 
                     @Override
@@ -126,12 +117,20 @@ public class Doctor_Fall_Send extends AppCompatActivity {
             }
         });
 
-
         // Fetch patient details and then fetch caregiver details
         fetchPatientDetails();
         fetchAbnormalities();
         fetchFallDetectionTime();
 
+        // Add the button functionality for bt_bdb
+        findViewById(R.id.bt_bdb).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Go back to Doctors_Dashboard_Screen activity
+                Intent intent = new Intent(Doctor_Fall_Send.this, Doctors_Dashboard_Screen.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void getParamedicsNumber(String userID, OnParamedicsNumberListener listener) {
@@ -143,11 +142,20 @@ public class Doctor_Fall_Send extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
+                                // Log document data for debugging
+                                Log.d("Doctor_Fall_Send", "Document ID: " + document.getId() + " Data: " + document.getData());
+
                                 // Access the document here
                                 String paramedicsNumber = document.getString("ParamedicsNumber");
+                                String notesText = document.getString("NotesText");
+
+                                // Debug log to check if values are null
+                                Log.d("Doctor_Fall_Send", "Paramedics Number: " + paramedicsNumber);
+                                Log.d("Doctor_Fall_Send", "Notes Text: " + notesText);
+
                                 // Call the paramedics using the retrieved number
                                 if (listener != null) {
-                                    listener.onParamedicsNumberRetrieved(paramedicsNumber);
+                                    listener.onParamedicsNumberRetrieved(paramedicsNumber, notesText);
                                 }
                                 return; // Exit after the first match
                             }
@@ -163,13 +171,9 @@ public class Doctor_Fall_Send extends AppCompatActivity {
 
     // Define a callback interface
     interface OnParamedicsNumberListener {
-        void onParamedicsNumberRetrieved(String paramedicsNumber);
+        void onParamedicsNumberRetrieved(String paramedicsNumber, String notesText);
         void onError(Exception e);
     }
-
-
-    // Define a callback interface
-
 
     private void fetchPatientDetails() {
         db.collection("users")
@@ -180,13 +184,13 @@ public class Doctor_Fall_Send extends AppCompatActivity {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful() && task.getResult() != null) {
                             DocumentSnapshot document = task.getResult();
-                            textViewPatientName.setText("Patient Name: " + document.getString("name")+ " "+ document.getString("surname") );
+                            textViewPatientName.setText("Patient Name: " + document.getString("name") + " " + document.getString("surname"));
                             textViewPatientMobile.setText("Patient Mobile: " + document.getString("mobile"));
                             patientID = document.getString("PatientID");
                             patientSmartWatchDevice = document.getString("SmartWatchDevice");
                             doctorID = document.getString("DoctorID");
                             caregiverID = document.getString("IDcaregiver");
-                            PatientName = document.getString("name")+document.getString("surname");
+                            PatientName = document.getString("name") + " " + document.getString("surname");
                             patientNumber = document.getString("mobile");
 
                             // Check if caregiverID is not null before fetching caregiver details
@@ -236,7 +240,7 @@ public class Doctor_Fall_Send extends AppCompatActivity {
                                                     int minHeartRate = Math.min(Integer.parseInt(minHeartRateMorning), Integer.parseInt(minHeartRateAfternoon));
                                                     final String heartRateAbnormality;
                                                     if (maxHeartRate > Integer.parseInt(thresholdHeart) || minHeartRate < Integer.parseInt(thresholdHeart)) {
-                                                        heartRateAbnormality = "Heart Rate Abnormality: " + Math.max(maxHeartRate, minHeartRate) +"BPM";
+                                                        heartRateAbnormality = "Heart Rate Abnormality: " + Math.max(maxHeartRate, minHeartRate) + " BPM";
                                                     } else {
                                                         heartRateAbnormality = null;
                                                     }
@@ -250,7 +254,6 @@ public class Doctor_Fall_Send extends AppCompatActivity {
                                                     String[] bloodPressureLimitsValues = thresholdBloodPressure.split("/");
                                                     int LimitsystolicBP = Integer.parseInt(bloodPressureLimitsValues[0]);
                                                     int LimitdiastolicBP = Integer.parseInt(bloodPressureLimitsValues[1]);
-
 
                                                     if (systolicBP > LimitsystolicBP || diastolicBP > LimitdiastolicBP) {
                                                         bloodPressureAbnormality = "Blood Pressure Alert: " + bloodPressure;
@@ -349,10 +352,31 @@ public class Doctor_Fall_Send extends AppCompatActivity {
         startActivity(smsIntent);
     }
 
-    void sendSMS(){
-        sendSMS("0830707014", "Emergency Alert! A Parkinson patient has fallen at "+latitudeFormated+" and "+longitudeFormated+". Name: "+PatientName+" Contact: "+patientNumber+" Patient with serious Heart Abnormalities: High Blood Pressure and BPM.");
-    }
+    private void sendSMS() {
+        db.collection("DoctorsNoteForPatientEmergency")
+                .whereEqualTo("PatientID", selectedDocumentId)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                // Log document data for debugging
+                                Log.d("Doctor_Fall_Send", "Document ID: " + document.getId() + " Data: " + document.getData());
 
+                                // Access the document here
+                                String notes = document.getString("NotesText");
+                                String ParamedicsNumber = document.getString("ParamedicsNumber");
+                                String message = "Emergency Alert! A Parkinson patient has fallen at " + latitudeFormated + " and " + longitudeFormated + ". Name: " + PatientName + " Contact: " + patientNumber + " Patient with serious Heart Abnormalities: High Blood Pressure and BPM. Doc. Notes: " + notes;
+                                sendSMS(ParamedicsNumber, message);
+                                return; // Exit after sending the message
+                            }
+                        } else {
+                            Log.e("Doctor_Fall_Send", "Error fetching notes", task.getException());
+                        }
+                    }
+                });
+    }
 
     private void fetchCareGiverDetails() {
         db.collection("Caregiver")
@@ -369,5 +393,4 @@ public class Doctor_Fall_Send extends AppCompatActivity {
                     }
                 });
     }
-
 }

@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
@@ -29,6 +30,7 @@ public class Doctors_View_Fall_Patients extends AppCompatActivity {
     private List<String> timeList;
     private Map<String, String> timestampToDocID;
     private String selectedUserID;
+    private Button bt_bdb;  // Add this line
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +63,17 @@ public class Doctors_View_Fall_Patients extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        // Find the button by its ID and set an OnClickListener
+        bt_bdb = findViewById(R.id.bt_bdb);  // Add this line
+        bt_bdb.setOnClickListener(new View.OnClickListener() {  // Add this block
+            @Override
+            public void onClick(View v) {
+                // Go back to Doctors_Dashboard_Screen activity
+                Intent intent = new Intent(Doctors_View_Fall_Patients.this, Doctors_Dashboard_Screen.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void fetchHealthData(String selectedUserID) {
@@ -89,7 +102,7 @@ public class Doctors_View_Fall_Patients extends AppCompatActivity {
                             }
                         }
 
-                        // Populate the spinner with timeList
+
                         populateSpinner(timeList);
                     }
                 })

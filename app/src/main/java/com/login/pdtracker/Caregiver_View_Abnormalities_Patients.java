@@ -56,7 +56,7 @@ public class Caregiver_View_Abnormalities_Patients extends AppCompatActivity {
                 String documentID = timestampToDocID.get(selectedTimestamp);
 
                 // Pass both selectedUserID and documentID to Doctor_Abnormal_Send class
-                Intent intent = new Intent(Caregiver_View_Abnormalities_Patients.this, Caregiver_View_Abnormal_End.class);
+                Intent intent = new Intent(Caregiver_View_Abnormalities_Patients.this, Caregiver_View_Abnormalities_Final.class);
                 intent.putExtra("selectedUserID", selectedUserID);
                 intent.putExtra("documentID", documentID);
                 startActivity(intent);
@@ -78,7 +78,7 @@ public class Caregiver_View_Abnormalities_Patients extends AppCompatActivity {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         // Fetch data from Firestore based on the selected user's ID
-        db.collection("DoctorsNoteForPatientEmergency")
+        db.collection("patient_abnormal_condition_detected")
                 .whereEqualTo("PatientID", selectedUserID)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -88,7 +88,7 @@ public class Caregiver_View_Abnormalities_Patients extends AppCompatActivity {
                         timestampToDocID.clear(); // Clear existing mapping
 
                         for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                            Timestamp timestamp = document.getTimestamp("NotesDate");
+                            Timestamp timestamp = document.getTimestamp("Time");
                             if (timestamp != null) {
                                 // Convert timestamp to string
                                 String time = timestamp.toDate().toString();

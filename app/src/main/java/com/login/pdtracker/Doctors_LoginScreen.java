@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -37,6 +38,8 @@ public class Doctors_LoginScreen extends AppCompatActivity {
 
     private EditText edit_email, edit_Password;
     private Button bt_login;
+
+    private AppCompatButton bt_bm;
     String[] errorMessages = {"Please complete all required fields to proceed", "Login Successfully!"};
     private ProgressBar progressbar;
     private TextView textForgotten;
@@ -62,6 +65,15 @@ public class Doctors_LoginScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Doctors_LoginScreen.this, Doctors_Dashboard_Screen.class);
+                startActivity(intent);
+            }
+        });
+
+        bt_bm = findViewById(R.id.bt_bm);
+        bt_bm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Doctors_LoginScreen.this, Home_App.class);
                 startActivity(intent);
             }
         });

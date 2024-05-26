@@ -10,6 +10,7 @@ import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -29,6 +30,8 @@ public class Doctors_View_Abnormalities_Patients extends AppCompatActivity {
     private List<String> timeList;
     private Map<String, String> timestampToDocID;
     private String selectedUserID;
+
+    private AppCompatButton bt_bdb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +61,16 @@ public class Doctors_View_Abnormalities_Patients extends AppCompatActivity {
                 Intent intent = new Intent(Doctors_View_Abnormalities_Patients.this, Doctor_Abnormal_Send.class);
                 intent.putExtra("selectedUserID", selectedUserID);
                 intent.putExtra("documentID", documentID);
+                startActivity(intent);
+            }
+        });
+
+        bt_bdb = findViewById(R.id.bt_bdb);
+        bt_bdb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Go back to Doctors_Dashboard_Screen activity
+                Intent intent = new Intent(Doctors_View_Abnormalities_Patients.this, Doctors_Dashboard_Screen.class);
                 startActivity(intent);
             }
         });

@@ -65,7 +65,7 @@ public class Patient_View_Abnormalities_Patients extends AppCompatActivity {
                 String documentID = timestampToDocID.get(selectedTimestamp);
 
                 // Pass both selectedUserID and documentID to Caregiver_View_Abnormal_End class
-                Intent intent = new Intent(Patient_View_Abnormalities_Patients.this, Patient_View_Abnormal_End.class);
+                Intent intent = new Intent(Patient_View_Abnormalities_Patients.this, Patient_View_Abnormalities_Final.class);
                 intent.putExtra("selectedUserID", selectedUserID);
                 intent.putExtra("documentID", documentID);
                 startActivity(intent);
@@ -82,7 +82,7 @@ public class Patient_View_Abnormalities_Patients extends AppCompatActivity {
     private void fetchHealthData(String selectedUserID) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        db.collection("DoctorsNoteForPatientEmergency")
+        db.collection("patient_abnormal_condition_detected")
                 .whereEqualTo("PatientID", selectedUserID)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -95,7 +95,7 @@ public class Patient_View_Abnormalities_Patients extends AppCompatActivity {
                             Log.d("Firestore", "No documents found for the user.");
                         } else {
                             for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                                Timestamp timestamp = document.getTimestamp("NotesDate");
+                                Timestamp timestamp = document.getTimestamp("Time");
                                 if (timestamp != null) {
                                     // Convert timestamp to string
                                     String time = timestamp.toDate().toString();

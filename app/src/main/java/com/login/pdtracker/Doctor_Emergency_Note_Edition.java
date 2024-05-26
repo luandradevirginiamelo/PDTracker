@@ -29,6 +29,7 @@ public class Doctor_Emergency_Note_Edition extends AppCompatActivity {
     private EditText editTextPhone;
     private AppCompatButton Edit;
 
+    private AppCompatButton bt_bdb;
     private String selectedDocumentId;
 
     @Override
@@ -54,6 +55,16 @@ public class Doctor_Emergency_Note_Edition extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 saveChangesToFirestore();
+            }
+        });
+
+        bt_bdb = findViewById(R.id.bt_bdb);
+        bt_bdb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Go back to Doctors_Dashboard_Screen activity
+                Intent intent = new Intent(Doctor_Emergency_Note_Edition.this, Doctors_Dashboard_Screen.class);
+                startActivity(intent);
             }
         });
     }

@@ -41,6 +41,12 @@
             android:exported="false" />
 
         <activity
+            android:name=".Caregiver_View_Abnormalities_Final"
+            android:exported="false" />
+
+
+
+        <activity
             android:name=".Doctors_View_Abnormalities_Patients"
             android:exported="false" />
 
@@ -69,6 +75,12 @@
         <activity
             android:name=".Doctor_Forgetpassword"
             android:exported="false" />
+
+        <activity
+            android:name=".Patient_View_Abnormalities_Final"
+            android:exported="false" />
+
+
         <activity
             android:name=".Doctor_Update_Note_Selection"
             android:exported="false" />

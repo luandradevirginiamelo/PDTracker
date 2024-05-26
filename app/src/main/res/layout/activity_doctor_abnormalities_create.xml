@@ -99,7 +99,7 @@
         android:layout_width="337dp"
         android:layout_height="61dp"
         android:layout_marginTop="30dp"
-
+        android:maxLength="1000"
         android:textColor="@color/black"
         android:textSize="18sp"
         android:textStyle="bold"

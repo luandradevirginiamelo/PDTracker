@@ -26,6 +26,7 @@ public class Caregiver_Home extends AppCompatActivity {
     private TextView welcome_user;
     private ImageButton bt_logoutButton;
     private AppCompatButton b3c, b2c, b4; // Reference to the update profile button
+
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     String userID;
 
@@ -51,6 +52,9 @@ public class Caregiver_Home extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
+
         b2c.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

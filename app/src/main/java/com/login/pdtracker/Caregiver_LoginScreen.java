@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -38,6 +39,8 @@ public class Caregiver_LoginScreen extends AppCompatActivity {
     private TextView textRegister;
     private EditText caregiver_email, caregiver_password;
     private Button caregiver_login;
+
+    private AppCompatButton bt_bm;
     String[] errorMessages = {"Please complete all required fields to proceed", "Login Successfully!"};
     private ProgressBar progressbar;
     private TextView textForgotten;
@@ -51,6 +54,15 @@ public class Caregiver_LoginScreen extends AppCompatActivity {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
+        });
+
+        bt_bm = findViewById(R.id.bt_bm);
+        bt_bm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Caregiver_LoginScreen.this, Home_App.class);
+                startActivity(intent);
+            }
         });
 
         // Initialize the button

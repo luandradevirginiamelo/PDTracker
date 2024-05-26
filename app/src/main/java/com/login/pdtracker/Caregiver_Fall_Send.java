@@ -372,8 +372,30 @@ public class Caregiver_Fall_Send extends AppCompatActivity {
         }
     }
 
-    void sendSMS(){
-        sendSMS("0830707014", "Emergency Alert! A Parkinson patient has fallen at "+latitudeFormated+" and "+longitudeFormated+". Name: "+PatientName+" Contact: "+patientNumber+" Patient with serious Heart Abnormalities: High Blood Pressure and BPM.");
+    private void sendSMS() {
+        db.collection("DoctorsNoteForPatientEmergency")
+                .whereEqualTo("PatientID", selectedDocumentId)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                // Log document data for debugging
+                                Log.d("Doctor_Fall_Send", "Document ID: " + document.getId() + " Data: " + document.getData());
+
+                                // Access the document here
+                                String notes = document.getString("NotesText");
+                                String ParamedicsNumber = document.getString("ParamedicsNumber");
+                                String message = "Emergency Alert! A Parkinson patient has fallen at " + latitudeFormated + " and " + longitudeFormated + ". Name: " + PatientName + " Contact: " + patientNumber + " Patient with serious Heart Abnormalities: High Blood Pressure and BPM. Doc. Notes: " + notes;
+                                sendSMS(ParamedicsNumber, message);
+                                return; // Exit after sending the message
+                            }
+                        } else {
+                            Log.e("Doctor_Fall_Send", "Error fetching notes", task.getException());
+                        }
+                    }
+                });
     }
 
 }

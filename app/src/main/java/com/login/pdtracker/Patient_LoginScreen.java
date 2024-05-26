@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -36,6 +37,7 @@ public class Patient_LoginScreen extends AppCompatActivity {
     private TextView textRegister;
     private EditText edit_email, edit_senha;
     private Button bt_login;
+    private AppCompatButton bt_bm;
     String[] errorMessages = {"Please complete all required fields to proceed", "Login Successfully!"};
     private ProgressBar progressbar;
     private TextView textForgotten;
@@ -61,6 +63,15 @@ public class Patient_LoginScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Patient_LoginScreen.this, Patients_RegScreen.class);
+                startActivity(intent);
+            }
+        });
+
+        bt_bm = findViewById(R.id.bt_bm);
+        bt_bm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Patient_LoginScreen.this, Home_App.class);
                 startActivity(intent);
             }
         });
